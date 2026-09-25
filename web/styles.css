@@ -352,3 +352,44 @@ h2::before { content: ""; position: absolute; top: 0; left: 0; width: 28px; heig
 .panel { border-radius: 12px; }
 .finding .rank { font-style: italic; color: var(--brass); }
 @media (max-width: 760px) { .chap-subs { display: none !important; } .chap-btn { font-size: 16px; padding: 4px 0; } nav.side .links { gap: 0 16px; } }
+
+/* =============== v3 — Lab =============== */
+.lab-banner { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; width: 100%; text-align: left; cursor: pointer; margin: 18px 0 0; padding: 16px 22px; border-radius: 12px; border: 1px solid var(--brass); background: color-mix(in oklab, var(--brass) 9%, var(--surface)); color: var(--ink); font-size: 15px; }
+.lab-banner:hover { background: color-mix(in oklab, var(--brass) 16%, var(--surface)); }
+.lb-go { color: var(--accent); font-size: 14px; }
+@media (max-width: 760px) { .lab-banner { grid-template-columns: 1fr; } }
+.studies { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+@media (max-width: 980px) { .studies { grid-template-columns: 1fr; } }
+.study { position: relative; display: flex; flex-direction: column; gap: 8px; text-align: left; cursor: pointer; background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 22px 20px 18px; color: var(--ink); transition: transform .25s, border-color .25s, box-shadow .25s; min-height: 210px; }
+.study:hover { transform: translateY(-3px); border-color: var(--brass); box-shadow: 0 14px 34px -22px rgba(0,0,0,.5); }
+.study .tier { position: absolute; top: 18px; right: 16px; }
+.study-n { font-family: var(--serif); font-size: 34px; line-height: 1; color: var(--brass); font-style: italic; }
+.study-k { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+.study-v { font-family: var(--serif); font-size: 22px; line-height: 1.2; }
+.study-d { font-size: 13.5px; color: var(--ink-2); }
+.muted-study { cursor: default; border-style: dashed; background: transparent; }
+.muted-study:hover { transform: none; box-shadow: none; border-color: var(--rule); }
+.answer { font-family: var(--serif); font-size: 21px; line-height: 1.25; margin: 4px 0 2px; }
+.conf { font-family: var(--sans); font-size: 11.5px; font-weight: 600; letter-spacing: .02em; padding: 2px 8px; border-radius: 999px; vertical-align: middle; margin-left: 6px; background: var(--surface-2); color: var(--ink-2); white-space: nowrap; }
+.conf[data-c="Very likely"] { background: var(--t-A); color: var(--t-ink-A); }
+.conf[data-c="Likely"] { background: var(--t-B); color: var(--t-ink-B); }
+.conf[data-c="Leaning"] { background: var(--t-C); color: var(--t-ink-C); }
+.guesses { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.guess { display: flex; flex-direction: column; }
+.g-top { display: flex; justify-content: space-between; align-items: center; }
+.g-swatch { width: 74px; height: 74px; border-radius: 50%; box-shadow: inset 0 -6px 14px rgba(0,0,0,.25), 0 0 0 1px var(--rule); }
+.g-ring { width: 80px; height: 80px; }
+.g-guess { font-family: var(--serif); font-size: 22px; line-height: 1.2; flex: 1; }
+.g-btns { display: flex; gap: 8px; margin-top: 12px; }
+.g-btns button { flex: 1; border: 1px solid var(--rule); background: var(--surface-2); border-radius: 8px; padding: 7px 0; cursor: pointer; font-size: 13px; color: var(--ink-2); }
+.g-btns button[aria-pressed="true"][data-v="right"] { background: color-mix(in oklab, var(--good) 22%, var(--surface)); border-color: var(--good); color: var(--ink); }
+.g-btns button[aria-pressed="true"][data-v="wrong"] { background: color-mix(in oklab, var(--critical) 18%, var(--surface)); border-color: var(--critical); color: var(--ink); }
+.scoreline { font-family: var(--serif); font-size: 18px; margin: 0 0 16px; color: var(--ink-2); }
+.hyp-head { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: baseline; margin-bottom: 10px; }
+.hyp-n { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--brass); }
+.hyp h3 { font-family: var(--serif); font-weight: 500; font-size: 19px; margin: 0; }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 3px 10px 3px 4px; border-radius: 999px; background: var(--surface-2); white-space: nowrap; }
+.status b { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; color: #fff; font-size: 11px; }
+.status.good b { background: var(--good); } .status.critical b { background: var(--critical); } .status.open b { background: var(--ink-3); }
+.ikat-panel { padding: 22px 18px 14px; }
+.lab-plate h1.display { font-size: clamp(26px, 3.2vw, 40px); }

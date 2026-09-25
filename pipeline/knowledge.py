@@ -213,6 +213,15 @@ def findings(data: dict) -> list[dict]:
     f.append(dict(title=f"Closest modern reference population: {top['population']} (distance {top['distance']})",
                   detail="5 of your 8 closest modern references are Tajik groups. This is similarity, not proof of genealogical descent.",
                   tier="A", rarity=0.2, interest=0.9, section="tajik"))
+    if data.get("lab"):
+        L = data["lab"]; e = L["consensus"]["east_summary"]; dt = L["dating"]
+        yr = lambda y: f"{-y} BCE" if y < 0 else f"AD {y}"
+        f.append(dict(title=f"Eight independent models converge on {e['median']}% East Eurasian ancestry",
+                      detail=f"Run locally on your raw DNA (range {e['min']}–{e['max']}%). This resolves the services' 0.1%-to-23% disagreement: 23andMe's figure is a labelling artefact.",
+                      tier="C", rarity=0.6, interest=0.95, section="consensus"))
+        f.append(dict(title=f"Your East Eurasian segments date to ≈ {yr(dt['calendar_best'])}, older than the Turkic era",
+                      detail=f"A local-ancestry model, validated on simulated genomes, dates the mixing to ~{dt['generations']} generations ago, the Iron-Age Saka/Wusun world. Exploratory, but new: no service estimates this.",
+                      tier="D", rarity=0.9, interest=1.0, section="ikat"))
     w = {"A": 1.0, "B": 0.8, "C": 0.5, "D": 0.25}
     for x in f:
         x["score"] = round(0.5 * w[x["tier"]] + 0.3 * x["rarity"] + 0.2 * x["interest"], 3)
@@ -239,3 +248,48 @@ def limitations(data: dict) -> dict:
     return {"can": can, "cannot": cannot,
             "sources_not_available": ["AncestryDNA raw data", "DNA Relatives / shared cM", "Ancestry-composition segment file",
                                       "IllustrativeDNA G25 coordinates", "23andMe Parental Inheritance report"]}
+
+
+def hypotheses(data: dict) -> list[dict]:
+    """Claude's hypotheses about this genome. Each is explicitly a hypothesis (Tier D until tested),
+    with the test that was, or could be, run."""
+    lab = data["lab"]
+    east = lab["consensus"]["east_summary"]
+    south = lab["consensus"]["south_summary"]
+    dt = lab["dating"]
+    val_ok = all(abs(v["estimated"] - v["true"]) <= max(5, 0.5 * v["true"]) for v in dt["validation"])
+    cal = dt["calendar_range"]
+    yr = lambda y: f"{-y} BCE" if y < 0 else f"AD {y}"
+    era = ("Mongol / post-Mongol era" if cal[0] >= 1150 else "Turkic-to-Mongol era" if cal[1] >= 1100 and cal[0] >= 500
+           else "Turkic era or earlier" if cal[1] >= 500 else "pre-Turkic (Hunnic / Iron-Age steppe)")
+    r = data["roh"]["summary"]
+    return [
+        dict(q="The services disagree about East Eurasian ancestry because of labelling, not because your DNA is ambiguous.",
+             test=f"Ran {len(lab['consensus']['east'])} independent reference models on your raw genome.",
+             result=f"Models put East Eurasian ancestry at {east['min']}–{east['max']}% (median {east['median']}%). The two lowest are models where a mixed 'Turkic' or 'Central Asia' cluster was excluded rather than counted. The 23andMe value (0.1%) is the outlier: its 'Central Asian' cluster absorbs this ancestry.",
+             status="Supported", tier="C"),
+        dict(q="Your East Eurasian ancestry arrived with the Turkic and Mongol expansions, not in the Bronze Age.",
+             test="Local-ancestry HMM along your chromosomes. The length of East Eurasian segments dates the mixing (shorter segments mean older mixing).",
+             result=f"Best fit ≈ {dt['generations']} generations ago (support {dt['support_generations'][0]}–{dt['support_generations'][1]}), ≈ {yr(cal[0])} to {yr(cal[1])}: {era}. " + ("The method recovered known dates in simulations. " if val_ok else "Caution: simulation checks showed bias. ") + ("The hypothesis fails: the signal points to an older, Iron-Age steppe layer (Saka / Wusun / Xiongnu era). Later Turkic input is likely averaged in, and imperfect reference proxies can push dates older." if cal[1] < 500 else ""),
+             status="Supported" if cal[1] >= 500 else "Not supported", tier="D"),
+        dict(q="(New, from H2) An Iron-Age East Eurasian layer, not just a medieval one, is a major part of your East Eurasian ancestry.",
+             test="Compare the admixture date with ancient-DNA evidence, and check whether your closest ancient references are Iron-Age steppe peoples.",
+             result=f"Consistent. Your dating points ≈ {yr(dt['calendar_best'])}, and your closest ancient references include Khotanese Saka (4.307) and Wusun (6.489), Iron-Age groups known to carry East Eurasian ancestry. A two-pulse model (Iron Age + Turkic) is the next test.",
+             status="Consistent" if cal[1] < 500 else "Open", tier="D"),
+        dict(q="Your South-Asian-related signal is ancient (AASI-like ancestry spread along the Iranian–Indus cline), not a recent South Asian ancestor.",
+             test="AASI-like components across models, and whether long South-Asian-specific segments exist.",
+             result=f"AASI-like components sit at {south['min']}–{south['max']}% across models, a level typical of Central Asian and Iranian-plateau populations. A recent South Asian grandparent would give ~25% plus long segments. Testing the segments needs a 3-way painting.",
+             status="Consistent", tier="C"),
+        dict(q="Your parents are not closely related.",
+             test="Runs of homozygosity scanned across the autosomes.",
+             result=f"Longest run {r['longest_mb']} Mb; none over 5 Mb. First- or second-cousin parents typically leave several runs over 10 Mb.",
+             status="Supported", tier="B"),
+        dict(q="Your mother's side carries more of the Turkic / East Eurasian ancestry (family story: an Uzbek-influenced village).",
+             test="Your X chromosome is 100% maternal. An ancestry estimate on X alone vs the autosomes would test this.",
+             result="Not yet testable: none of the reference models include X-chromosome markers. The test becomes possible with a phased relative (e.g. Claire's data) or an X-aware reference panel.",
+             status="Open", tier="D"),
+        dict(q="Your Y line (C1b1a1a, a South-Asian-associated branch) entered Central Asia from the south.",
+             test="Needs Y-chromosome sequencing (FTDNA Big Y) to find your sub-branch and its closest relatives and dates.",
+             result="One lineage cannot show a population-level direction of movement. With Big Y, your branch could be placed next to dated ancient and modern samples.",
+             status="Open", tier="D"),
+    ]

@@ -16,6 +16,7 @@
 | 2026-09-25 | Web fetch attempt: isogg.org haplogroup C tree (blocked by the network proxy) | URL only | No |
 | 2026-09-25 | GitHub: installed 23andMe `yhaplo` (open-source code download) | Nothing about you | No |
 | 2026-09-25 | npm: `world-atlas` (Natural Earth outlines) and `playwright` (screenshot testing) | Nothing about you | No |
+| 2026-09-25 | PyPI: `admix`, `numpy`, `scipy` packages; GitHub: public reference model files from the `admix` project (HarappaWorld, puntDNAL, etc.) | Nothing about you | No |
 | 2026-09-25 | Attempted downloads of ClinVar (ftp.ncbi.nlm.nih.gov) and ybrowse.org, both blocked by the proxy | URL only | No |
 
 The generated `atlas.html` carries a Content-Security-Policy of `default-src 'none'`. The browser itself blocks

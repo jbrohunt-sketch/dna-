@@ -58,9 +58,46 @@ def annotate(G: dict, entries: list[dict], kind: str) -> list[dict]:
             n, status = _count(c.genotype, v["effect"], v["other"])
             row |= {"genotype": c.genotype, "chrom": c.chrom, "pos": c.pos, "effect_count": n, "status": status,
                     "reading": v["interp"][n] if n is not None and "interp" in v else None,
+                    "answer": panel.ANSWERS.get(v["rsid"], {}).get(n, (None, None))[0] if n is not None else None,
+                    "confidence": panel.ANSWERS.get(v["rsid"], {}).get(n, (None, None))[1] if n is not None else None,
                     "palindromic": {v["effect"], v["other"]} in ({"A", "T"}, {"C", "G"}),
                     "provenance": {"record": c.line_no}}
         out.append(row)
+    return out
+
+
+def predictions(traits: list[dict]) -> list[dict]:
+    """Multi-SNP 'what your DNA guesses' predictions. Transparent rules, not black-box models."""
+    T = {t["rsid"]: t for t in traits}
+    n = lambda rs: T.get(rs, {}).get("effect_count")
+    out = []
+    herc, oca, slc24, slc45, tyr, irf4, r151, r160, edar = (n(x) for x in ("rs12913832", "rs1800407", "rs1426654", "rs16891982", "rs1042602", "rs12203592", "rs1805007", "rs1805008", "rs3827760"))
+    if herc is not None:
+        eye = {0: ("Brown", 0.9), 1: ("Brown or hazel", 0.65), 2: ("Blue / grey", 0.85)}[herc]
+        if herc == 0 and oca:
+            eye = ("Brown (possibly lighter brown / hazel tint)", 0.8)
+        out.append(dict(key="eyes", label="Eye colour", guess=eye[0], p=eye[1], tier="B",
+                        basis=f"HERC2 rs12913832 {T['rs12913832']['genotype']} is the dominant eye-colour switch (IrisPlex's strongest marker); OCA2 rs1800407 {T['rs1800407']['genotype']} modifies shade.",
+                        swatch=["#4a2c17", "#6b4423", "#8a5a2b"] if herc == 0 else ["#6b7a4a", "#8a6a3a"] if herc == 1 else ["#6f8fb0", "#9fb3c8"]))
+    red = (r151 or 0) + (r160 or 0)
+    if herc is not None and slc45 is not None:
+        dark = (herc == 0) + (slc45 is not None and slc45 < 2) * 0.5 + (irf4 == 0) * 0.5
+        hair = "Red / auburn" if red >= 2 else "Dark brown to black" if dark >= 1.5 else "Brown" if dark >= 1 else "Light brown to dark blond"
+        out.append(dict(key="hair", label="Natural hair colour", guess=hair, p=0.7 if red < 2 else 0.8, tier="C",
+                        basis=f"No MC1R red-hair variants ({red} copies), HERC2 {T['rs12913832']['genotype']}, IRF4 {T['rs12203592']['genotype']}, SLC45A2 {T['rs16891982']['genotype']}. HIrisPlex-style reasoning; hair colour also darkens with age.",
+                        swatch=["#1f1611", "#2e2016", "#3d2a1b"] if hair.startswith("Dark") else ["#5a3b22", "#6e4a2c"]))
+    if slc24 is not None and slc45 is not None:
+        light = slc24 + slc45 + (tyr or 0) * 0.5
+        skin = "Light to olive (intermediate)" if 2.5 <= light < 4.5 else "Light" if light >= 4.5 else "Olive to medium-brown"
+        out.append(dict(key="skin", label="Skin tone", guess=skin, p=0.6, tier="C",
+                        basis=f"SLC24A5 {T['rs1426654']['genotype']} ({slc24}/2 lighter copies), SLC45A2 {T['rs16891982']['genotype']} ({slc45}/2), TYR {T['rs1042602']['genotype']}. Skin tone is highly polygenic; these loci explain only part of it.",
+                        swatch=["#e8c6a0", "#d4a77e", "#c08e64"] if skin.startswith("Light to") else ["#b8865a", "#9a6b43"]))
+    if irf4 is not None:
+        out.append(dict(key="sun", label="Sun response", guess="Tans more than burns; few freckles" if irf4 == 0 and red == 0 else "Freckles / burns more easily", p=0.65, tier="C",
+                        basis=f"IRF4 {T['rs12203592']['genotype']} and no MC1R red-hair variants.", swatch=["#c08e64", "#a8744a"]))
+    if edar is not None:
+        out.append(dict(key="hairform", label="Hair texture", guess="Straight to wavy, medium-to-thick strands" if edar == 1 else "Thick and straight" if edar == 2 else "Wavy to straight, typical West-Eurasian thickness",
+                        p=0.55, tier="C", basis=f"EDAR rs3827760 {T['rs3827760']['genotype']}: {edar} copy/copies of the East-Asian-associated thick-hair allele.", swatch=["#2a1d14", "#3a2a1c"]))
     return out
 
 
@@ -283,6 +320,7 @@ def main() -> None:
         "roh": {"segments": roh, "summary": roh_summary},
         "haplogroups": {"y": y_haplogroup(ds), "mt": mt_haplogroup(ds)},
         "traits": traits,
+        "predictions": predictions(traits),
         "pgx": {"sites": pgx_rows, "summary": pgx_summary(pgx_rows), "not_assessable": panel.PGX_NOT_ASSESSABLE},
         "health": {"sites": health, "apoe": apoe(G), "not_assessed": panel.NOT_ASSESSED_HEALTH},
         "reported": reported,
@@ -290,6 +328,10 @@ def main() -> None:
         "knowledge": {"identity_layers": knowledge.IDENTITY_LAYERS, "timeline": knowledge.TIMELINE,
                       "why_differ": knowledge.WHY_DIFFER, "places": knowledge.PLACES, "lineage_notes": knowledge.LINEAGE_NOTES},
     }
+    lab = OUT / "lab.json"
+    if lab.exists():
+        data["lab"] = json.loads(lab.read_text())
+        data["hypotheses"] = knowledge.hypotheses(data)
     data["findings"] = knowledge.findings(data)
     data["limitations"] = knowledge.limitations(data)
     (OUT / "atlas_data.json").write_text(json.dumps(data, ensure_ascii=False))

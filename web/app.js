@@ -30,6 +30,8 @@
     });
   }
   const tt = (title, rows) => `<div class='tt-title'>${esc(title)}</div>` + rows.map(([k, v]) => `<div class='tt-row'><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
+  const yr = (y) => (y < 0 ? `${-y} BCE` : `AD ${y}`);
+  const yrRange = (a, b) => (a < 0 && b < 0 ? `${-a}–${-b} BCE` : `${yr(a)} – ${yr(b)}`);
   const tier = (t, withName = true) => `<span class="tier" data-t="${t}" title="Evidence tier ${t}: ${esc(A.meta.tiers[t]?.desc || "")}"><b>${t}</b>${withName ? esc(TIER_NAMES[t]) : ""}</span>`;
   function why(rows) {
     const body = rows.filter(([, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("");
@@ -40,10 +42,11 @@
   /* ---------------- navigation (state-based: no URL/hash changes, safe in sandboxed previews) ---------------- */
   const CHAPTERS = [
     { id: "portrait", roman: "I", name: "Portrait", q: "Who am I, genetically?", subs: [["portrait", "Portrait"], ["findings", "What stands out"], ["identity", "Seven kinds of ancestry"]] },
-    { id: "origins", roman: "II", name: "Origins", q: "Where did my ancestry come from, and when?", subs: [["river", "River of ancestry"], ["tajik", "Places"], ["services", "Services compared"], ["time", "Timeline"]] },
-    { id: "lines", roman: "III", name: "Lineages", q: "What can be traced to each parent?", subs: [["lineages", "Paternal & maternal lines"], ["parents", "Which parent?"]] },
-    { id: "body", roman: "IV", name: "Body", q: "What does my DNA say about traits and health?", subs: [["traits", "Traits"], ["health", "Health & drug response"]] },
-    { id: "genome", roman: "V", name: "Genome", q: "What exactly is in my data?", subs: [["chromosomes", "Chromosome explorer"], ["explorer", "Variant explorer"], ["quality", "Data quality"], ["method", "Method & privacy"]] },
+    { id: "lab", roman: "II", name: "Lab", q: "What can new analysis of my raw DNA reveal?", subs: [["lab", "Notebook"], ["consensus", "Eight models, one answer"], ["deep", "Deep ancestry"], ["ikat", "Painted chromosomes"], ["guesses", "What your DNA guesses"], ["hypotheses", "Hypotheses"]] },
+    { id: "origins", roman: "III", name: "Origins", q: "Where did my ancestry come from, and when?", subs: [["river", "River of ancestry"], ["tajik", "Places"], ["services", "Services compared"], ["time", "Timeline"]] },
+    { id: "lines", roman: "IV", name: "Lineages", q: "What can be traced to each parent?", subs: [["lineages", "Paternal & maternal lines"], ["parents", "Which parent?"]] },
+    { id: "body", roman: "V", name: "Body", q: "What does my DNA say about traits and health?", subs: [["traits", "Traits"], ["health", "Health & drug response"]] },
+    { id: "genome", roman: "VI", name: "Genome", q: "What exactly is in my data?", subs: [["chromosomes", "Chromosome explorer"], ["explorer", "Variant explorer"], ["quality", "Data quality"], ["method", "Method & privacy"]] },
   ];
   const chapterOf = (sub) => CHAPTERS.find((c) => c.subs.some(([id]) => id === sub));
   const state = { sub: "portrait", arg: null };
@@ -238,6 +241,7 @@
         </div>
       </div>
 
+      ${A.lab ? `<button class="lab-banner" data-go="lab"><span class="eyebrow" style="margin:0;color:var(--brass)">New · The Lab</span><span class="lb-v">Eight models converge on <b>${fmt(A.lab.consensus.east_summary.median, 1)}% East Eurasian</b>, mixed in around <b>${yrRange(A.lab.dating.calendar_range[0], A.lab.dating.calendar_range[1])}</b>.</span><span class="lb-go">Open the Lab →</span></button>` : ""}
       <h2>Four ways into who you are</h2>
       <p class="muted">People make sense of identity through the people they come from, the places they belong to, the story over time, and their own body. The atlas is organised the same way.</p>
       <div class="doors">
@@ -581,10 +585,12 @@
   RENDER.traits = (el) => {
     const cats = [...new Set(A.traits.map((t) => t.category))];
     el.innerHTML = `<div class="eyebrow">Trait genetics</div><h1>Single variants with replicated effects</h1>
-      <p class="lede">These are among the best-understood genotype–trait links. Even so, most traits are polygenic: one SNP shifts probabilities, it does not determine you. Highlighted letters are the effect allele, and the dots count your copies (0–2).</p>
+      <p class="lede">Each card leads with the answer, then how sure it is. <b>Very likely</b> means the variant largely decides the trait. <b>Small effect</b> means it only nudges a trait shaped by many genes. Highlighted letters are the effect allele, and the dots count your copies (0–2).</p>
+      <div class="panel" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span>Want the combined picture, with eyes, hair and skin predicted from several markers together?</span><button class="link" data-go="guesses">What your DNA guesses →</button></div>
       ${cats.map((c) => `<h2>${esc(c)}</h2><div class="grid-2">${A.traits.filter((t) => t.category === c).map((t) => `
         <div class="panel trait-card" data-tier="${t.tier}"><div class="top"><h3>${esc(t.trait)}</h3>${tier(t.tier, false)}</div><div class="gene">${esc(t.gene)} · ${esc(t.rsid)}</div>
-          <div>${gtHtml(t)}</div><div class="muted" style="font-size:14px">${esc(t.reading || (t.genotype ? "" : "This marker is not on your array (or is a no-call)."))}</div>
+          ${t.answer ? `<div class="answer">${esc(t.answer)} <span class="conf" data-c="${esc(t.confidence)}">${esc(t.confidence)}</span></div>` : `<div class="answer faint">No answer: ${t.genotype ? esc(t.status) : "not on your array or no-call"}</div>`}
+          <div>${gtHtml(t)}</div><div class="muted" style="font-size:13.5px">${esc(t.reading || "")}</div>
           ${t.note ? `<div class="faint" style="font-size:13px">${esc(t.note)}</div>` : ""}${t.genotype && t.status === "ok" ? variantWhy(t) : ""}</div>`).join("")}</div>`).join("")}`;
   };
 
@@ -686,6 +692,163 @@
         ${["Is the genotype actually present?", "Was strand orientation checked?", "Is the genome build known?", "Is the association replicated?", "In which population was it studied?", "What is the effect size?", "Monogenic or polygenic?", "Correlation or causation?", "Direct evidence or inference?", "Could the array simply lack coverage?"].map((x) => `<li>${x}</li>`).join("")}</ol></div>`;
   };
 
+
+  /* ================= LAB ================= */
+  const L = A.lab;
+  const noLab = (el) => { el.innerHTML = `<div class="notice">Lab results not built yet. Run <span class="mono">python -m pipeline.lab</span>.</div>`; };
+  const DEEP_COL = { "Iran-Neolithic farmers": "iranian", "Anatolian farmers": "anatolian", "Steppe / Eastern hunter-gatherers": "steppe", "Western hunter-gatherers": "europe", "East Eurasian & Siberian": "east", "South Eurasian (AASI-like)": "south", "Levant (Natufian)": "oasis" };
+  const SVC_EAST = [["23andMe", 0.1], ["AncestryDNA", 7], ["IllustrativeDNA · 1", 23.0], ["IllustrativeDNA · 2", 14.6]];
+  const SVC_SOUTH = [["23andMe", 0], ["AncestryDNA", 6], ["IllustrativeDNA · 1", 14.6], ["IllustrativeDNA · 2", 18.0]];
+  const statusPill = (s) => { const m = { Supported: ["good", "✓"], Consistent: ["good", "◐"], "Not supported": ["critical", "✗"], Open: ["open", "?"] }[s] || ["open", "?"]; return `<span class="status ${m[0]}"><b>${m[1]}</b>${esc(s)}</span>`; };
+
+  function consensusStrip(rows, svc, max = 36, medOverride = null) {
+    const W = 1000, H = 150, X = (v) => 30 + ((W - 60) * v) / max, sm = rows.length ? [Math.min(...rows.map((r) => r.pct)), Math.max(...rows.map((r) => r.pct))] : [0, 0];
+    const med = medOverride ?? [...rows.map((r) => r.pct)].sort((a, b) => a - b)[Math.floor(rows.length / 2)];
+    let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+    for (let t = 0; t <= max; t += 5) s += `<g class="grid"><line x1="${X(t)}" x2="${X(t)}" y1="18" y2="${H - 26}"/></g><text x="${X(t)}" y="${H - 8}" text-anchor="middle">${t}%</text>`;
+    s += `<rect x="${X(sm[0])}" y="26" width="${X(sm[1]) - X(sm[0])}" height="44" rx="6" fill="var(--brass)" opacity=".16"/><line x1="${X(med)}" x2="${X(med)}" y1="22" y2="74" stroke="var(--brass)" stroke-width="2"/><text x="${X(med)}" y="16" text-anchor="middle" class="lbl-strong" style="fill:var(--brass)">model consensus ${fmt(med, 1)}%</text>`;
+    rows.forEach((r, i) => { s += `<circle cx="${X(r.pct)}" cy="${38 + (i % 3) * 12}" r="6" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" data-tip="${esc(tt(r.model, [["estimate", fmt(r.pct, 1) + "%"], ...(r.composite_excluded || []).map((c) => ["excluded composite: " + c.name, c.pct + "%"])]))}"/>`; });
+    svc.forEach(([n, v], i) => { const x = X(v), y = 100; s += `<path d="M${x},${y - 7} L${x + 7},${y} L${x},${y + 7} L${x - 7},${y}Z" fill="var(--surface)" stroke="var(--ink-2)" stroke-width="1.6" data-tip="${esc(tt(n, [["service estimate", fmt(v, 1) + "%"]]))}"/><text x="${x}" y="${y + 22}" text-anchor="middle" style="font-size:10.5px">${esc(n.replace("IllustrativeDNA", "IDNA"))}</text>`; });
+    return s + `</svg><div class="legend"><span><i style="background:var(--accent);border-radius:50%"></i>independent model on your raw DNA</span><span><svg width="12" height="12"><path d="M6,0 L12,6 L6,12 L0,6Z" fill="none" stroke="currentColor"/></svg>what a service reported</span><span><i style="background:var(--brass);opacity:.35"></i>model range</span></div>`;
+  }
+  function modelBars(name, m) {
+    const comps = m.components.filter((c) => c.pct >= 1).slice(0, 9), W = 460, rowH = 22, lab = 170, max = Math.max(35, ...comps.map((c) => c.pct + c.se)), X = (v) => lab + ((W - lab - 40) * v) / max, H = comps.length * rowH + 10;
+    let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+    comps.forEach((c, i) => { const y = i * rowH + 4; s += `<text x="0" y="${y + 12}" style="font-size:11px">${esc(c.name)}</text><rect x="${lab}" y="${y + 3}" width="${Math.max(X(c.pct) - lab, 1)}" height="12" rx="3" fill="var(--accent)" opacity=".8" data-tip="${esc(tt(name + " · " + c.name, [["estimate", c.pct + "%"], ["± SE (jackknife)", c.se + "%"]]))}"/><line x1="${X(Math.max(c.pct - c.se, 0))}" x2="${X(c.pct + c.se)}" y1="${y + 9}" y2="${y + 9}" stroke="var(--ink)" stroke-width="1.2"/><text x="${X(c.pct + c.se) + 5}" y="${y + 13}" class="mono" style="font-size:10px">${fmt(c.pct, 1)}</text>`; });
+    return s + `</svg>`;
+  }
+
+  RENDER.lab = (el) => {
+    if (!L) return noLab(el);
+    const e = L.consensus.east_summary, so = L.consensus.south_summary, dt = L.dating, H = A.hypotheses || [];
+    const top = Object.entries(L.deep.puntDNAL || {}).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    el.innerHTML = `<div class="hero-plate lab-plate">${ORNAMENT}<div class="hero-inner">
+        <div class="eyebrow">The Lab · analyses no service ran on your data</div>
+        <h1 class="display">Your raw file, re-read by <em>eight independent ancestry models</em>, then painted, dated and questioned.</h1>
+        <p class="lede">None of these results appear in 23andMe, AncestryDNA or IllustrativeDNA. Every computation ran locally on your ${fmt(A.qc.markers)} markers, with error bars, and each carries an evidence tier.</p></div></div>
+      <div class="studies">
+        <button class="study" data-go="consensus"><span class="study-n">01</span><span class="study-k">Consensus</span><span class="study-v">${fmt(e.median, 1)}% East Eurasian</span><span class="study-d">Median of ${L.consensus.east.length} models (range ${e.min}–${e.max}%). It resolves the services' 0.1%-vs-23% disagreement.</span>${tier("C", false)}</button>
+        <button class="study" data-go="deep"><span class="study-n">02</span><span class="study-k">Deep ancestry</span><span class="study-v">${top.map(([k, v]) => `${esc(k.split(" ")[0])} ${fmt(v, 0)}%`).join(" · ")}</span><span class="study-d">Your genome decomposed into ancient source populations, 10,000+ years deep.</span>${tier("C", false)}</button>
+        <button class="study" data-go="ikat"><span class="study-n">03</span><span class="study-k">Painting & dating</span><span class="study-v">≈ ${yrRange(dt.calendar_range[0], dt.calendar_range[1])}</span><span class="study-d">When the East Eurasian ancestry in your genome was mixed in, estimated from segment lengths. ${L.painting.segment_count} segments painted.</span>${tier("D", false)}</button>
+        <button class="study" data-go="guesses"><span class="study-n">04</span><span class="study-k">Predictions</span><span class="study-v">${(A.predictions || []).length} guesses about you</span><span class="study-d">Eyes, hair, skin, sun and hair texture predicted from your genotype. Mark them right or wrong.</span>${tier("B", false)}</button>
+        <button class="study" data-go="hypotheses"><span class="study-n">05</span><span class="study-k">Hypotheses</span><span class="study-v">${H.filter((h) => h.status === "Supported").length} supported · ${H.filter((h) => h.status === "Open").length} open</span><span class="study-d">Questions I asked of your genome, the test for each, and what came back.</span>${tier("D", false)}</button>
+        <div class="study muted-study"><span class="study-n">06</span><span class="study-k">Next experiments</span><span class="study-v">X-chromosome ancestry · Big Y · relatives</span><span class="study-d">What would unlock the next layer: maternal-side ancestry via X, your exact Y sub-branch, and phased segments from Claire.</span></div>
+      </div>`;
+  };
+
+  RENDER.consensus = (el) => {
+    if (!L) return noLab(el);
+    el.innerHTML = `<div class="eyebrow">Study 01 · Consensus</div><h1>Eight models, one answer</h1>
+      <p class="lede">The services disagreed by two orders of magnitude on your East Eurasian ancestry. So I ran eight published reference models directly on your raw genome and summed each model's East-Eurasian components. Six of the eight land between 18% and 23%. The two lower ones (TurkicK11, K13M2) keep part of it inside a mixed "Turkic" or "Central Asia" component, which I refused to count. Either way, 23andMe's 0.1% comes from how it labels ancestry, not from your DNA.</p>
+      <div class="panel" data-tier="C"><h3>East Eurasian ancestry</h3>${consensusStrip(L.consensus.east, SVC_EAST, 36, L.consensus.east_summary.median)}</div>
+      <div class="panel" data-tier="C"><h3>South-Asian-related (AASI-like) ancestry</h3>${consensusStrip(L.consensus.south, SVC_SOUTH, 30, L.consensus.south_summary.median)}
+        <p class="muted" style="font-size:14px">Model components here measure the ancient South Asian hunter-gatherer (AASI-like) share. Services' "South Asian" labels also include Iranian-related ancestry common across the Indus region, so they read higher.</p></div>
+      <h2>Every model, with jackknife error bars</h2><p class="muted">Each whisker is ±1 standard error from re-running the model 22 times, leaving out one chromosome each time.</p>
+      <div class="grid-2">${Object.entries(L.models).map(([n, m]) => `<div class="panel" data-tier="C"><div style="display:flex;justify-content:space-between"><h3>${esc(n)}</h3><span class="faint mono" style="font-size:12px">${fmt(m.snps_used)} SNPs</span></div>${modelBars(n, m)}</div>`).join("")}</div>
+      <div class="panel">${why([["Method", "Maximum-likelihood admixture with fixed reference allele frequencies (the objective ADMIXTURE uses in projection mode), EM with SQUAREM acceleration; reimplemented here and checked against the published <span class='mono'>admix</span> package."], ["References", "Hobbyist calculators (Dodecad K12b, HarappaWorld, puntDNAL, MDLP K27, AncientNearEast13, TurkicK11, K13M2, globe13) distributed by the open-source <span class='mono'>admix</span> project. They are not peer-reviewed panels, hence Tier C."], ["Grouping", "Which components count as East Eurasian is listed in <span class='mono'>pipeline/lab.py</span>. Regional composites (e.g. 'Turkic', 'Central Asia') are excluded, never silently counted."], ["Privacy", "Reference files were downloaded; nothing about you was sent."]])}</div>`;
+  };
+
+  RENDER.deep = (el) => {
+    if (!L) return noLab(el);
+    const groups = Object.keys(DEEP_COL), mods = Object.keys(L.deep);
+    const seOf = (m, grp) => { const comps = L.models[m].components; return Math.sqrt(0); };
+    const C = 300, R0 = 50, Rmax = 250, maxV = 35, rv = (v) => R0 + ((Rmax - R0) * Math.min(v, maxV)) / maxV, n = groups.length, sector = (2 * Math.PI) / n;
+    let s = `<svg class="chart rose" viewBox="0 0 600 600" role="img" aria-label="Deep ancestry rose">`;
+    [10, 20, 30].forEach((t) => { s += `<circle cx="${C}" cy="${C}" r="${rv(t)}" fill="none" stroke="var(--rule)" stroke-dasharray="2 4"/><text x="${C + 4}" y="${C - rv(t) - 3}" style="font-size:10px">${t}%</text>`; });
+    groups.forEach((gname, i) => {
+      const a0 = -Math.PI / 2 + i * sector;
+      mods.forEach((m, j) => {
+        const v = L.deep[m][gname] || 0, w = sector * 0.36, a = a0 + sector * (0.12 + j * 0.4), r = rv(v);
+        const p = (ang, rr) => [C + rr * Math.cos(ang), C + rr * Math.sin(ang)];
+        const [x1, y1] = p(a, R0), [x2, y2] = p(a, r), [x3, y3] = p(a + w, r), [x4, y4] = p(a + w, R0);
+        s += `<path d="M${x1},${y1} L${x2},${y2} A${r},${r} 0 0 1 ${x3},${y3} L${x4},${y4} A${R0},${R0} 0 0 0 ${x1},${y1}Z" fill="var(--s-${DEEP_COL[gname]})" opacity="${j ? 0.55 : 0.95}" stroke="var(--surface)" stroke-width="1.5" data-tip="${esc(tt(gname, [["model", m], ["share", fmt(v, 1) + "%"]]))}"/>`;
+      });
+      const am = a0 + sector / 2, [lx, ly] = [C + (Rmax + 22) * Math.cos(am), C + (Rmax + 22) * Math.sin(am)];
+      s += `<text x="${lx}" y="${ly}" text-anchor="${Math.cos(am) > 0.2 ? "start" : Math.cos(am) < -0.2 ? "end" : "middle"}" class="lbl-strong" style="font-size:11.5px">${esc(gname)}</text>`;
+    });
+    s += `<circle cx="${C}" cy="${C}" r="${R0 - 6}" fill="var(--surface)" stroke="var(--brass)"/><text x="${C}" y="${C + 5}" text-anchor="middle" style="font-family:var(--serif);font-size:16px;fill:var(--ink)">10,000+ yrs</text></svg>`;
+    el.innerHTML = `<div class="eyebrow">Study 02 · Deep ancestry</div><h1>The ancient populations inside you</h1>
+      <p class="lede">Two ancient-DNA-based models describe your genome as a mixture of populations that lived 8,000–15,000 years ago. Each petal is a source population: the solid bar is <b>puntDNAL</b>, the translucent bar <b>AncientNearEast13</b>.</p>
+      <div class="rings-wrap"><div class="panel" data-tier="C">${s}</div>
+        <div><table class="data"><tr><th>Source</th>${mods.map((m) => `<th style="text-align:right">${esc(m)}</th>`).join("")}</tr>
+          ${groups.map((gname) => `<tr><td><i class="swatch" style="background:var(--s-${DEEP_COL[gname]});vertical-align:-2px;margin-right:8px"></i>${esc(gname)}</td>${mods.map((m) => `<td class="num">${fmt(L.deep[m][gname] || 0, 1)}%</td>`).join("")}</tr>`).join("")}</table>
+          <div class="panel" style="margin-top:16px"><h3>How to read it ${tier("C", false)}</h3><ul class="clean">
+            <li><b>Iran-Neolithic farmers</b> are your largest deep source in both models: the Zagros ancestry that underlies southern Central Asia.</li>
+            <li><b>Steppe / Eastern hunter-gatherers</b> and <b>Anatolian farmers</b> together trace the Bronze-Age steppe herders (who themselves carried farmer ancestry).</li>
+            <li><b>East Eurasian & Siberian</b> captures both the ancient North Eurasian (ANE-like) substrate and later East Asian inflow; the models cannot fully separate these.</li>
+            <li>The two models disagree on how to split Anatolian vs Caucasus farmers (CHG-EEF), which is a known weakness of these calculators.</li></ul></div></div></div>`;
+  };
+
+  RENDER.ikat = (el) => {
+    if (!L) return noLab(el);
+    const P = L.painting, D = L.dating, W = 1000, lab = 40, rowH = 36, th = 14, maxL = A.chromosomes["1"].length;
+    const chs = Object.keys(P.chromosomes);
+    let s = `<svg class="chart ikat" viewBox="0 0 ${W} ${chs.length * rowH + 20}" role="img" aria-label="Chromosomes painted by East Eurasian ancestry">
+      <defs><filter id="ikatf" x="-1%" y="-30%" width="102%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.42" numOctaves="3" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="16" xChannelSelector="R" yChannelSelector="B" result="d"/><feGaussianBlur in="d" stdDeviation="1.1 0.2"/></filter>
+      <pattern id="weave" width="4" height="2" patternUnits="userSpaceOnUse"><path d="M0,1 H4" stroke="#fff" stroke-opacity=".10" stroke-width=".7"/></pattern>`;
+    chs.forEach((ch) => {
+      const L0 = A.chromosomes[ch].length;
+      [1, 2].forEach((k) => {
+        s += `<linearGradient id="ik-${ch}-${k}" x1="0" x2="1">` + P.chromosomes[ch].map((b) => `<stop offset="${((b[0] + 0.5) * 1e6 / L0).toFixed(4)}" stop-color="var(--s-east)" stop-opacity="${b[k].toFixed(2)}"/>`).join("") + `</linearGradient>`;
+      });
+    });
+    s += `</defs>`;
+    chs.forEach((ch, r) => {
+      const y = r * rowH + 6, w = ((W - lab - 10) * A.chromosomes[ch].length) / maxL;
+      s += `<text x="${lab - 10}" y="${y + th + 4}" text-anchor="end">${ch}</text>`;
+      s += `<clipPath id="cl-${ch}"><rect x="${lab}" y="${y}" width="${w}" height="${2 * th + 2}" rx="7"/></clipPath><g clip-path="url(#cl-${ch})">`;
+      [0, 1].forEach((k) => { const yy = y + k * (th + 2); s += `<rect x="${lab}" y="${yy}" width="${w}" height="${th}" fill="var(--s-iranian)"/><g filter="url(#ikatf)"><rect x="${lab}" y="${yy}" width="${w}" height="${th}" fill="url(#ik-${ch}-${k + 1})"/></g><rect x="${lab}" y="${yy}" width="${w}" height="${th}" fill="url(#weave)"/>`; });
+      s += `</g>`;
+      P.chromosomes[ch].forEach((b) => { const x = lab + (w * b[0] * 1e6) / A.chromosomes[ch].length; s += `<rect x="${x}" y="${y}" width="${Math.max(w * 1e6 / A.chromosomes[ch].length, 1)}" height="${2 * th + 2}" fill="transparent" data-tip="${esc(tt(`chr${ch} · ${b[0]}–${b[0] + 1} Mb`, [["P(≥1 East Eurasian copy)", pct(b[1], 0)], ["P(2 copies)", pct(b[2], 0)]]))}"/>`; });
+    });
+    s += `</svg>`;
+    const cv = D.curve, best = Math.max(...cv.map((c) => c[1])), CW = 520, CH = 220, lx = (T) => 40 + ((CW - 60) * Math.log(T / cv[0][0])) / Math.log(cv[cv.length - 1][0] / cv[0][0]), ly = (v) => 20 + Math.min(1, (best - v) / 30) * (CH - 60);
+    let c = `<svg class="chart" viewBox="0 0 ${CW} ${CH}" role="img" aria-label="Likelihood of admixture date">`;
+    c += `<rect x="${lx(D.support_generations[0])}" y="20" width="${Math.max(lx(D.support_generations[1]) - lx(D.support_generations[0]), 3)}" height="${CH - 60}" fill="var(--brass)" opacity=".15"/>`;
+    [0, 10, 20, 30].forEach((t) => { c += `<g class="grid"><line x1="40" x2="${CW - 20}" y1="${ly(best - t)}" y2="${ly(best - t)}"/></g><text x="34" y="${ly(best - t) + 4}" text-anchor="end">${t ? "−" + t : "best"}</text>`; });
+    c += `<path d="${cv.map((p, i) => (i ? "L" : "M") + lx(p[0]) + "," + ly(p[1])).join("")}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+    cv.forEach((p) => { c += `<circle cx="${lx(p[0])}" cy="${ly(p[1])}" r="3.5" fill="var(--accent)" data-tip="${esc(tt(p[0] + " generations ago", [["≈ year", yr(1975 - p[0] * 29)], ["Δ log-likelihood", fmt(p[1] - best, 1)]]))}"/>`; });
+    [5, 10, 20, 50, 100, 200].filter((t) => t >= cv[0][0] && t <= cv[cv.length - 1][0]).forEach((t) => { c += `<text x="${lx(t)}" y="${CH - 24}" text-anchor="middle">${t}</text><text x="${lx(t)}" y="${CH - 8}" text-anchor="middle" style="font-size:9.5px;fill:var(--ink-3)">${yr(1975 - t * 29)}</text>`; });
+    c += `</svg>`;
+    el.innerHTML = `<div class="eyebrow">Study 03 · Painting & dating</div><h1>Your chromosomes, woven like ikat</h1>
+      <p class="lede">Central Asian ikat is dyed before it is woven, so its patterns have soft, feathered edges. Your chromosomes are drawn the same way. Blue is West-Eurasian-related ancestry (Iranian, steppe, South-Asian-related), and pink is East Eurasian. Each chromosome has two threads: the top shows the chance that at least one copy is East Eurasian, the bottom the chance both are. The feathering is the model's uncertainty.</p>
+      <div class="panel ikat-panel" data-tier="D">${s}<div class="legend"><span><i style="background:var(--s-iranian)"></i>West-Eurasian-related</span><span><i style="background:var(--s-east)"></i>East Eurasian</span><span class="faint">${P.segment_count} East-Eurasian-rich segments · mean ${P.mean_segment_mb} Mb · global East share ${P.qE_global}% (HarappaWorld)</span></div></div>
+      <div class="grid-2">
+        <div class="panel" data-tier="D"><h3>When did it happen? ${tier("D", false)}</h3><p class="muted" style="font-size:14px">Mixing leaves long blocks, and recombination cuts them shorter every generation. The model finds the admixture time that best explains your segment lengths.</p>${c}
+          <p style="font-size:15px"><b>Best estimate ≈ ${D.generations} generations ago</b>, about <b>${yr(D.calendar_best)}</b>. Supported range ${D.support_generations[0]}–${D.support_generations[1]} generations, about ${yrRange(D.calendar_range[0], D.calendar_range[1])}.</p>
+          <p class="muted" style="font-size:14px"><b>What this suggests:</b> much of your East Eurasian ancestry is <em>older</em> than the Turkic expansions. It points to the Iron-Age steppe world of the Saka, Wusun and Xiongnu, when East Eurasian ancestry was already entering Central Asia. That fits your closest ancient matches (Khotanese Saka, Wusun). Turkic- and Mongol-era input probably exists too, but a single-date model averages it with the older layer, and imperfect reference proxies can push the date older still. Treat it as a strong lead, not a verdict.</p></div>
+        <div class="panel"><h3>Can the method be trusted? It was tested first</h3><p class="muted" style="font-size:14px">Before touching your data, I simulated genomes at the same SNPs with a known mixing date and checked what the model recovered.</p>
+          <table class="data"><tr><th>True date</th><th>Recovered</th><th>Support interval</th></tr>${D.validation.map((v) => `<tr><td class="num">${v.true} gen</td><td class="num">${v.estimated} gen</td><td class="num">${v.support[0]}–${v.support[1]}</td></tr>`).join("")}</table>
+          ${why([["Model", "Diploid 2-way hidden Markov model (West vs East), unphased genotypes, single admixture pulse, HarappaWorld frequencies collapsed to two sources using your own proportions."], ["Limitations", "Real history had many pulses (Turkic, then Mongol), so a single date is an average. A uniform recombination map (1.2 cM/Mb) blurs segment lengths. Reference populations are proxies. Hence Tier D: a real measurement, but exploratory."], ["Conversion", "29 years per generation, counted back from ~1975."]])}</div></div>`;
+  };
+
+  RENDER.guesses = (el) => {
+    const P = A.predictions || [];
+    const get = (k) => { try { return localStorage.getItem("atlas-guess-" + k); } catch { return null; } };
+    const draw = () => {
+      const done = P.filter((p) => get(p.key)), right = done.filter((p) => get(p.key) === "right").length;
+      el.innerHTML = `<div class="eyebrow">Study 04 · Predictions</div><h1>What your DNA guesses about you</h1>
+        <p class="lede">Each prediction reads several of your genotypes at once, the way forensic tools such as HIrisPlex do. You know the truth, so mark each one right or wrong. Your answers stay in this browser.</p>
+        <div class="scoreline">${done.length ? `Your DNA got <b>${right} of ${done.length}</b> right so far.` : "Mark each guess to see how well a genome predicts a person."}</div>
+        <div class="guesses">${P.map((p) => { const v = get(p.key), R = 34, C = 2 * Math.PI * R; return `
+          <div class="guess panel" data-tier="${p.tier}">
+            <div class="g-top"><div class="g-swatch" style="background:radial-gradient(circle at 35% 35%, ${p.swatch[p.swatch.length - 1]}, ${p.swatch[0]})"></div>
+              <svg class="g-ring" viewBox="0 0 80 80"><circle cx="40" cy="40" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="6"/><circle cx="40" cy="40" r="${R}" fill="none" stroke="var(--brass)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C * p.p} ${C}" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle" style="font-family:var(--serif);font-size:17px;fill:var(--ink)">${Math.round(p.p * 100)}%</text></svg></div>
+            <div class="eyebrow" style="margin:8px 0 2px">${esc(p.label)}</div><div class="g-guess">${esc(p.guess)}</div>
+            <div class="g-btns"><button data-k="${p.key}" data-v="right" aria-pressed="${v === "right"}">✓ Right</button><button data-k="${p.key}" data-v="wrong" aria-pressed="${v === "wrong"}">✗ Wrong</button></div>
+            ${why([["Based on", esc(p.basis)], ["Confidence", `${Math.round(p.p * 100)}%: the rough share of people with this genotype pattern for whom the guess holds`], ["Tier", tier(p.tier)]])}</div>`; }).join("")}</div>`;
+      el.querySelectorAll(".g-btns button").forEach((b) => b.addEventListener("click", () => { try { localStorage.setItem("atlas-guess-" + b.dataset.k, b.dataset.v); } catch {} draw(); bindTips(el); }));
+    };
+    draw();
+  };
+
+  RENDER.hypotheses = (el) => {
+    const H = A.hypotheses || [];
+    el.innerHTML = `<div class="eyebrow">Study 05 · Hypotheses</div><h1>Questions I asked of your genome</h1>
+      <p class="lede">These are my hypotheses, generated from your data and the population-genetics literature. Each is stated before its test, and the result is reported even when it's "not supported" or "can't test yet". That's what separates research from storytelling.</p>
+      ${H.map((h, i) => `<div class="panel hyp" data-tier="${h.tier}"><div class="hyp-head"><span class="hyp-n">H${i + 1}</span><h3>${esc(h.q)}</h3>${statusPill(h.status)}</div>
+        <dl class="kv"><dt>Test</dt><dd>${esc(h.test)}</dd><dt>Result</dt><dd>${esc(h.result)}</dd><dt>Evidence</dt><dd>${tier(h.tier)}</dd></dl></div>`).join("")}`;
+  };
   /* ---------------- boot ---------------- */
   buildNav(); theme(); lens();
   $("#main").innerHTML = `<header id="chapter-head"></header>` + CHAPTERS.flatMap((c) => c.subs).map(([id]) => `<section class="page" id="${id}"></section>`).join("");

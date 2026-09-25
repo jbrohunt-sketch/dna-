@@ -175,3 +175,27 @@ MT_PATH = [
 ]
 # rCRS is haplogroup H; carrying these non-rCRS alleles shows the lineage is not H.
 MT_NON_H = [(2706, "G"), (7028, "T"), (11719, "A"), (73, "G")]
+
+# Plain-language answers per effect-allele count: (answer, confidence).
+# Confidence words: "Very likely" (>~85%), "Likely" (~65–85%), "Leaning" (weak shift), "Small effect".
+ANSWERS = {
+    "rs12913832": {0: ("Brown eyes", "Very likely"), 1: ("Brown or hazel eyes", "Likely"), 2: ("Blue or light eyes", "Very likely")},
+    "rs1800407": {0: ("No green/hazel modifier", "Very likely"), 1: ("Carries a green/hazel modifier", "Small effect"), 2: ("Two green/hazel modifiers", "Small effect")},
+    "rs1426654": {0: ("Darker-pigmentation version", "Likely"), 1: ("One lighter-skin copy: intermediate", "Leaning"), 2: ("Two lighter-skin copies", "Likely")},
+    "rs16891982": {0: ("Darker-pigmentation version", "Likely"), 1: ("One lighter copy", "Leaning"), 2: ("Two lighter copies: lighter skin and hair", "Likely")},
+    "rs1042602": {0: ("Typical", "Small effect"), 1: ("Slightly lighter / more freckling", "Small effect"), 2: ("Slightly lighter / more freckling", "Small effect")},
+    "rs12203592": {0: ("Tans rather than freckles", "Leaning"), 1: ("More freckles and sun sensitivity", "Likely"), 2: ("Freckles and burns easily", "Likely")},
+    "rs1805007": {0: ("Not a red-hair carrier here", "Very likely"), 1: ("Red-hair carrier (not red-haired)", "Likely"), 2: ("Red hair", "Very likely")},
+    "rs1805008": {0: ("Not a red-hair carrier here", "Very likely"), 1: ("Red-hair carrier (not red-haired)", "Likely"), 2: ("Red hair", "Very likely")},
+    "rs3827760": {0: ("Typical West-Eurasian hair shaft", "Likely"), 1: ("Somewhat thicker, straighter hair", "Leaning"), 2: ("Thick, straight hair", "Likely")},
+    "rs17822931": {0: ("Wet (sticky) earwax", "Very likely"), 1: ("Wet (sticky) earwax", "Very likely"), 2: ("Dry, flaky earwax; little underarm odour", "Very likely")},
+    "rs4988235": {0: ("Likely lactose intolerant as an adult", "Likely"), 1: ("Digests milk as an adult", "Very likely"), 2: ("Digests milk as an adult", "Very likely")},
+    "rs671": {0: ("No alcohol flush from ALDH2", "Very likely"), 1: ("Face flushes after alcohol", "Very likely"), 2: ("Strong flush; alcohol poorly tolerated", "Very likely")},
+    "rs1229984": {0: ("Typical alcohol metabolism", "Likely"), 1: ("Fast converter; tends to drink less", "Likely"), 2: ("Fast converter", "Likely")},
+    "rs762551": {0: ("Slower caffeine metabolism", "Leaning"), 1: ("Intermediate caffeine metabolism", "Leaning"), 2: ("Fast caffeine metabolism", "Leaning")},
+    "rs72921001": {0: ("Cilantro tastes normal", "Small effect"), 1: ("A little more likely to find cilantro soapy", "Small effect"), 2: ("More likely to find cilantro soapy", "Small effect")},
+    "rs1815739": {0: ("Sprint/power-type muscle (RR)", "Small effect"), 1: ("Mixed power/endurance (RX)", "Small effect"), 2: ("Endurance-leaning (XX)", "Small effect")},
+    "rs4680": {0: ("Faster dopamine clearance (Val/Val)", "Small effect"), 1: ("Intermediate (Val/Met)", "Small effect"), 2: ("Slower dopamine clearance (Met/Met)", "Small effect")},
+    "rs1801133": {0: ("Normal folate enzyme", "Very likely"), 1: ("Slightly reduced folate enzyme; not clinically meaningful", "Very likely"), 2: ("Reduced folate enzyme; eat folate", "Likely")},
+    "rs2814778": {0: ("Duffy-positive blood group", "Very likely"), 1: ("One Duffy-null copy", "Very likely"), 2: ("Duffy-null blood group", "Very likely")},
+}

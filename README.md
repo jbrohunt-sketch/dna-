@@ -15,6 +15,9 @@ python3 -m pipeline.run          # -> data/processed/atlas.sqlite, inventory.jso
 python3 -m pipeline.analyze      # -> data/processed/atlas_data.json
 # 3. build the offline app (open the file in any browser; no server needed)
 python3 -m pipeline.build_site   # -> data/processed/atlas.html, atlas_full.html (with genome lookup)
+# 3b. optional Lab studies (needs numpy): independent admixture models, painting, dating
+python -m pipeline.fetch_models  # one-time public reference download (~150 MB, git-ignored)
+python -m pipeline.lab           # -> data/processed/lab.json (then re-run analyze + build_site)
 # 4. tests (synthetic data only)
 uvx pytest -q
 ```
@@ -43,6 +46,8 @@ open-source caller with `pip install "yhaplo @ git+https://github.com/23andMe/yh
 | `pipeline/knowledge.py` | Timeline, identity layers, the mapping of service labels to shared ancestry streams, the findings ranker, limitations |
 | `pipeline/analyze.py` | Allele-checked annotation, CPIC-style PGx, APOE, mtDNA path check, yhaplo, ROH, chromosome bins |
 | `pipeline/build_site.py` | Inlines `web/` + data into one CSP-locked offline HTML file |
+| `pipeline/lab.py` | Lab: supervised admixture (EM+SQUAREM) under 8 reference models with chromosome jackknife; East/South consensus; 2-way local-ancestry HMM and admixture dating validated by simulation |
+| `pipeline/fetch_models.py` | Downloads the public reference models |
 | `web/` | Zero-dependency app (HTML/CSS/JS + SVG); Natural Earth basemap generated at build time |
 
 ## Build phases

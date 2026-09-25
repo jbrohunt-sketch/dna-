@@ -102,3 +102,16 @@ def test_plink_roh_finds_long_homozygous_block():
     snps += [(14_000_000 + i * 10_000, (i % 7 == 0)) for i in range(500)]
     runs = analyze._plink_roh("1", snps)
     assert len(runs) == 1 and 3.5 < runs[0]["length_mb"] < 4.6
+
+
+# ---------------- lab (needs numpy; skipped otherwise) ----------------
+def test_em_admix_recovers_known_proportions():
+    import pytest
+    np = pytest.importorskip("numpy")
+    from pipeline import lab
+    rng = np.random.default_rng(1)
+    f = rng.uniform(0.05, 0.95, size=(20000, 3))
+    q_true = np.array([0.6, 0.3, 0.1])
+    g = rng.binomial(2, f @ q_true).astype(float)
+    q = lab.em_admix(g, f)
+    assert np.abs(q - q_true).max() < 0.02
