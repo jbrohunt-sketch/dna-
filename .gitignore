@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------
+# PRIVACY: genetic data must never be committed.
+# Everything under data/ except the README is local-only.
+# ---------------------------------------------------------------
+data/*
+!data/README.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Node / web
+node_modules/
+.next/
+out/
+dist/
+
+# OS
+.DS_Store
