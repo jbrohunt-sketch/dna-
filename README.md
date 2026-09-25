@@ -10,13 +10,17 @@ haplogroups and relatives into one provenance-tracked, evidence-tiered model of 
 
 ```bash
 # 1. put your exports in data/raw/local/   (23andMe .zip/.txt, AncestryDNA .zip/.txt)
-# 2. build the processed database
+# 2. build the processed database + analysis
 python3 -m pipeline.run          # -> data/processed/atlas.sqlite, inventory.json
-# 3. tests (synthetic data only)
+python3 -m pipeline.analyze      # -> data/processed/atlas_data.json
+# 3. build the offline app (open the file in any browser; no server needed)
+python3 -m pipeline.build_site   # -> data/processed/atlas.html, atlas_full.html (with genome lookup)
+# 4. tests (synthetic data only)
 uvx pytest -q
 ```
 
-Python 3.10+ with the standard library only; no install step.
+Python 3.10+ with the standard library only. Optional: to verify the Y haplogroup, install 23andMe's
+open-source caller with `pip install "yhaplo @ git+https://github.com/23andMe/yhaplo"`. It runs locally.
 
 ## Design principles
 - **Raw stays raw.** Code never writes to `data/raw/`. Everything derived goes to `data/processed/`.
@@ -35,10 +39,20 @@ Python 3.10+ with the standard library only; no install step.
 | `pipeline/compare.py` | Cross-dataset concordance with strand and palindrome handling |
 | `pipeline/store.py` | SQLite schema: datasets, genotypes, reported_results, population_distances, claims |
 | `pipeline/evidence.py` | Evidence tier definitions |
+| `pipeline/panel.py` | Curated trait / pharmacogenomic / health variants (plus-strand alleles, refs, tiers) |
+| `pipeline/knowledge.py` | Timeline, identity layers, the mapping of service labels to shared ancestry streams, the findings ranker, limitations |
+| `pipeline/analyze.py` | Allele-checked annotation, CPIC-style PGx, APOE, mtDNA path check, yhaplo, ROH, chromosome bins |
+| `pipeline/build_site.py` | Inlines `web/` + data into one CSP-locked offline HTML file |
+| `web/` | Zero-dependency app (HTML/CSS/JS + SVG); Natural Earth basemap generated at build time |
 
 ## Build phases
 1. ✅ Audit of available files
 2. ✅ Parsers and normalized schema, validated on a partial genome
-3. ⏳ Scientific report: needs the complete raw genotype file
-4. ⏳ Interactive web interface
-5. and later: ancestry visualization, traits, health/PGx, population genetics, parental-origin analysis
+3. ✅ Analysis of the full 23andMe v5 file (638,544 markers)
+4. ✅ Interactive offline web app with 14 sections
+5. ✅ Ancestry visualization: services compared, time layers, Central Asia map
+6. ✅ Traits and variant explorer
+7. ✅ Health, APOE (hidden by default) and a limited PGx panel
+8. ⏳ Independent population-genetics modeling: needs reference panels (AADR / 1000 Genomes) or G25 coordinates
+9. ◐ Parental origin: Y, mtDNA and X are done; autosomes need phasing or relatives' data
+10. ◐ Polish; ClinVar-wide annotation, to run locally where NCBI is reachable

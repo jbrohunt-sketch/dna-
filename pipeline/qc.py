@@ -13,12 +13,20 @@ def _is_snv(gt: str) -> bool:
     return len(gt) == 2 and set(gt) <= set("ACGT")
 
 
+# GRCh37 pseudoautosomal regions: diploid in males, so excluded from X-heterozygosity.
+PAR_X = ((60_001, 2_699_520), (154_931_044, 155_260_560))
+
+
+def in_par(chrom: str, pos: int) -> bool:
+    return chrom == "X" and any(a <= pos <= b for a, b in PAR_X)
+
+
 def qc(ds: ParsedDataset) -> dict:
     per_chrom: dict[str, Counter] = defaultdict(Counter)
     last_pos: dict[str, int] = {}
     seen_positions: Counter = Counter()
     for c in ds.calls:
-        k = per_chrom[c.chrom]
+        k = per_chrom["X_PAR" if in_par(c.chrom, c.pos) else c.chrom]
         k["markers"] += 1
         if c.genotype == "--":
             k["no_call"] += 1
@@ -34,6 +42,7 @@ def qc(ds: ParsedDataset) -> dict:
         last_pos[c.chrom] = max(last_pos.get(c.chrom, 0), c.pos)
         seen_positions[(c.chrom, c.pos)] += 1
 
+    per_chrom.pop("X_PAR", None)
     present = [ch for ch in CHROM_ORDER if ch in per_chrom]
     missing = [ch for ch in CHROM_ORDER if ch not in per_chrom and ch != "XY"]
     n = len(ds.calls)
@@ -71,11 +80,13 @@ def _sex_evidence(per_chrom) -> dict:
     if not x and not y:
         return {"inference": "not assessable", "reason": "no X or Y markers in this file"}
     y_called = (y["markers"] - y["no_call"]) if y else 0
-    x_het = x["het"] / x["snv_called"] if x and x["snv_called"] else None
+    x_called = (x["snv_called"] + x["haploid"]) if x else 0
+    x_het = x["het"] / x_called if x_called else None
     if y_called > 100 and (x_het is None or x_het < 0.01):
         inf = "XY (Y calls present, X essentially homozygous)"
     elif y_called < 20 and x_het and x_het > 0.05:
         inf = "XX (no Y calls, heterozygous X)"
     else:
         inf = "ambiguous — inspect manually"
-    return {"inference": inf, "y_called": y_called, "x_heterozygosity": x_het}
+    return {"inference": inf, "y_called": y_called,
+            "x_heterozygosity_excl_PAR": round(x_het, 5) if x_het is not None else None}

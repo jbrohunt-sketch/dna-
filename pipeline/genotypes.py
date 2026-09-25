@@ -67,7 +67,10 @@ def _read_text(path: Path) -> tuple[str, bytes]:
     raw = path.read_bytes()
     if zipfile.is_zipfile(io.BytesIO(raw)):
         with zipfile.ZipFile(io.BytesIO(raw)) as z:
-            members = [n for n in z.namelist() if n.lower().endswith(".txt")]
+            # Skip macOS Finder metadata (__MACOSX/._name) that "Compress" adds.
+            members = [n for n in z.namelist()
+                       if n.lower().endswith(".txt")
+                       and not n.startswith("__MACOSX/") and not Path(n).name.startswith("._")]
             if len(members) != 1:
                 raise ValueError(f"{path}: expected one .txt in zip, found {members}")
             return z.read(members[0]).decode("utf-8", "replace"), raw

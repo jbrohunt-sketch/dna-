@@ -14,8 +14,14 @@
 | 2026-09-25 | Gmail connector: searched for DNA-service emails | Search queries (service names) | No |
 | 2026-09-25 | Web search: `Y-DNA haplogroup C-P92 SNP P92 ISOGG C2 subclade` | Haplogroup marker name only | No |
 | 2026-09-25 | Web fetch attempt: isogg.org haplogroup C tree (blocked by the network proxy) | URL only | No |
+| 2026-09-25 | GitHub: installed 23andMe `yhaplo` (open-source code download) | Nothing about you | No |
+| 2026-09-25 | npm: `world-atlas` (Natural Earth outlines) and `playwright` (screenshot testing) | Nothing about you | No |
+| 2026-09-25 | Attempted downloads of ClinVar (ftp.ncbi.nlm.nih.gov) and ybrowse.org, both blocked by the proxy | URL only | No |
 
-> Build-environment note: the first phases were built in a Claude Code **cloud** session. The
-> files retrieved from Google Drive were held in that session's temporary container, under the
-> git-ignored `data/`, and were never pushed. For fully local operation, clone the repo,
-> put your exports in `data/raw/local/` and run `python3 -m pipeline.run`.
+The generated `atlas.html` carries a Content-Security-Policy of `default-src 'none'`. The browser itself blocks
+any network request from the page. Headless-browser tests confirmed zero requests across all 14 sections.
+
+> Build-environment note: phases 1–7 were built in a Claude Code **cloud** session. The genome file you
+> uploaded and the files retrieved from Google Drive were held in that session's temporary container,
+> under the git-ignored `data/`, and were never pushed. For fully local operation, clone the repo,
+> put your exports in `data/raw/local/` and run the four commands in the README.

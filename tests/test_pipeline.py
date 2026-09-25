@@ -76,3 +76,29 @@ def test_concordance_strand_and_palindromes(tmp_path):
     assert r["counts"]["strand_flip"] == 1
     assert r["counts"]["palindromic_match_unverifiable_strand"] == 1
     assert r["counts"]["discordant"] == 1
+
+
+# ---------------- analysis layer (synthetic) ----------------
+from pipeline import analyze  # noqa: E402
+from pipeline.genotypes import Call  # noqa: E402
+
+
+def test_annotate_refuses_allele_mismatch():
+    G = {"rs1": Call("rs1", "1", 10, "GT", 1)}
+    row = analyze.annotate(G, [dict(rsid="rs1", gene="X", effect="A", other="G", tier="B", interp={0: "", 1: "", 2: ""})], "trait")[0]
+    assert row["effect_count"] is None and "mismatch" in row["status"]
+
+
+def test_apoe_calls():
+    mk = lambda a, b: {"rs429358": Call("rs429358", "19", 1, a, 1), "rs7412": Call("rs7412", "19", 2, b, 2)}
+    assert analyze.apoe(mk("TT", "CC"))["genotype"] == "ε3/ε3"
+    assert analyze.apoe(mk("CT", "CC"))["genotype"] == "ε3/ε4"
+    assert analyze.apoe(mk("TT", "CT"))["genotype"] == "ε2/ε3"
+
+
+def test_plink_roh_finds_long_homozygous_block():
+    snps = [(i * 10_000, (i % 7 == 0)) for i in range(1000)]            # heterozygous background
+    snps += [(10_000_000 + i * 10_000, False) for i in range(400)]     # 4 Mb homozygous block
+    snps += [(14_000_000 + i * 10_000, (i % 7 == 0)) for i in range(500)]
+    runs = analyze._plink_roh("1", snps)
+    assert len(runs) == 1 and 3.5 < runs[0]["length_mb"] < 4.6
