@@ -15,10 +15,15 @@
     <div class="brand-sub">private · offline · evidence-tiered</div>
     <div class="links" id="nav-links"></div>
     <div class="side-foot">
-      No network requests. Your genome stays on this device.
+      <div class="lbl">Evidence lens</div>
+      <div class="lens" role="group" aria-label="Evidence lens: fade claims weaker than">
+        <button data-l="all" title="Show everything">All</button><button data-l="C" title="Hide exploratory and non-genetic">A–C</button><button data-l="B" title="Only strong evidence">A–B</button><button data-l="A" title="Only directly observed">A</button>
+      </div>
+      <div class="lbl">Theme</div>
       <div class="theme-toggle" role="group" aria-label="Theme">
         <button data-t="auto">Auto</button><button data-t="light">Light</button><button data-t="dark">Dark</button>
       </div>
+      <p style="margin-top:16px">No network requests. Your genome stays on this device.</p>
     </div>
   </nav>
   <main id="main"></main>
