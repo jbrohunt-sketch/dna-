@@ -425,3 +425,5 @@ h2::before { content: ""; position: absolute; top: 0; left: 0; width: 28px; heig
   table.data { font-size: 12.5px; }
 }
 @media (max-width: 760px) { .shell { grid-template-columns: minmax(0, 1fr); } .shell > * { min-width: 0; } }
+details.why dd, .kv dd, td { overflow-wrap: anywhere; min-width: 0; }
+.finding > div, .panel, .trait-card { min-width: 0; }

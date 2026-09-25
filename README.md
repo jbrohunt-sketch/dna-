@@ -15,6 +15,8 @@ python3 -m pipeline.run          # -> data/processed/atlas.sqlite, inventory.jso
 python3 -m pipeline.analyze      # -> data/processed/atlas_data.json
 # 3. build the offline app (open the file in any browser; no server needed)
 python3 -m pipeline.build_site   # -> data/processed/atlas.html, atlas_full.html (with genome lookup)
+# 3c. script-free edition for phone previews (needs node + playwright)
+node tools/prerender.mjs data/processed/atlas.html data/processed/atlas_static.html
 # 3b. optional Lab studies (needs numpy): independent admixture models, painting, dating
 python -m pipeline.fetch_models  # one-time public reference download (~150 MB, git-ignored)
 python -m pipeline.lab           # -> data/processed/lab.json (then re-run analyze + build_site)
