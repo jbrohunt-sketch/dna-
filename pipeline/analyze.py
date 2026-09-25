@@ -13,7 +13,7 @@ import subprocess
 from collections import defaultdict
 from pathlib import Path
 
-from . import genotypes, knowledge, panel, qc
+from . import genotypes, knowledge, panel, qc  # noqa: F401
 from .run import OUT, RAW
 
 GRCH37_LEN = {
@@ -101,7 +101,7 @@ def predictions(traits: list[dict]) -> list[dict]:
     return out
 
 
-def pgx_summary(pgx_rows: list[dict]) -> list[dict]:
+def pgx_summary(pgx_rows: list[dict], extra: list[dict] | None = None) -> list[dict]:
     by = {(r["gene"], r["star"]): r for r in pgx_rows}
 
     def cnt(gene, star):
@@ -112,7 +112,8 @@ def pgx_summary(pgx_rows: list[dict]) -> list[dict]:
     n2, n3, n17 = cnt("CYP2C19", "*2"), cnt("CYP2C19", "*3"), cnt("CYP2C19", "*17")
     if None not in (n2, n3, n17):
         nf = n2 + n3
-        pheno = {(0, 0): ("*1/*1", "Normal metabolizer"), (1, 0): ("*1/*2 or *1/*3", "Intermediate metabolizer"),
+        one = "*1/*2" if n2 == 1 else "*1/*3"
+        pheno = {(0, 0): ("*1/*1", "Normal metabolizer"), (1, 0): (one, "Intermediate metabolizer"),
                  (2, 0): ("*2/*2-type", "Poor metabolizer"), (0, 1): ("*1/*17", "Rapid metabolizer"),
                  (0, 2): ("*17/*17", "Ultrarapid metabolizer"), (1, 1): ("*2/*17 (phase assumed)", "Intermediate metabolizer")}.get((nf, n17), ("complex", "Indeterminate"))
         res.append(dict(gene="CYP2C19", diplotype=pheno[0], phenotype=pheno[1], tier="B",
@@ -149,7 +150,33 @@ def pgx_summary(pgx_rows: list[dict]) -> list[dict]:
     if None not in (t1, t2):
         res.append(dict(gene="TPMT", diplotype="no *3B/*3C alleles detected" if t1 + t2 == 0 else "variant detected",
                         phenotype="Likely normal (limited)" if t1 + t2 == 0 else "Possibly decreased activity", tier="B",
-                        caveat="NUDT15 (important in East/Central Asian ancestry) is not assessed.", drugs="azathioprine, mercaptopurine"))
+                        caveat="Combine with NUDT15 (see coverage).", drugs="azathioprine, mercaptopurine"))
+    # coverage + safety: any non-reference extra allele makes the phenotype indeterminate (never silently ignored)
+    extra = extra or []
+    for r in res:
+        core = [x for x in pgx_rows if x["gene"] == r["gene"]]
+        ext = [x for x in extra if x["gene"] == r["gene"]]
+        sites = [{"allele": x["star"], "rsid": x["rsid"], "genotype": x.get("genotype"),
+                  "status": "observed" if x.get("status") == "ok" else "not_assayed" if x.get("genotype") is None else "flagged",
+                  "variant_copies": x.get("effect_count"), "role": x.get("role", "core")} for x in core + ext]
+        r["coverage"] = {"sites": sites, "observed": sum(s["status"] == "observed" for s in sites), "total": len(sites)}
+        hits = [s for s in sites if s["role"] in ("nf", "dec", "inc") and s["variant_copies"]]
+        if hits:
+            r["phenotype"] = "Indeterminate: additional variant detected"
+            r["caveat"] += " Additional allele(s) found: " + ", ".join(s["allele"] for s in hits) + ". Needs clinical confirmation."
+        if not hits and r["gene"] in ("DPYD", "TPMT"):
+            r["phenotype"] = f"No risk variant among the {r['coverage']['observed']} assayed (limited)"
+            r["diplotype"] = "no tested variant detected"
+        tag = [s for s in sites if s["role"] == "tag" and s["variant_copies"]]
+        if r["gene"] == "CYP2C19" and tag:
+            r["caveat"] += " rs12769205 G is also present; it lies on the *2 haplotype, so it is not counted as a separate *35 allele (phase assumed)."
+    nud = next((x for x in extra if x["gene"] == "NUDT15"), None)
+    if nud is not None:
+        res.append(dict(gene="NUDT15", diplotype="*3 " + ("not detected" if nud.get("effect_count") == 0 else "detected" if nud.get("effect_count") else "not called"),
+                        phenotype="No *3 detected (limited)" if nud.get("effect_count") == 0 else "Possibly decreased activity", tier="B",
+                        caveat="Only *3 (the most common risk allele in East/Central Asians) is assayed.", drugs="azathioprine, mercaptopurine",
+                        coverage={"sites": [{"allele": "*3", "rsid": nud["rsid"], "genotype": nud.get("genotype"), "status": "observed" if nud.get("status") == "ok" else "not_assayed", "variant_copies": nud.get("effect_count"), "role": "nf"}],
+                                  "observed": 1 if nud.get("status") == "ok" else 0, "total": 1}))
     return res
 
 
@@ -209,7 +236,24 @@ def y_haplogroup(ds) -> dict:
     parts = hg.read_text().split()
     der = [t for t in (ydir / "derived.snps.self.txt").read_text().split()[3:] if ":" in t]
     anc = [t for t in (ydir / "ancestral.snps.self.txt").read_text().split()[3:] if ":" in t]
-    return {"status": "ok", "reported": "C-P92", "reported_by": "23andMe (user statement)",
+    # per-branch coverage: branch-defining SNPs in the ISOGG 2016 tree vs those observed on this array
+    tree = {}
+    iso = next(ydir.glob("isogg.snps.cleaned.*.txt"), None)
+    if iso:
+        for line in iso.read_text().splitlines():
+            p_ = line.split()
+            if len(p_) >= 2:
+                tree.setdefault(p_[1], []).append(p_[0])
+    obs = {}
+    for s_ in der:
+        h, n = s_.split(":", 1); obs.setdefault(h, {"derived": [], "ancestral": []})["derived"].append(n)
+    for s_ in anc:
+        h, n = s_.split(":", 1); obs.setdefault(h, {"derived": [], "ancestral": []})["ancestral"].append(n)
+    path_nodes = ["CT", "CF", "C", "C1", "C1b", "C1b1a", "C1b1a1", "C1b1a1a"]
+    node_cov = [{"node": h, "defining_snps": len(tree.get(h, [])), "observed_derived": obs.get(h, {}).get("derived", []),
+                 "observed_ancestral": obs.get(h, {}).get("ancestral", [])} for h in path_nodes]
+    return {"status": "ok", "reported": "C-P92", "reported_by": "23andMe (user statement)", "node_coverage": node_cov,
+            "tree_version": "ISOGG 2016-01-04 (bundled with yhaplo)",
             "yhaplo_hg_snp": parts[1], "yhaplo_23andme_label": parts[2], "yhaplo_ycc": parts[3],
             "derived": [s.replace(":", " : ") for s in der], "ancestral": [s.replace(":", " : ") for s in anc],
             "y_markers_used": len(y), "tool": "23andMe yhaplo (ISOGG 2016-01-04 tree), run locally"}
@@ -235,11 +279,15 @@ def bins_and_roh(ds) -> tuple[dict, list[dict], dict]:
     dens = defaultdict(lambda: None)
     for ch in GRCH37_LEN:
         dens[ch] = [0] * (GRCH37_LEN[ch] // BIN + 1)
+    nocall = {ch: [0] * (GRCH37_LEN[ch] // BIN + 1) for ch in GRCH37_LEN}
     for c in ds.calls:
         if c.chrom in GRCH37_LEN:
             dens[c.chrom][c.pos // BIN] += 1
+            if c.genotype == "--":
+                nocall[c.chrom][c.pos // BIN] += 1
     for ch in bins:
         bins[ch]["all_markers"] = dens[ch]
+        bins[ch]["nocall"] = nocall[ch]
 
     roh = []
     for ch in AUTOSOMES:
@@ -306,6 +354,7 @@ def main() -> None:
 
     traits = annotate(G, panel.TRAITS, "trait")
     pgx_rows = annotate(G, panel.PGX, "pgx")
+    pgx_extra = annotate(G, [dict(v, tier="B") for v in panel.PGX_EXTRA], "pgx_extra")
     health = annotate(G, panel.HEALTH, "health")
     bins, roh, roh_summary = bins_and_roh(ds)
 
@@ -321,7 +370,7 @@ def main() -> None:
         "haplogroups": {"y": y_haplogroup(ds), "mt": mt_haplogroup(ds)},
         "traits": traits,
         "predictions": predictions(traits),
-        "pgx": {"sites": pgx_rows, "summary": pgx_summary(pgx_rows), "not_assessable": panel.PGX_NOT_ASSESSABLE},
+        "pgx": {"sites": pgx_rows, "extra": pgx_extra, "summary": pgx_summary(pgx_rows, pgx_extra), "not_assessable": panel.PGX_NOT_ASSESSABLE},
         "health": {"sites": health, "apoe": apoe(G), "not_assessed": panel.NOT_ASSESSED_HEALTH},
         "reported": reported,
         "ancestry": knowledge.ancestry_model(reported),
@@ -332,7 +381,12 @@ def main() -> None:
     if lab.exists():
         data["lab"] = json.loads(lab.read_text())
         data["hypotheses"] = knowledge.hypotheses(data)
+    for t in traits:
+        if t["rsid"] in panel.MECHANISM:
+            t["mechanism"] = panel.MECHANISM[t["rsid"]]
     data["findings"] = knowledge.findings(data)
+    from . import claims
+    claims.attach(data, OUT)
     data["limitations"] = knowledge.limitations(data)
     (OUT / "atlas_data.json").write_text(json.dumps(data, ensure_ascii=False))
     print(f"atlas_data.json written: {len(traits)} traits, {len(pgx_rows)} PGx, {len(health)} health, "

@@ -199,3 +199,50 @@ ANSWERS = {
     "rs1801133": {0: ("Normal folate enzyme", "Very likely"), 1: ("Slightly reduced folate enzyme; not clinically meaningful", "Very likely"), 2: ("Reduced folate enzyme; eat folate", "Likely")},
     "rs2814778": {0: ("Duffy-positive blood group", "Very likely"), 1: ("One Duffy-null copy", "Very likely"), 2: ("Duffy-null blood group", "Very likely")},
 }
+
+# Additional clinically relevant PGx alleles checked for array COVERAGE (and, when present, genotype).
+# role: 'nf' no function, 'dec' decreased, 'inc' increased, 'tag' haplotype tag.
+PGX_EXTRA = [
+    dict(gene="CYP2C19", star="*4", rsid="rs28399504", effect="G", other="A", role="nf"),
+    dict(gene="CYP2C19", star="*8", rsid="rs41291556", effect="C", other="T", role="nf"),
+    dict(gene="CYP2C19", star="*9", rsid="rs17884712", effect="A", other="G", role="dec"),
+    dict(gene="CYP2C19", star="*35 / *2-haplotype tag", rsid="rs12769205", effect="G", other="A", role="tag",
+         note="rs12769205 G is carried on the *2 haplotype; it defines *35 only when rs4244285 (*2) is absent."),
+    dict(gene="CYP2C9", star="*5", rsid="rs28371686", effect="G", other="C", role="dec"),
+    dict(gene="CYP2C9", star="*6", rsid="rs9332131", effect="D", other="I", role="nf"),
+    dict(gene="CYP2C9", star="*8", rsid="rs7900194", effect="A", other="G", role="dec"),
+    dict(gene="CYP2C9", star="*11", rsid="rs28371685", effect="T", other="C", role="dec"),
+    dict(gene="DPYD", star="*13 (c.1679T>G)", rsid="rs55886062", effect="C", other="A", role="nf"),
+    dict(gene="DPYD", star="c.2846A>T", rsid="rs67376798", effect="A", other="T", role="dec"),
+    dict(gene="DPYD", star="HapB3 (c.1236G>A)", rsid="rs56038477", effect="T", other="C", role="dec"),
+    dict(gene="TPMT", star="*2", rsid="rs1800462", effect="G", other="C", role="nf"),
+    dict(gene="NUDT15", star="*3", rsid="rs116855232", effect="T", other="C", role="nf"),
+    dict(gene="CYP3A5", star="*6", rsid="rs10264272", effect="T", other="C", role="nf"),
+    dict(gene="CYP3A5", star="*7", rsid="rs41303343", effect="I", other="D", role="nf"),
+    dict(gene="UGT1A1", star="*6", rsid="rs4148323", effect="A", other="G", role="dec"),
+    dict(gene="SLCO1B1", star="c.388A>G (*1B/*15 component)", rsid="rs2306283", effect="G", other="A", role="tag"),
+]
+
+# Biological mechanism chains for traits (literature summaries; qualitative, no invented effect sizes).
+# explained: how much of the trait's variation this locus is known to account for, qualitatively.
+MECHANISM = {
+    "rs12913832": dict(chain=["HERC2 intron enhancer (rs12913832)", "controls OCA2 expression in the iris", "OCA2 governs melanin in iris melanocytes", "brown vs blue iris"], explained="most of the blue/brown difference in West Eurasians; shade within brown is polygenic"),
+    "rs1800407": dict(chain=["OCA2 coding change R419Q", "slightly reduced OCA2 activity", "less iris melanin", "green/hazel shading"], explained="a small modifier"),
+    "rs1426654": dict(chain=["SLC24A5 A111T", "melanosome ion exchange", "melanin production in skin", "lighter skin"], explained="a meaningful minority of skin-tone variation between populations"),
+    "rs16891982": dict(chain=["SLC45A2 L374F", "melanosome pH / transport", "less melanin", "lighter skin and hair"], explained="a minority; skin tone is highly polygenic"),
+    "rs1042602": dict(chain=["TYR S192Y", "tyrosinase activity", "melanin synthesis", "freckling / lighter pigment"], explained="a small effect"),
+    "rs12203592": dict(chain=["IRF4 enhancer", "IRF4 regulates TYR in melanocytes", "tanning response", "freckles & sun sensitivity"], explained="a moderate effect on freckling in Europeans"),
+    "rs1805007": dict(chain=["MC1R R151C", "weaker MC1R signalling", "pheomelanin over eumelanin", "red hair (with 2 variants)"], explained="red hair is near-Mendelian: two MC1R 'R' alleles usually needed"),
+    "rs1805008": dict(chain=["MC1R R160W", "weaker MC1R signalling", "pheomelanin over eumelanin", "red hair (with 2 variants)"], explained="as above"),
+    "rs3827760": dict(chain=["EDAR V370A", "stronger EDAR signalling in hair follicles", "thicker hair shaft", "thick, straight hair"], explained="a large share of hair-thickness differences in East Asia"),
+    "rs17822931": dict(chain=["ABCC11 G180R", "transporter lost in apocrine glands", "no secretion of lipids", "dry earwax, low odour"], explained="essentially the whole trait (recessive)"),
+    "rs4988235": dict(chain=["MCM6 intron (LCT enhancer)", "keeps LCT switched on after weaning", "lactase in the adult gut", "digests milk as an adult"], explained="most lactase persistence in Europeans and the steppe; other alleles exist elsewhere"),
+    "rs671": dict(chain=["ALDH2 E504K", "inactive aldehyde dehydrogenase", "acetaldehyde builds up", "facial flush"], explained="essentially the whole flush trait"),
+    "rs1229984": dict(chain=["ADH1B R48H", "faster ethanol → acetaldehyde", "earlier aversive effects", "tends to drink less"], explained="a moderate effect on drinking"),
+    "rs762551": dict(chain=["CYP1A2 promoter (*1F)", "more inducible enzyme", "faster caffeine clearance", "caffeine tolerance"], explained="a modest effect; smoking matters more"),
+    "rs72921001": dict(chain=["olfactory receptor cluster (OR6A2)", "detects aldehydes in cilantro", "perceived 'soapy' smell", "cilantro dislike"], explained="a small share of the trait"),
+    "rs1815739": dict(chain=["ACTN3 R577X (stop codon)", "α-actinin-3 absent (XX only)", "fast-twitch fibre structure", "sprint vs endurance tendency"], explained="a small effect on performance"),
+    "rs4680": dict(chain=["COMT V158M", "less stable enzyme", "slower dopamine breakdown in prefrontal cortex", "subtle cognitive/stress differences"], explained="very small; popular claims overstated"),
+    "rs1801133": dict(chain=["MTHFR A222V", "heat-labile enzyme", "less 5-methyl-THF", "higher homocysteine when folate is low"], explained="biochemical effect clear; clinical effect minimal"),
+    "rs2814778": dict(chain=["ACKR1 promoter", "no Duffy protein on red cells", "P. vivax cannot enter", "malaria protection"], explained="the whole Duffy-null trait"),
+}

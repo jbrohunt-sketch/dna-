@@ -22,13 +22,23 @@
     tip.style.left = x + "px"; tip.style.top = y + "px";
   }
   function hideTip() { tip.classList.remove("on"); }
+  let tipOwner = null;
   function bindTips(root) {
     $$("[data-tip]", root).forEach((n) => {
+      if (n.dataset.tipBound) return;
+      n.dataset.tipBound = "1";
+      if (!n.hasAttribute("tabindex")) n.setAttribute("tabindex", "0");
+      if (!n.getAttribute("aria-label")) n.setAttribute("aria-label", n.getAttribute("data-tip").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
       n.addEventListener("mouseenter", (e) => showTip(e, n.getAttribute("data-tip")));
       n.addEventListener("mousemove", moveTip);
       n.addEventListener("mouseleave", hideTip);
+      n.addEventListener("focus", () => { const r = n.getBoundingClientRect(); tipOwner = n; showTip({ clientX: r.right, clientY: r.bottom }, n.getAttribute("data-tip")); n.classList.add("tip-focus"); });
+      n.addEventListener("blur", () => { hideTip(); n.classList.remove("tip-focus"); });
+      n.addEventListener("pointerdown", (e) => { if (e.pointerType === "touch") { tipOwner = n; showTip(e, n.getAttribute("data-tip")); } });
     });
   }
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideTip(); });
+  document.addEventListener("pointerdown", (e) => { if (e.pointerType === "touch" && tipOwner && !tipOwner.contains(e.target)) { hideTip(); tipOwner = null; } }, true);
   const tt = (title, rows) => `<div class='tt-title'>${esc(title)}</div>` + rows.map(([k, v]) => `<div class='tt-row'><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
   const yr = (y) => (y < 0 ? `${-y} BCE` : `AD ${y}`);
   const yrRange = (a, b) => (a < 0 && b < 0 ? `${-a}–${-b} BCE` : `${yr(a)} – ${yr(b)}`);
@@ -58,23 +68,40 @@
       </div>`).join("");
   }
   const rendered = new Set();
-  function go(sub, arg = null) {
+  const ARG_PAGES = new Set(["chromosomes", "tajik", "services", "health", "traits", "lineages"]);
+  function go(sub, arg = null, opts = {}) {
     if (!RENDER[sub]) sub = "portrait";
+    const same = state.sub === sub && state.arg === arg && rendered.has(sub);
     state.sub = sub; state.arg = arg;
     const chap = chapterOf(sub);
     $$(".chap").forEach((c) => c.classList.toggle("open", c.dataset.chap === chap.id));
     $$("[data-go]", $("#nav-links")).forEach((b) => b.classList.toggle("active", b.dataset.go === sub));
     $("#chapter-head").innerHTML = `<div class="chap-eyebrow"><span class="roman">${chap.roman}</span>${esc(chap.name)}<span class="sep">·</span><span class="q">${esc(chap.q)}</span></div>
-      <div class="subtabs">${chap.subs.map(([id, n]) => `<button data-go="${id}" aria-selected="${id === sub}">${n}</button>`).join("")}</div>`;
+      <div class="subtabs" role="tablist">${chap.subs.map(([id, n]) => `<button role="tab" data-go="${id}" aria-selected="${id === sub}">${n}</button>`).join("")}</div>`;
     $$("section.page").forEach((s) => s.classList.toggle("active", s.id === sub));
     const el = $("#" + sub);
-    if (!rendered.has(sub) || (sub === "chromosomes" && arg)) { RENDER[sub](el, arg); bindTips(el); rendered.add(sub); reveal(el); }
+    if (!same && (!rendered.has(sub) || ARG_PAGES.has(sub))) { RENDER[sub](el, arg); bindTips(el); rendered.add(sub); reveal(el); }
+    if (!opts.silent) setRoute(sub, arg, opts.replace);
     try { sessionStorage.setItem("atlas-view", sub); } catch {}
-    window.scrollTo({ top: 0 });
+    if (!opts.keepScroll) window.scrollTo({ top: 0 });
+    document.dispatchEvent(new CustomEvent("atlas:view", { detail: { sub, arg } }));
   }
+  function setRoute(sub, arg, replace) {
+    const h = "#" + [sub, arg].filter((x) => x != null && x !== "").map(encodeURIComponent).join("/");
+    try { if (location.hash !== h) (replace ? history.replaceState : history.pushState).call(history, { sub, arg }, "", h); } catch { /* sandboxed preview: in-memory only */ }
+  }
+  function parseRoute() {
+    try {
+      const [sub, ...rest] = decodeURIComponent(location.hash.slice(1)).split("/");
+      return sub ? { sub, arg: rest.join("/") || null } : null;
+    } catch { return null; }
+  }
+  window.addEventListener("popstate", () => { const r = parseRoute(); if (r) go(r.sub, r.arg, { silent: true }); });
   document.addEventListener("click", (e) => {
     const t = e.target.closest("[data-go]");
     if (t) { e.preventDefault(); go(t.dataset.go, t.dataset.arg || null); }
+    const c = e.target.closest("[data-claim]");
+    if (c && typeof openClaim === "function") { e.preventDefault(); openClaim(c.dataset.claim, c); }
   });
   function reveal(root) {
     const els = $$(".panel, .finding, .tl-card, .layer, .door, h2", root);
@@ -849,10 +876,3 @@
       ${H.map((h, i) => `<div class="panel hyp" data-tier="${h.tier}"><div class="hyp-head"><span class="hyp-n">H${i + 1}</span><h3>${esc(h.q)}</h3>${statusPill(h.status)}</div>
         <dl class="kv"><dt>Test</dt><dd>${esc(h.test)}</dd><dt>Result</dt><dd>${esc(h.result)}</dd><dt>Evidence</dt><dd>${tier(h.tier)}</dd></dl></div>`).join("")}`;
   };
-  /* ---------------- boot ---------------- */
-  buildNav(); theme(); lens();
-  $("#main").innerHTML = `<header id="chapter-head"></header>` + CHAPTERS.flatMap((c) => c.subs).map(([id]) => `<section class="page" id="${id}"></section>`).join("");
-  let start = "portrait";
-  try { start = sessionStorage.getItem("atlas-view") || start; } catch {}
-  go(start);
-})();

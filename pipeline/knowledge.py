@@ -222,6 +222,12 @@ def findings(data: dict) -> list[dict]:
         f.append(dict(title=f"Your East Eurasian segments date to ≈ {yr(dt['calendar_best'])}, older than the Turkic era",
                       detail=f"A local-ancestry model, validated on simulated genomes, dates the mixing to ~{dt['generations']} generations ago, the Iron-Age Saka/Wusun world. Exploratory, but new: no service estimates this.",
                       tier="D", rarity=0.9, interest=1.0, section="ikat"))
+    rel = {"lineages": 0.7, "pgx": 0.95, "chromosomes": 0.5, "contradictions": 0.6, "tajik": 0.8, "traits": 0.6, "consensus": 0.8, "ikat": 0.7}
+    anc = {"lineages", "contradictions", "tajik", "consensus", "ikat"}
+    for x in f:
+        x["relevance"] = rel.get(x["section"], 0.5)
+        x["ancestry"] = x["section"] in anc
+        x["new"] = x["section"] in ("consensus", "ikat")
     w = {"A": 1.0, "B": 0.8, "C": 0.5, "D": 0.25}
     for x in f:
         x["score"] = round(0.5 * w[x["tier"]] + 0.3 * x["rarity"] + 0.2 * x["interest"], 3)
