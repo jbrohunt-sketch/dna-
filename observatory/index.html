@@ -1,10 +1,11 @@
 <!doctype html>
+<!-- Built from observatory/src by observatory/build.py. Edit the sources, not this file. -->
 <html lang="en" data-tone="night">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07110e">
-<meta name="description" content="Astervell — The Observatory. Describe one workflow that keeps slipping and receive a draft observation: the workflow, the evidence, and one reversible test.">
+<meta name="description" content="Astervell — The Observatory. Describe one workflow that keeps slipping. Get a draft map, a question worth asking, and one change you can undo.">
 <title>Astervell — The Observatory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -117,8 +118,7 @@ html[data-tone="paper"] .grain { opacity: .05; mix-blend-mode: multiply; }
 #sky { position: absolute; inset: 0; z-index: 0; pointer-events: none; transition: opacity 1.1s var(--ease); }
 html[data-tone="paper"] #sky { opacity: 0; }
 #sky svg { width: 100%; height: 100%; display: block; }
-#sky .st { fill: var(--star); animation: twinkle var(--d, 5s) ease-in-out var(--dl, 0s) infinite; }
-@keyframes twinkle { 0%, 100% { opacity: var(--o, .5); } 50% { opacity: calc(var(--o, .5) * .25); } }
+#sky .st { fill: var(--star); opacity: var(--o, .4); }
 #sky .horizon {
   position: absolute; left: -20%; right: -20%; bottom: -38%; height: 70%;
   background: radial-gradient(closest-side, rgba(11, 61, 50, .9), rgba(11, 61, 50, 0));
@@ -242,6 +242,7 @@ html[data-tone="paper"] #sky { opacity: 0; }
 .q-kicker { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
 .q-kicker::before { content: ""; width: 18px; height: 1px; background: var(--gold); }
 .q h2 { margin-bottom: 12px; }
+.q h2 em { color: inherit; }
 .q .lede { margin-bottom: 30px; font-size: 15px; }
 .opts { display: grid; gap: 10px; }
 .opt {
@@ -282,35 +283,29 @@ textarea.field { font: 400 24px/1.35 var(--serif); resize: none; min-height: 150
 .count { text-align: right; margin-top: 6px; }
 
 /* ------------------------------------------------------------------
-   Composing — the curated pause
+   Pause — one honest breath instead of a fake "thinking" screen
 ------------------------------------------------------------------- */
-.composing { display: flex; flex-direction: column; min-height: 100%; }
-.orbit { position: relative; width: min(300px, 78vw); aspect-ratio: 1; margin: 5vh auto 0; }
-.orbit svg { width: 100%; height: 100%; overflow: visible; }
-.orbit .rg { fill: none; stroke: var(--night-line); }
-.orbit .rg.dash { stroke-dasharray: 2 6; }
-.orbit .spin { transform-origin: 150px 150px; animation: spin 26s linear infinite; }
-.orbit .spin.rev { animation-duration: 40s; animation-direction: reverse; }
-.orbit .node { transition: transform 1.6s var(--ease), opacity 1.2s var(--ease); transform-box: view-box; transform-origin: 150px 150px; }
-.orbit .node circle { fill: var(--night); stroke: var(--on-night); stroke-width: 1.4; }
-.orbit .node text { fill: var(--on-night-muted); font: 400 8.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.orbit.converge .node { transform: scale(.02); opacity: 0; }
-.orbit .core { fill: var(--gold); transform-origin: 150px 150px; transform: scale(.4); transition: transform 1.4s var(--spring) .5s; }
-.orbit.converge .core { transform: scale(1.35); }
-.orbit .pulse { fill: none; stroke: var(--gold); opacity: 0; transform-origin: 150px 150px; }
-.orbit.converge .pulse { animation: pulse 2.4s var(--ease-out) .9s infinite; }
-@keyframes pulse { from { opacity: .7; transform: scale(.5); } to { opacity: 0; transform: scale(3.2); } }
-.steps-log { list-style: none; margin: 34px 0 0; padding: 0; display: grid; gap: 14px; }
-.steps-log li { display: flex; gap: 14px; align-items: center; font: 400 15px/1.35 var(--sans); color: var(--on-night-faint); opacity: 0; transform: translateY(8px); transition: all .7s var(--ease); }
-.steps-log li.on { opacity: 1; transform: none; color: var(--on-night); }
-.steps-log li.done { color: var(--on-night-muted); }
-.steps-log .tick { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--night-line); display: grid; place-items: center; }
-.steps-log li.on .tick { border-color: var(--gold); }
-.steps-log .tick svg { width: 11px; height: 11px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-dasharray: 14; stroke-dashoffset: 14; transition: stroke-dashoffset .5s var(--ease) .2s; }
-.steps-log li.done .tick svg { stroke-dashoffset: 0; }
-.steps-log li.on:not(.done) .tick::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 1s ease-in-out infinite; }
-@keyframes blink { 50% { opacity: .2; } }
-.composing .skip { margin-top: auto; align-self: center; padding: 14px 18px; color: var(--on-night-faint); font: 400 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.pause { display: flex; flex-direction: column; min-height: 100%; text-align: center; }
+.pause .lede { max-width: 300px; margin: 12px auto 0; }
+.breath { position: relative; width: min(260px, 70vw); aspect-ratio: 1; margin: 6vh auto 3vh; display: grid; place-items: center; }
+.breath .ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--night-line); }
+.breath .ring.r2 { inset: 14%; border-style: dashed; opacity: .6; }
+.breath .orbit-dot { position: absolute; inset: 0; animation: spin 10s linear infinite; }
+.breath .orbit-dot::after { content: ""; position: absolute; left: 50%; top: -3px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--gold); }
+.breath .lung {
+  width: 58%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(223, 194, 127, .9), rgba(176, 138, 74, .55) 45%, rgba(11, 61, 50, .2) 75%);
+  box-shadow: 0 0 60px rgba(223, 194, 127, .25);
+  transform: scale(.55); transition: transform 4s cubic-bezier(.45, 0, .35, 1);
+}
+.breath.inhale .lung { transform: scale(1); transition-duration: 4s; }
+.breath.exhale .lung { transform: scale(.55); transition-duration: 6s; }
+.breath-cue { font: 400 26px/1.2 var(--serif); min-height: 1.2em; transition: opacity .6s var(--ease); }
+.breath-count { margin-top: 8px; }
+.pause .later { margin-top: auto; display: grid; gap: 10px; }
+.sheet .breath { width: 200px; margin: 18px auto; }
+.sheet .breath .ring { border-color: var(--line); }
+.sheet .breath-cue { color: var(--ink); text-align: center; }
 
 /* ------------------------------------------------------------------
    Reveal — the sealed card
@@ -552,12 +547,6 @@ textarea.field { font: 400 24px/1.35 var(--serif); resize: none; min-height: 150
   overflow: hidden;
 }
 .invite-card::before { content: ""; position: absolute; inset: 9px; border-radius: 22px; border: 1px solid var(--gold-soft); pointer-events: none; }
-.invite-card::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .09) 50%, transparent 65%);
-  transform: translateX(-100%); animation: sheen 5s var(--ease) 1.2s infinite;
-}
-@keyframes sheen { 0% { transform: translateX(-100%); } 35%, 100% { transform: translateX(100%); } }
 .invite-card .eyebrow { color: var(--gold); }
 .invite-card h2 { font: 400 40px/1 var(--serif); margin: 14px 0 12px; }
 .invite-card h2 em { color: var(--gold); }
@@ -596,7 +585,7 @@ textarea.field { font: 400 24px/1.35 var(--serif); resize: none; min-height: 150
 .mod.wide { grid-column: 1 / -1; }
 .mod.dark { background: linear-gradient(160deg, #0f3a30, var(--pine-dark)); color: var(--on-night); border-color: transparent; }
 .mod.dark .eyebrow { color: var(--gold); }
-.mod.dark .fine { color: var(--on-night-faint); }
+.mod.dark .fine { color: var(--on-night-muted); }
 .mod h4 { font: 400 26px/1.05 var(--serif); margin: 6px 0 0; }
 .mod .go { position: absolute; right: 16px; top: 16px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; }
 .mod.dark .go { border-color: var(--night-line); }
@@ -649,6 +638,68 @@ textarea.field { font: 400 24px/1.35 var(--serif); resize: none; min-height: 150
   .emblem .draw { stroke-dashoffset: 0; }
   .emblem circle { opacity: 1; }
 }
+
+/* ------------------------------------------------------------------
+   Intake — chip layout for many-option questions
+------------------------------------------------------------------- */
+.opts.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts.chips .opt { width: auto; min-height: 0; padding: 12px 16px; border-radius: 999px; gap: 10px; }
+.opts.chips .opt .key { width: 20px; height: 20px; font-size: 10px; }
+.opts.chips .opt b { font-size: 15px; }
+.q-note { margin: -14px 0 22px; }
+
+/* ------------------------------------------------------------------
+   Connect — honest bridges to the rest of your tools
+------------------------------------------------------------------- */
+.bridge-group { margin-top: 26px; }
+.bridge-group > .eyebrow { display: block; margin-bottom: 10px; }
+.bridge {
+  display: grid; grid-template-columns: 42px 1fr auto; gap: 14px; align-items: center; width: 100%; text-align: left;
+  padding: 14px 14px 14px 12px; border-radius: 20px; border: 1px solid var(--night-line); background: rgba(239, 234, 220, .03);
+  transition: background .3s var(--ease), transform .2s var(--ease); color: var(--on-night); text-decoration: none;
+}
+.bridge + .bridge { margin-top: 8px; }
+.bridge:active { transform: scale(.985); }
+.bridge:hover { background: rgba(239, 234, 220, .06); }
+.bridge .glyph { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; background: rgba(223, 194, 127, .1); color: var(--gold-bright); font: 400 18px/1 var(--serif); }
+.bridge .glyph svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.bridge b { display: block; font: 500 15px/1.3 var(--sans); }
+.bridge small { display: block; margin-top: 3px; font: 400 12.5px/1.4 var(--sans); color: var(--on-night-muted); }
+.bridge .go-arrow { color: var(--on-night-faint); font-size: 18px; }
+.bridge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.pill { padding: 10px 14px; border-radius: 999px; border: 1px solid var(--night-line); font: 500 13px/1 var(--sans); color: var(--on-night); text-decoration: none; }
+.honest { margin-top: 28px; padding: 16px; border-radius: 18px; border: 1px dashed var(--night-line); }
+.honest p { margin: 6px 0 0; font: 400 13.5px/1.55 var(--sans); color: var(--on-night-muted); }
+
+/* Preview sheet: exactly what leaves the device */
+.preview { margin: 16px 0 0; max-height: 38vh; overflow: auto; padding: 14px 16px; border-radius: 16px; background: var(--paper-bright); border: 1px solid var(--line-soft);
+  font: 400 12.5px/1.6 var(--mono); white-space: pre-wrap; word-break: break-word; color: var(--ink); }
+.leaves { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+.leaves svg { width: 14px; height: 14px; stroke: var(--pine); fill: none; stroke-width: 1.6; flex: none; }
+.sheet-actions { display: grid; gap: 10px; margin-top: 18px; }
+.sheet-actions a.btn { text-decoration: none; }
+
+/* ------------------------------------------------------------------
+   Library
+------------------------------------------------------------------- */
+.lib-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.filters { display: flex; gap: 6px; overflow-x: auto; margin: 18px calc(var(--gutter) * -1) 6px; padding: 0 var(--gutter) 6px; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.filters button { flex: none; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line); font: 500 13px/1 var(--sans); color: var(--muted); transition: all .3s var(--ease); }
+.filters button[aria-pressed="true"] { background: var(--pine); border-color: var(--pine); color: var(--paper-bright); }
+.shelf { list-style: none; margin: 10px 0 0; padding: 0; }
+.shelf li + li { border-top: 1px solid var(--line-soft); }
+.item { display: grid; grid-template-columns: 1fr auto; gap: 12px; width: 100%; text-align: left; padding: 18px 0; color: inherit; text-decoration: none; }
+.item .kind { font: 500 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+.item b { display: block; margin-top: 7px; font: 400 23px/1.12 var(--serif); }
+.item .meta { display: block; margin-top: 5px; font: 400 12.5px/1.4 var(--sans); color: var(--faint); }
+.item p { margin: 8px 0 0; font: 400 14.5px/1.5 var(--sans); color: var(--muted); }
+.item .act { align-self: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--muted); }
+.item .act svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.why { display: inline-block; margin-top: 8px; padding: 4px 8px; border-radius: 8px; background: var(--paper-deep); font: 400 11.5px/1.3 var(--sans); color: var(--pine); }
+.steps-list { margin: 18px 0 0; padding: 0; list-style: none; counter-reset: s; }
+.steps-list li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 8px; padding: 14px 0; border-top: 1px solid var(--line-soft); font: 400 15.5px/1.5 var(--sans); }
+.steps-list li::before { content: counter(s); font: 400 24px/1 var(--serif); color: var(--gold); }
 </style>
 </head>
 <body>
@@ -670,269 +721,1131 @@ textarea.field { font: 400 24px/1.35 var(--serif); resize: none; min-height: 150
 <noscript><p style="color:#efeadc;padding:24px;font-family:Georgia,serif">The Observatory needs JavaScript. You can still reach Astervell at <a style="color:#b08a4a" href="https://astervell.com">astervell.com</a>.</p></noscript>
 
 <script>
+/* Astervell Observatory — content.
+ *
+ * Every word the app says lives here: questions, phrasing, workflow
+ * templates, resources. engine.js turns answers into an observation;
+ * app.js choreographs it. Change the words here, not in the logic.
+ *
+ * Conventions
+ * - A question's `q`, `help` and `options` may be functions of the
+ *   answers so far (`a`). That is how one intake serves a solo operator,
+ *   an owner-led team, a department in a large organization, or an
+ *   advisor speaking about someone else's team.
+ * - `when(a)` decides whether a question is asked at all.
+ * - Typographic apostrophes (’) throughout; never straight quotes in copy.
+ */
+(function (root) {
+  'use strict';
+
+  const BRAND = {
+    email: 'agentflow.work@gmail.com',
+    calendar: 'https://calendly.com/agentflow-work/30min',
+    founder: 'Rahmat',
+    site: 'https://astervell.com',
+  };
+
+  // Who the observation is about. Changes wording, options and the model.
+  const AUDIENCE = {
+    self: { label: 'Just me', decider: 'You', requester: 'Client' },
+    team: { label: 'An owner-led team', decider: 'Owner', mono: 'O', requester: 'Client' },
+    org: { label: 'A team inside a larger organization', decider: 'Team lead', mono: 'L', requester: 'Requester' },
+    advisor: { label: 'Someone I advise', decider: 'Owner', mono: 'O', requester: 'Client' },
+  };
+
+  const is = (a, ...aud) => aud.includes(a.audience);
+  const their = a => (is(a, 'advisor') ? 'their' : 'your');
+
+  const QUESTIONS = [
+    {
+      id: 'name', type: 'text', kicker: 'Before we begin',
+      q: 'What should we call you?',
+      help: 'A first name is plenty. It stays on this device.',
+      placeholder: 'First name', max: 40,
+    },
+    {
+      id: 'audience', type: 'single', kicker: 'Who this is for',
+      q: 'Who is this for?',
+      help: 'The questions that follow change with your answer.',
+      options: [
+        { v: 'self', t: 'Just me', s: 'I run the work and do most of it myself.' },
+        { v: 'team', t: 'An owner-led team', s: 'A small team where the owner still decides most things.' },
+        { v: 'org', t: 'A team inside a larger organization', s: 'Departments, approvals, several systems.' },
+        { v: 'advisor', t: 'Someone I advise', s: 'A client, or a team I support.' },
+      ],
+    },
+    {
+      id: 'workflow', type: 'single', kicker: 'The workflow',
+      q: a => (is(a, 'advisor') ? 'Which of their workflows keeps <em>slipping</em>?' : 'Which workflow keeps <em>slipping</em>?'),
+      help: 'Pick the one that costs the most attention. We look at one at a time.',
+      options: a => [
+        { v: 'lead', t: 'Lead intake', s: 'New requests, from first contact to a reply' },
+        { v: 'scheduling', t: 'Scheduling', s: 'Finding a time and confirming it' },
+        { v: 'followup', t: 'Follow-up', s: 'What happens after the conversation ends' },
+        { v: 'onboarding', t: 'Getting started', s: 'From a yes to a good first week' },
+        { v: 'knowledge', t: 'Team knowledge', s: is(a, 'self') ? 'Answers that live only in your head' : 'Answers that live in one person’s head' },
+        ...(is(a, 'self') ? [] : [{ v: 'approvals', t: 'Approvals', s: 'Waiting for someone to say yes' }]),
+        ...(is(a, 'org', 'advisor') ? [{ v: 'crossteam', t: 'Handoffs between teams', s: 'Where one team’s done becomes another’s start' }] : []),
+        { v: 'other', t: 'Something else', s: 'You’ll name it on the next screen' },
+      ],
+    },
+    {
+      id: 'workflowName', type: 'text', kicker: 'In a few words',
+      when: a => a.workflow === 'other',
+      q: 'What do you call this workflow?',
+      help: 'Whatever the team would call it out loud.',
+      placeholder: 'e.g. Quote approvals', max: 40,
+    },
+    {
+      id: 'doors', type: 'multi', layout: 'chips', kicker: 'The doors',
+      q: 'Where does the work <em>arrive</em>?',
+      help: 'Choose every way in. Most teams have more than they think.',
+      options: a => [
+        { v: 'form', t: 'Website form', short: 'Form' },
+        { v: 'email', t: 'Email', short: 'Email' },
+        { v: 'phone', t: 'Phone & voicemail', short: 'Phone' },
+        { v: 'text', t: 'Texts & DMs', short: 'Texts' },
+        { v: 'chat', t: 'Slack or Teams', short: 'Chat' },
+        ...(is(a, 'self') ? [] : [{ v: 'system', t: 'A request or ticket system', short: 'Tickets' }]),
+        { v: 'person', t: 'In person', short: 'In person' },
+        { v: 'referral', t: 'Referrals', short: 'Referrals' },
+      ],
+    },
+    {
+      id: 'tools', type: 'multi', layout: 'chips', kicker: 'The tools',
+      q: 'What does it <em>pass through</em> on the way?',
+      help: 'Every tool the work touches between arriving and being done. Each crossing is a place context can fall out.',
+      options: [
+        { v: 'slack', t: 'Slack' },
+        { v: 'teams', t: 'Microsoft Teams' },
+        { v: 'email', t: 'Email' },
+        { v: 'sheet', t: 'Spreadsheets' },
+        { v: 'crm', t: 'A CRM' },
+        { v: 'tickets', t: 'A ticket or project tool' },
+        { v: 'calendar', t: 'Calendar' },
+        { v: 'docs', t: 'Notes or docs' },
+        { v: 'memory', t: 'Paper or memory' },
+      ],
+    },
+    {
+      id: 'owner', type: 'single', kicker: 'The handoff',
+      when: a => !is(a, 'self'),
+      q: 'Who usually takes the <em>next step</em>?',
+      help: 'Not who should. Who usually does.',
+      options: a => (is(a, 'org') ? [
+        { v: 'lead', t: 'The team lead' },
+        { v: 'coordinator', t: 'A coordinator or ops person' },
+        { v: 'first', t: 'Whoever sees it first' },
+        { v: 'queue', t: 'Nobody. It sits in a queue' },
+        { v: 'depends', t: 'It depends on the day' },
+      ] : [
+        { v: 'founder', t: 'The owner' },
+        { v: 'coordinator', t: 'An office coordinator' },
+        { v: 'first', t: 'Whoever sees it first' },
+        { v: 'depends', t: 'It depends on the day' },
+      ]),
+    },
+    {
+      id: 'away', type: 'single', kicker: 'The gap',
+      q: a => (is(a, 'self') ? 'When you’re away, what <em>happens</em>?'
+        : a.owner === 'queue' ? 'When nobody is watching the queue, what <em>happens</em>?'
+        : 'When that person is away, what <em>happens</em>?'),
+      help: 'An honest “not sure” is useful evidence too.',
+      options: a => (is(a, 'self') ? [
+        { v: 'named', t: 'Someone I’ve asked covers' },
+        { v: 'autoreply', t: 'An auto-reply, then it waits' },
+        { v: 'waits', t: 'It waits for me' },
+        { v: 'unsure', t: 'Honestly, not sure' },
+      ] : a.owner === 'queue' ? [
+        { v: 'named', t: 'Someone is assigned to watch it' },
+        { v: 'notices', t: 'Whoever notices picks it up' },
+        { v: 'waits', t: 'It waits until someone looks' },
+        { v: 'unsure', t: 'Honestly, not sure' },
+      ] : [
+        { v: 'named', t: 'A named person covers' },
+        { v: 'waits', t: 'It waits for their return' },
+        { v: 'notices', t: 'Whoever notices picks it up' },
+        { v: 'unsure', t: 'Honestly, not sure' },
+      ]),
+    },
+    {
+      id: 'frequency', type: 'single', kicker: 'The pattern',
+      q: 'How often does something slip?',
+      help: 'Your best guess. We’ll treat it as reported, not measured.',
+      options: [
+        { v: 'rare', t: 'Rarely, but it stings' },
+        { v: 'monthly', t: 'A few times a month' },
+        { v: 'weekly', t: 'Most weeks' },
+        { v: 'often', t: 'More than we’d admit' },
+      ],
+    },
+    {
+      id: 'signal', type: 'single', kicker: 'The signal',
+      q: 'How do you usually <em>find out</em>?',
+      options: a => [
+        { v: 'client', t: is(a, 'org') ? 'The requester chases it' : 'The client follows up' },
+        { v: 'teammate', t: is(a, 'self') ? 'I notice, late' : 'A teammate notices' },
+        { v: 'review', t: 'In a regular review' },
+        { v: 'late', t: 'Weeks later, or never' },
+      ],
+    },
+    {
+      id: 'approvals', type: 'single', kicker: 'The approvals',
+      when: a => is(a, 'org'),
+      q: 'How many approvals before the work can <em>move</em>?',
+      help: 'Count sign-offs, not people who are copied in.',
+      options: [
+        { v: '0', t: 'None' },
+        { v: '1', t: 'One' },
+        { v: '2', t: 'Two' },
+        { v: '3', t: 'Three or more' },
+        { v: 'varies', t: 'It depends who asks' },
+      ],
+    },
+    {
+      id: 'judgment', type: 'single', kicker: 'The boundary',
+      q: 'Which decision must stay <em>human</em>?',
+      help: 'Tools may help around it. They never make it.',
+      options: a => [
+        { v: 'fit', t: 'Who is a good fit' },
+        { v: 'urgency', t: 'What is urgent' },
+        { v: 'promise', t: 'What we promise' },
+        { v: 'tone', t: 'The relationship itself' },
+        ...(is(a, 'org', 'advisor') ? [{ v: 'risk', t: 'What is safe or allowed' }] : []),
+      ],
+    },
+    {
+      id: 'ai', type: 'single', kicker: 'AI in the work',
+      q: 'Where is AI in this work <em>already</em>?',
+      help: 'ChatGPT, Claude, Copilot, automations. There’s no right answer.',
+      options: a => [
+        { v: 'none', t: 'Nowhere yet' },
+        { v: 'private', t: is(a, 'self') ? 'I use it on my own' : 'People use it on their own', s: 'Personal ChatGPT or Claude chats' },
+        ...(is(a, 'self') ? [] : [{ v: 'sanctioned', t: 'We have an approved tool' }]),
+        { v: 'automated', t: 'Some steps run automatically' },
+        { v: 'unsure', t: 'Not sure' },
+      ],
+    },
+    {
+      id: 'feel', type: 'single', kicker: 'How it feels',
+      q: a => (is(a, 'self') ? 'How does this work feel to <em>you</em>?' : 'How does it feel to the <em>people</em> in it?'),
+      help: 'This matters as much as the timing.',
+      options: a => [
+        { v: 'fine', t: 'Mostly fine, just slow' },
+        { v: 'rushed', t: 'Rushed' },
+        { v: 'anxious', t: 'Anxious that things get dropped' },
+        { v: 'uneven', t: is(a, 'self') ? 'Heavy. It’s all on me' : 'Uneven. Some carry more' },
+        { v: 'numb', t: 'Numb. It’s just how it is' },
+      ],
+    },
+    {
+      id: 'sponsor', type: 'single', kicker: 'Permission',
+      when: a => is(a, 'org'),
+      q: 'Who could say yes to a <em>small test</em>?',
+      help: 'Five cases, one week, fully reversible.',
+      options: [
+        { v: 'me', t: 'I can' },
+        { v: 'manager', t: 'My manager' },
+        { v: 'above', t: 'Someone above that' },
+        { v: 'unclear', t: 'Nobody clearly' },
+      ],
+    },
+    {
+      id: 'note', type: 'long', kicker: 'In your words',
+      q: a => `In one sentence, where does ${is(a, 'advisor') ? 'their' : 'it'} get <em>stuck</em>?`,
+      help: 'Optional. Describe the process only.',
+      placeholder: 'Requests sit in the shared inbox when…', max: 280,
+    },
+  ];
+
+  const PHRASE = {
+    // Who takes the next step, as a noun phrase inside a sentence.
+    owner: {
+      self: 'you', founder: 'the owner', coordinator: 'the coordinator', first: 'whoever saw it first',
+      depends: 'the person on duty', lead: 'the team lead', queue: 'whoever watches the queue',
+    },
+    away: {
+      named: a => (is(a, 'self') ? 'someone you’ve asked is meant to cover' : 'a named person is meant to cover'),
+      autoreply: () => 'an auto-reply goes out, then it waits',
+      waits: a => (is(a, 'self') ? 'it waits for you' : a.owner === 'queue' ? 'it waits until someone looks' : 'it waits for their return'),
+      notices: () => 'whoever notices picks it up',
+      unsure: () => 'nobody is quite sure what happens',
+    },
+    frequency: { rare: 'rarely, but it stings', monthly: 'a few times a month', weekly: 'most weeks', often: 'more often than anyone would admit' },
+    signal: {
+      client: a => (is(a, 'org') ? 'the requester chases it' : 'the client follows up'),
+      teammate: a => (is(a, 'self') ? 'you notice, late' : 'a teammate notices'),
+      review: () => 'it surfaces in a regular review',
+      late: () => 'weeks later, if at all',
+    },
+    // The human decision, three ways: in a sentence, as a short verb object, as a label.
+    judgment: {
+      fit: ['who is a good fit', 'fit', 'Fit stays human'],
+      urgency: ['what is urgent', 'what’s urgent', 'Urgency stays human'],
+      promise: ['what gets promised', 'what’s promised', 'Promises stay human'],
+      tone: ['the relationship and its tone', 'the tone', 'The relationship stays human'],
+      risk: ['what is safe or allowed', 'what’s allowed', 'Risk calls stay human'],
+    },
+  };
+
+  // Workflow templates. `steps(c)` receives the cast of the observation:
+  // c.role (who holds the next step), c.decider, c.requester, c.doors,
+  // c.inbox, c.same (holder and decider are one person), c.self.
+  const WORKFLOWS = {
+    lead: {
+      arc: 'From a request<br>to a confirmed next step.',
+      unit: 'requests',
+      question: o => `Who takes the next action when ${o} ${o === 'you' ? 'are' : 'is'} away?`,
+      flag: 1,
+      request: 'Could we book<br>a first visit?',
+      steps: c => [
+        ['Request arrives', c.requester, c.doors],
+        ['Request received', c.role, c.inbox],
+        ['Fit reviewed', c.same ? c.decider : `${c.role} / ${c.decider.toLowerCase()}`, 'Human review'],
+        ['Reply sent', c.role, 'Email / chat'],
+        ['Next step agreed', `${c.role} + ${c.requester.toLowerCase()}`, 'Email / calendar'],
+        ['Confirmed', c.requester, 'Route to clarify'],
+      ],
+      move: ['Name the cover.', 'Confirm the handoff.'],
+      change: 'Where requests already land, write the next action and who holds it. Before any absence, the cover person says yes, out loud or in writing.',
+      measure: 'Minutes to an acknowledged owner, and whether the next action is visible. Keep unresolved requests visible.',
+    },
+    scheduling: {
+      arc: 'From a request<br>to a booked time.',
+      unit: 'bookings',
+      question: () => 'Who holds an open booking between messages?',
+      flag: 3,
+      request: 'Does Thursday<br>still work?',
+      steps: c => [
+        ['Time requested', c.requester, c.doors],
+        ['Availability checked', c.role, 'Calendar'],
+        ['Options sent', c.role, 'Email / text'],
+        ['Waiting on a choice', c.requester, 'Reply thread'],
+        ['Booking confirmed', c.role, 'Calendar'],
+        ['Reminder sent', c.self ? 'You or a tool' : `A tool or ${c.role.toLowerCase()}`, 'Route to clarify'],
+      ],
+      move: ['One holder per booking.', 'Pass it on out loud.'],
+      change: 'Each open scheduling thread has one named holder until a time is confirmed. Handing it over means the next holder says so, in the thread.',
+      measure: 'Messages and hours from first request to a confirmed time, and how many threads have no visible holder.',
+    },
+    followup: {
+      arc: 'From a conversation<br>to a closed loop.',
+      unit: 'conversations',
+      question: () => 'Who owns the next step once the conversation ends?',
+      flag: 2,
+      request: 'Great talking.<br>What’s next?',
+      steps: c => [
+        ['Conversation ends', `${c.requester} + ${c.role.toLowerCase()}`, c.doors],
+        ['Next step noted', c.role, 'Notes or memory'],
+        ['Owner assigned', 'To clarify', 'Not yet visible'],
+        ['Follow-up sent', c.role, 'Email / phone'],
+        ['Reply received', c.requester, 'Inbox'],
+        ['Loop closed', c.role, 'Shared record'],
+      ],
+      move: ['Name the next step', 'before you leave the room.'],
+      change: 'Every conversation ends with a written next step, an owner and a date, kept where the team already looks. Nothing else changes.',
+      measure: 'Share of conversations with a written next step and owner, and days to the first follow-up.',
+    },
+    onboarding: {
+      arc: 'From a yes<br>to a good first week.',
+      unit: 'new clients',
+      question: () => 'Who looks after a new client between the yes and the first session?',
+      flag: 2,
+      request: 'We’re in.<br>What do you need from us?',
+      steps: c => [
+        ['Client says yes', c.requester, c.doors],
+        ['Kickoff scheduled', c.role, 'Email / calendar'],
+        ['Details gathered', 'To clarify', 'Forms / email'],
+        ['Work set up', c.self ? 'You' : 'Team', 'Shared tools'],
+        ['First session', `${c.decider} + ${c.requester.toLowerCase()}`, 'Call / in person'],
+        ['First check-in', c.role, 'Route to clarify'],
+      ],
+      move: ['One named guide', 'for the first two weeks.'],
+      change: 'Each new client gets one named guide from yes to first check-in, who tells them who to contact and when.',
+      measure: 'Days from yes to first session, and how often a new client asks “what happens next?”',
+    },
+    knowledge: {
+      arc: 'From a question<br>to an answer anyone can find.',
+      unit: 'repeated questions',
+      question: o => (o === 'you' ? 'Where does an answer go after you give it?' : `Where does the answer go after ${o} gives it?`),
+      flag: 4,
+      request: 'Where’s the<br>template for this?',
+      steps: c => [
+        ['Question comes up', c.self ? 'You, later' : 'Teammate', 'Chat or in person'],
+        ['Asks around', c.self ? 'You' : 'Teammate', 'Search / chat'],
+        ['Finds the one who knows', c.role, 'Memory'],
+        ['Answer given', c.role, 'Conversation'],
+        ['Answer written down', 'To clarify', 'No shared place yet'],
+        ['Next person finds it', c.self ? 'Future you' : 'Next teammate', 'Unknown'],
+      ],
+      move: ['Write down', 'the next answer.'],
+      change: 'The next time someone answers a repeated question, the answer goes in one shared place the team already uses.',
+      measure: 'How often the same question is asked twice, and whether the second person finds the answer without asking.',
+    },
+    approvals: {
+      arc: 'From a request<br>to a decision someone can act on.',
+      unit: 'approval requests',
+      question: () => 'Which approvals change the outcome, and which only add waiting?',
+      flag: 2,
+      request: 'Can I get a yes<br>on this by Friday?',
+      steps: c => [
+        ['Request submitted', c.requester, c.doors],
+        ['Checked for completeness', c.role, c.inbox],
+        ['Waiting for approval', c.decider, 'To clarify'],
+        ['Approved or returned', c.decider, 'Email / system'],
+        ['Requester told', c.role, 'Email / chat'],
+        ['Work proceeds', c.requester, 'Next system'],
+      ],
+      move: ['Separate the check', 'from the wait.'],
+      change: 'For the next five requests, note which approval changed anything. Where none did, propose one step to trial as notify-only, with that approver’s agreement.',
+      measure: 'Hours waiting at each approval, and how many approvals changed the outcome.',
+    },
+    crossteam: {
+      arc: 'From one team’s done<br>to the next team’s start.',
+      unit: 'handoffs',
+      question: () => 'What does the receiving team need that it doesn’t get?',
+      flag: 2,
+      request: 'Is this ready<br>for us yet?',
+      steps: c => [
+        ['Work finished', 'Sending team', c.doors],
+        ['Handed over', c.role, 'Ticket / chat'],
+        ['Received', 'Receiving team', 'Their queue'],
+        ['Clarified', 'Both teams', 'Chat thread'],
+        ['Picked up', 'Receiving team', 'Their system'],
+        ['Sender hears back', 'Sending team', 'Route to clarify'],
+      ],
+      move: ['Agree what “ready”', 'means.'],
+      change: 'Both teams agree a short “ready to hand over” note. The receiving team acknowledges each handoff where the sender can see it.',
+      measure: 'Clarifying messages per handoff, and time from hand-over to visible pickup.',
+    },
+    other: {
+      arc: 'From the first step<br>to done.',
+      unit: 'cases',
+      question: o => `Who takes the next action when ${o} ${o === 'you' ? 'are' : 'is'} away?`,
+      flag: 1,
+      request: 'Any update<br>on this?',
+      steps: c => [
+        ['Work arrives', c.requester, c.doors],
+        ['Received', c.role, c.inbox],
+        ['Decision needed', c.decider, 'Human review'],
+        ['Work done', c.role, 'Your tools'],
+        ['Checked', c.decider, 'Review'],
+        ['Closed', c.role, 'Route to clarify'],
+      ],
+      move: ['Name the next action,', 'every time.'],
+      change: 'Wherever the work sits, write the next action and who holds it. That is the whole change.',
+      measure: 'How often work sits without a visible next action, and for how long.',
+    },
+  };
+
+  const HYPOTHESIS = {
+    named: 'The cover may exist on paper but not in practice. Work is received, but nobody visibly accepts it.',
+    autoreply: 'The auto-reply tells the client something, but promises nothing. The wait after it may be the real gap.',
+    waits: 'An explicitly agreed cover may reduce the work left without a visible next action.',
+    notices: 'When everyone can pick it up, nobody clearly holds it. A named next-action role may reduce drift.',
+    unsure: 'The handoff may be invisible rather than broken. Making the next action visible may be the first useful change.',
+  };
+
+  const FLAGNOTE = {
+    named: 'Cover is named, but acceptance isn’t visible.',
+    autoreply: 'An auto-reply goes out. Then it waits.',
+    waits: o => `When ${o} ${o === 'you' ? 'are' : 'is'} away, this waits.`,
+    notices: 'Anyone can pick it up, so nobody clearly holds it.',
+    unsure: 'What happens here is unclear from your answers.',
+  };
+
+  // What AI already does in the work, and what that means for the evidence.
+  const AI_NOTE = {
+    none: 'No AI in this workflow yet. Good: the first change should be a human agreement, not a tool.',
+    private: 'Some of this work already runs through personal ChatGPT or Claude chats. That work is invisible to everyone else, and so are its mistakes. Worth asking, kindly, what people paste in.',
+    sanctioned: 'An approved AI tool is in the loop. Check which step it touches, and whether a person still sees what it decided.',
+    automated: 'Some steps run automatically. Automations fail quietly; check who would notice if one stopped.',
+    unsure: 'Nobody is sure where AI is used. That is worth one question in the walkthrough.',
+  };
+
+  // How the work feels, and what that changes about how to read it.
+  const FEEL_NOTE = {
+    fine: 'The people are okay. Protect that: any change should cost them less than it saves.',
+    rushed: 'Rushed work skips acknowledgments first. The fix may be a smaller promise, not a faster reply.',
+    anxious: 'When people fear dropping things, they hold work longer and double-check. That can look like slowness from outside.',
+    uneven: 'Uneven load is an ownership question before it is a speed question.',
+    numb: 'When a problem feels normal, people stop reporting it. The real frequency may be higher than anyone guesses.',
+  };
+
+  const METHOD = [
+    ['Listen', 'Walk through one concrete example without collecting sensitive records.'],
+    ['Map', 'Trace steps, owners and decisions. Ask the person who does the work to correct it.'],
+    ['Check', 'Label supported friction, other explanations, and what is still unknown.'],
+    ['Design', 'Propose one reversible change, or recommend no change when the evidence is thin.'],
+    ['Test', 'Agree a baseline, a small trial, and a Day 30 decision: keep, revise or undo.'],
+  ];
+
+  const RITUAL = {
+    keep: 'Keep it, and keep watching workload and handoff quality alongside speed. A faster handoff is not better if it moves work to the wrong person.',
+    revise: 'Revise it. Change one thing, write down who decided, and run the same comparison again.',
+    undo: 'Undo it. Restore the old way without deleting the history. “No change is supported” is still a finding.',
+  };
+
+  // Resources. `kind` drives the library filters. Astervell practices are
+  // original; books and research are real, cited, and not linked (links rot,
+  // titles don't). Apps link to their own homepages.
+  const RESOURCES = [
+    { id: 'walk', kind: 'practice', title: 'The handoff walk', meta: 'Astervell practice · 20 minutes',
+      note: 'Walk one real request from last week with the person who handled it.',
+      steps: [
+        'Pick one request from last week. A normal one, not the disaster.',
+        'Sit with the person who handled it. Ask them to show you, not tell you.',
+        'At each step ask three things: who had it, where did it sit, what were they waiting for?',
+        'Write down only what they say. No fixing, no “why didn’t you”.',
+        'Read it back. Ask: what did I get wrong?',
+      ] },
+    { id: 'cover', kind: 'practice', title: 'Name the cover', meta: 'Astervell practice · 10 minutes',
+      note: 'A two-sentence agreement that closes most off-shift gaps.',
+      steps: [
+        'Before anyone is away, say it plainly: “While I’m out, ___ will acknowledge new requests. They won’t decide ___.”',
+        'The cover answers: “Yes, I have it.” Silence is not a yes.',
+        'Write both sentences where the work lands, not in a separate document.',
+        'When the person is back, the cover hands over what’s open, out loud.',
+      ] },
+    { id: 'baseline', kind: 'practice', title: 'The five-request baseline', meta: 'Astervell practice · one week',
+      note: 'Before changing anything, count what actually happens.',
+      steps: [
+        'Take the next five comparable requests. Don’t pick them.',
+        'For each: when it arrived, when someone visibly acknowledged it, and who.',
+        'Stop at seven days, even if you have fewer than five.',
+        'That is your baseline. Now a trial has something to be compared with.',
+      ] },
+    { id: 'nochange', kind: 'practice', title: 'The no-change finding', meta: 'Astervell practice · 5 minutes',
+      note: 'Sometimes the evidence says leave it. Write that down.',
+      steps: [
+        'List what you checked: the walk, the baseline, the people you asked.',
+        'Say plainly why no change is supported.',
+        'Name what would make you look again.',
+        'Share it. It protects the team from change for its own sake.',
+      ] },
+    { id: 'askperson', kind: 'practice', title: 'Ask the person, not the tool', meta: 'Astervell practice · 10 minutes',
+      note: 'Before handing a step to AI or an automation.',
+      steps: [
+        'Find the person who does the step today.',
+        'Ask: “What do you notice here that isn’t written down anywhere?”',
+        'Ask: “When does this step need judgment?”',
+        'Whatever they name is the part a tool will miss. Keep it human, or keep it visible.',
+      ] },
+    { id: 'breath', kind: 'pause', title: 'One long exhale', meta: 'In this app · 1 minute',
+      note: 'A short breathing pause before a decision. In through the nose, out slowly.', action: 'breathe' },
+    { id: 'sighing', kind: 'read', title: 'Brief structured respiration practices enhance mood and reduce physiological arousal',
+      meta: 'Balban et al. · Cell Reports Medicine · 2023',
+      note: 'The Stanford study behind the long-exhale pause. Five minutes a day of exhale-focused breathing improved mood in a month-long trial.' },
+    { id: 'mwv', kind: 'read', title: 'Making Work Visible', meta: 'Dominica DeGrandis · 2017',
+      note: 'The book closest to what this app does: find where work hides, and show it.' },
+    { id: 'goal', kind: 'read', title: 'The Goal', meta: 'Eliyahu M. Goldratt · 1984',
+      note: 'A novel about bottlenecks. Read it if work keeps piling up in one place.' },
+    { id: 'checklist', kind: 'read', title: 'The Checklist Manifesto', meta: 'Atul Gawande · 2009',
+      note: 'Small written agreements that prevent big misses.' },
+    { id: 'humble', kind: 'read', title: 'Humble Inquiry', meta: 'Edgar H. Schein · 2013',
+      note: 'How to ask so people tell you what actually happens.' },
+    { id: 'fearless', kind: 'read', title: 'The Fearless Organization', meta: 'Amy C. Edmondson · 2018',
+      note: 'Why people stop reporting problems, and how to make it safe to speak again.' },
+    { id: 'topologies', kind: 'read', title: 'Team Topologies', meta: 'Matthew Skelton & Manuel Pais · 2019',
+      note: 'For work that crosses team lines: who owns what, and how teams should hand off.' },
+    { id: 'systems', kind: 'read', title: 'Thinking in Systems', meta: 'Donella H. Meadows · 2008',
+      note: 'For when fixing one step quietly breaks another.' },
+    { id: 'weeks', kind: 'read', title: 'Four Thousand Weeks', meta: 'Oliver Burkeman · 2021',
+      note: 'On finite time. For when the honest problem is that there is too much.' },
+    { id: 'calm', kind: 'pause', title: 'Calm', meta: 'App · opens their site', url: 'https://www.calm.com',
+      note: 'Guided sessions, breathing and sleep.' },
+    { id: 'headspace', kind: 'pause', title: 'Headspace', meta: 'App · opens their site', url: 'https://www.headspace.com',
+      note: 'Short guided meditations, including ones for work.' },
+    { id: 'insight', kind: 'pause', title: 'Insight Timer', meta: 'App · large free library', url: 'https://insighttimer.com',
+      note: 'Thousands of free guided sessions and a plain meditation timer.' },
+    { id: 'claude', kind: 'tool', title: 'Claude', meta: 'AI assistant · claude.ai', url: 'https://claude.ai',
+      note: 'Good for thinking a problem through with you. Paste the process, never the records.' },
+    { id: 'chatgpt', kind: 'tool', title: 'ChatGPT', meta: 'AI assistant · chatgpt.com', url: 'https://chatgpt.com',
+      note: 'Ask it to question your explanation, not to decide for you.' },
+    { id: 'workflowbuilder', kind: 'tool', title: 'Slack Workflow Builder', meta: 'Built into Slack',
+      note: 'Can post a structured message when someone fills in a form: a simple way to make an acknowledgment visible.' },
+  ];
+
+  const LIBRARY_FILTERS = [
+    ['foryou', 'For you'], ['practice', 'Practices'], ['read', 'Reading'], ['pause', 'Pause'], ['tool', 'Tools'],
+  ];
+
+  const api = { BRAND, AUDIENCE, QUESTIONS, PHRASE, WORKFLOWS, HYPOTHESIS, FLAGNOTE, AI_NOTE, FEEL_NOTE, METHOD, RITUAL, RESOURCES, LIBRARY_FILTERS, their };
+  root.AstervellContent = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+/* Astervell Observatory — engine.
+ *
+ * Pure functions: answers in, observation out. No DOM, no storage, no
+ * network, no clock unless one is passed in. That keeps it testable in
+ * Node (tests/engine.test.mjs) and portable to a server later.
+ *
+ * Nothing here is "AI". The observation is a deterministic reading of
+ * what the person said, labelled as a draft. The app says so, too.
+ */
+(function (root) {
+  'use strict';
+
+  const C = root.AstervellContent || (typeof require !== 'undefined' ? require('./content.js') : null);
+  const SCHEMA = 2;
+
+  const call = (v, a) => (typeof v === 'function' ? v(a) : v);
+  const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : s);
+  const plain = s => String(s || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+
+  /* ---------------------------------------------------------------
+     Questions
+  ---------------------------------------------------------------- */
+  function questionsFor(a) {
+    return C.QUESTIONS.filter(q => !q.when || q.when(a));
+  }
+
+  function resolve(q, a) {
+    return { ...q, q: call(q.q, a), help: call(q.help, a), options: call(q.options, a) };
+  }
+
+  function labelFor(id, value, a) {
+    const q = C.QUESTIONS.find(x => x.id === id);
+    const opts = q && call(q.options, a);
+    const hit = opts && opts.find(o => o.v === value);
+    return hit ? hit.t : '';
+  }
+
+  // Remove answers that no longer apply after an earlier answer changed
+  // (e.g. switching audience from org to self drops `approvals`).
+  function prune(a) {
+    const keep = {};
+    for (const q of questionsFor(a)) {
+      if (!(q.id in a)) continue;
+      const opts = call(q.options, a);
+      if (!opts) { keep[q.id] = a[q.id]; continue; }
+      const valid = new Set(opts.map(o => o.v));
+      if (q.type === 'multi') {
+        const vs = (a[q.id] || []).filter(v => valid.has(v));
+        if (vs.length) keep[q.id] = vs;
+      } else if (valid.has(a[q.id])) keep[q.id] = a[q.id];
+    }
+    return keep;
+  }
+
+  /* ---------------------------------------------------------------
+     The cast: who holds the work, who decides, who could cover
+  ---------------------------------------------------------------- */
+  const HOLDER = {
+    founder: { label: 'Teammate', role: 'Sees it first', mono: 'T', the: 'your teammate' },
+    lead: { label: 'Teammate', role: 'Sees it first', mono: 'T', the: 'your teammate' },
+    coordinator: { label: 'Coordinator', role: 'Shared inbox', mono: 'C', the: 'the coordinator' },
+    first: { label: 'First to see it', role: 'Whoever’s there', mono: 'F', the: 'whoever saw it first' },
+    depends: { label: 'On duty', role: 'Varies by day', mono: 'D', the: 'the person on duty' },
+    queue: { label: 'The queue', role: 'Nobody watching', mono: 'Q', the: 'the queue', thing: true },
+  };
+  const STEP_ROLE = {
+    founder: 'Owner', lead: 'Team lead', coordinator: 'Coordinator', first: 'First to see it',
+    depends: 'On duty', queue: 'Nobody named',
+  };
+
+  function castFor(a) {
+    const aud = C.AUDIENCE[a.audience] || C.AUDIENCE.team;
+    const self = a.audience === 'self';
+    const j = C.PHRASE.judgment[a.judgment] || C.PHRASE.judgment.fit;
+    const owner = self ? 'self' : (a.owner || 'depends');
+    const start = self || owner === 'founder' || owner === 'lead' ? 'owner' : 'holder';
+    const people = self ? {
+      holder: { label: 'Written reply', role: 'Acknowledges only', mono: '✎', the: 'a written reply', thing: true },
+      owner: { label: 'You', role: `Decides ${j[1]}`, mono: 'Y', the: 'you', you: true },
+      cover: { label: 'Backup', role: a.away === 'named' ? 'Asked, not confirmed' : 'Not yet asked', mono: '✧', the: 'your backup' },
+    } : {
+      holder: HOLDER[owner] || HOLDER.depends,
+      owner: { label: aud.decider, role: `Decides ${j[1]}`, mono: aud.mono || aud.decider[0], the: `the ${aud.decider.toLowerCase()}` },
+      cover: { label: 'Cover', role: a.away === 'named' ? 'Named, not confirmed' : 'Not yet agreed', mono: '✧', the: 'the cover' },
+    };
+    return { self, owner, start, people, decider: aud.decider, requester: aud.requester, j };
+  }
+
+  function doorsLabel(a) {
+    const q = C.QUESTIONS.find(x => x.id === 'doors');
+    const opts = call(q.options, a);
+    const list = (a.doors || []).map(v => (opts.find(o => o.v === v) || {}).t).filter(Boolean);
+    if (!list.length) return { short: 'Several ways in', list };
+    return { short: list.slice(0, 2).join(' / ') + (list.length > 2 ? ` +${list.length - 2}` : ''), list };
+  }
+
+  function toolsList(a) {
+    const q = C.QUESTIONS.find(x => x.id === 'tools');
+    return (a.tools || []).map(v => (q.options.find(o => o.v === v) || {}).t).filter(Boolean);
+  }
+
+  const joinList = xs => (xs.length <= 1 ? xs.join('') : xs.slice(0, -1).join(', ') + ' and ' + xs[xs.length - 1]);
+
+  /* ---------------------------------------------------------------
+     Compose the observation
+  ---------------------------------------------------------------- */
+  function compose(input, number = 1, now = new Date()) {
+    const a = prune(input);
+    const cast = castFor(a);
+    const wf = C.WORKFLOWS[a.workflow] || C.WORKFLOWS.other;
+    const doors = doorsLabel(a);
+    const tools = toolsList(a);
+    const ownerPhrase = C.PHRASE.owner[cast.owner] || 'the person on duty';
+    const away = a.away || 'unsure';
+    const workflowLabel = a.workflow === 'other'
+      ? (plain(a.workflowName) || 'Your workflow')
+      : (labelFor('workflow', a.workflow, a) || 'Your workflow');
+
+    const steps = wf.steps({
+      role: cast.self ? 'You' : STEP_ROLE[cast.owner] || 'On duty',
+      decider: cast.decider,
+      requester: cast.requester,
+      doors: doors.short,
+      inbox: cast.self ? 'Your inbox' : a.audience === 'org' ? 'Queue or inbox' : 'Shared inbox',
+      same: cast.self || cast.owner === 'founder' || cast.owner === 'lead',
+      self: cast.self,
+    });
+
+    const flagNote = call(C.FLAGNOTE[away], ownerPhrase);
+    const who = a.audience === 'advisor' ? 'They' : 'You';
+
+    const reported = [
+      `In ${workflowLabel.toLowerCase()}, work arrives through ${doors.list.length === 1 ? 'one door' : doors.list.length ? doors.list.length + ' doors' : 'several doors'}` +
+        (tools.length ? ` and passes through ${tools.length === 1 ? 'one tool' : tools.length + ' tools'}.` : '.'),
+      cast.self
+        ? `The next step is yours; when you’re away, ${call(C.PHRASE.away[away], a)}.`
+        : `The next step usually sits with ${ownerPhrase}; when ${cast.owner === 'queue' ? 'nobody is watching' : 'they are away'}, ${call(C.PHRASE.away[away], a)}.`,
+      `It slips ${C.PHRASE.frequency[a.frequency] || 'sometimes'}, and ${who.toLowerCase()} usually find out when ${call(C.PHRASE.signal[a.signal] || (() => 'someone notices'), a)}.`,
+    ].join(' ');
+
+    let contrary = a.frequency === 'rare'
+      ? 'At this frequency the cost may be real but rare. Adding a control could create more work than it saves.'
+      : `Some waits may be intentional: decisions about ${cast.j[0]} sometimes need time. Not every pause is a slip.`;
+    if (a.audience === 'org' && ['2', '3', 'varies'].includes(a.approvals)) {
+      contrary += ' And each approval may protect something nobody on the team can see from where they sit.';
+    }
+    const changeMind = away === 'named'
+      ? 'A walkthrough shows the named cover already accepts work reliably. Then don’t add another control.'
+      : `A walkthrough shows ${wf.unit} already reach an acknowledged owner in reasonable time. Then no change is supported, and we say so.`;
+
+    let hypothesis = C.HYPOTHESIS[away] || C.HYPOTHESIS.unsure;
+    if (cast.owner === 'queue') hypothesis = 'A queue stores work but never says “mine”. A named person watching it, even part-time, may be the missing piece.';
+    if (cast.self && away === 'waits') hypothesis = 'When everything waits for you, a written acknowledgment or a named backup may remove the wait without handing over any decision.';
+
+    const sponsorNote = a.sponsor === 'unclear'
+      ? 'Nobody clearly owns the yes. Before any trial, find the person who can authorize five cases for one week.'
+      : a.sponsor === 'above'
+        ? 'The yes sits two levels up. Keep the trial small enough that it can be approved in a sentence.'
+        : '';
+
+    return {
+      v: SCHEMA,
+      id: 'obs-' + now.getTime().toString(36),
+      number,
+      created: now.toISOString(),
+      name: plain(a.name).slice(0, 40),
+      audience: a.audience || 'team',
+      answers: a,
+      workflowLabel,
+      arc: wf.arc,
+      request: wf.request,
+      steps,
+      flag: wf.flag,
+      flagNote,
+      question: wf.question(ownerPhrase),
+      reported,
+      hypothesis,
+      contrary,
+      changeMind,
+      aiNote: C.AI_NOTE[a.ai] || '',
+      feelNote: C.FEEL_NOTE[a.feel] || '',
+      sponsorNote,
+      doors: doors.list,
+      tools,
+      judgment: cast.j[0],
+      jshort: cast.j[1],
+      lock: cast.j[2],
+      move: wf.move,
+      change: wf.change,
+      measure: wf.measure,
+      unit: wf.unit,
+      people: cast.people,
+      start: cast.start,
+    };
+  }
+
+  /* ---------------------------------------------------------------
+     The explorable model: where first-reply authority sits
+  ---------------------------------------------------------------- */
+  const verbIs = p => (p.you ? 'are' : 'is');
+
+  function derive(obs, arr) {
+    const P = obs.people;
+    const self = obs.audience === 'self';
+    const start = obs.start;
+    const tok = arr.compare ? start : arr.token;
+    const asDescribed = tok === start && !arr.compare && arr.token === start;
+    const D = P.owner;
+    const decides = self ? 'decide' : 'decides';
+    const Dname = cap(D.the);
+    const s = obs.jshort;
+
+    if (tok === start && arr.away) {
+      const p = P[tok];
+      return {
+        tok, blocked: true,
+        title: 'The work waits<br>at an empty desk.',
+        body: p.thing
+          ? 'Nobody is watching the queue. Someone would need to agree to watch it before the work can move.'
+          : `${cap(p.the)} ${verbIs(p)} away. ${self ? 'A backup' : obs.answers.away === 'named' ? 'The named cover' : 'Someone'} would need to agree to cover before the work can move.`,
+        status: p.thing ? 'Stored,<br>not owned' : 'An owner,<br>nobody available',
+      };
+    }
+    if (tok === 'owner') {
+      return self ? {
+        tok, blocked: false,
+        title: 'You reply and decide.<br>Both wait on you.',
+        body: `Try moving the first reply to a written acknowledgment or a backup. Keep decisions about ${obs.judgment} with you.`,
+        status: 'Permission<br>concentrates here',
+      } : {
+        tok, blocked: false,
+        title: `Even the first reply<br>goes back to ${D.the}.`,
+        body: `${asDescribed ? 'This is the arrangement you described. ' : ''}Move the reply token to ${P.holder.the} or a cover. Keep decisions about ${obs.judgment} with ${D.the}.`,
+        status: 'Permission<br>concentrates here',
+      };
+    }
+    if (tok === 'holder') {
+      const H = P.holder;
+      if (H.thing && self) return {
+        tok, blocked: false,
+        title: `A written reply goes out.<br>You still decide ${s}.`,
+        body: 'The client hears back quickly, and nothing is promised until you decide. Write the wording once, with care.',
+        status: 'Acknowledge<br>before deciding',
+      };
+      if (H.thing) return {
+        tok, blocked: false,
+        title: 'The queue holds it.<br>Nobody has said “mine”.',
+        body: `${asDescribed ? 'This is the arrangement you described. ' : ''}A queue stores work; it doesn’t acknowledge it. Try giving the first reply to a person.`,
+        status: 'Stored,<br>not owned',
+      };
+      return {
+        tok, blocked: false,
+        title: `${cap(H.the)} can reply.<br>${Dname} still ${decides} ${s}.`,
+        body: asDescribed
+          ? `This is the arrangement you described. Switch ${H.the} to away and watch where the work goes.`
+          : `${cap(H.the)} needs agreed wording and capacity. Try the boundary before keeping it.`,
+        status: 'Acknowledge<br>before review',
+      };
+    }
+    return {
+      tok, blocked: false,
+      title: self ? `Your backup can reply.<br>You still decide ${s}.` : `The cover can reply.<br>${Dname} still ${decides} ${s}.`,
+      body: `${self ? 'Your backup' : 'The cover'} needs capacity and an explicit agreement. The work has moved, not vanished.`,
+      status: 'Cover<br>accepts first',
+    };
+  }
+
+  function awayLabel(obs, away) {
+    const p = obs.people[obs.start];
+    if (p.thing) return away ? 'Nobody is watching the queue' : 'Someone is watching the queue';
+    return `${cap(p.the)} ${verbIs(p)} ${away ? 'away' : 'available'}`;
+  }
+
+  /* ---------------------------------------------------------------
+     The test plan that follows from the arrangement
+  ---------------------------------------------------------------- */
+  function testPlan(obs, arr) {
+    const P = obs.people;
+    const tok = arr.token;
+    const self = obs.audience === 'self';
+    const a = obs.answers;
+    if (arr.evidenceFirst) return {
+      kind: 'evidence',
+      eyebrow: 'Understanding is a valid next step',
+      title: 'Check before<br>you change.',
+      chip: 'An evidence-first plan',
+      rows: [
+        ['First', 'Walk through two more real examples with the person doing the work.'],
+        ['Ask', obs.question],
+        ['Watch', 'What would contradict the explanation you started with?'],
+        ['Then', 'Correct the map. Decide whether any change is justified.'],
+      ],
+      staged: 'Check the decision boundary with the person doing the work before changing anything.',
+    };
+    if (tok === obs.start) return { kind: 'unchanged' };
+
+    const who = P[tok];
+    const Dname = cap(P.owner.the);
+    const decides = self ? 'decide' : 'decides';
+    const first = a.sponsor === 'unclear'
+      ? `Find who can say yes to a five-${obs.unit.replace(/s$/, '')} trial. Until then, stay evidence-first.`
+      : who.thing ? 'Write the acknowledgment once. It says when you’ll reply, and promises nothing else.'
+      : `Agree wording, capacity and the boundary with ${who.the}.`;
+    const tryRow = who.thing
+      ? `A written reply acknowledges the next five comparable ${obs.unit} for one week. You still decide ${obs.jshort}.`
+      : `${cap(who.the)} acknowledges the next five comparable ${obs.unit} over one week. ${Dname} still ${decides} ${obs.jshort}.`;
+    const rows = [['First', first], ['Try', tryRow], ['Watch', obs.measure]];
+    if (a.audience === 'org' && ['2', '3', 'varies'].includes(a.approvals)) {
+      rows.push(['Ask', 'Before touching any approval, ask its owner what it protects.']);
+    }
+    rows.push(['Undo if', 'Ownership gets less clear, capacity fails, or someone makes a commitment without authority.']);
+    return {
+      kind: 'plan',
+      eyebrow: 'Keep it small. Keep it reversible.',
+      title: `Five ${obs.unit}.<br>One new boundary.`,
+      chip: `First reply · ${who.thing ? 'written' : who.label}`,
+      rows,
+      staged: `${cap(who.the)} acknowledges the next five ${obs.unit}. ${Dname} ${self ? 'keep' : 'keeps'} decisions about ${obs.judgment}.`,
+    };
+  }
+
+  /* ---------------------------------------------------------------
+     Resources that fit this observation
+  ---------------------------------------------------------------- */
+  function recommend(obs, limit = 6) {
+    const a = obs.answers;
+    const score = {};
+    const add = (id, n) => { score[id] = (score[id] || 0) + n; };
+    add('walk', 5); add('baseline', 4); add('mwv', 2);
+    if (['named', 'waits', 'unsure', 'autoreply'].includes(a.away)) add('cover', 4);
+    if (['anxious', 'numb'].includes(a.feel)) { add('fearless', 4); add('breath', 4); }
+    if (a.feel === 'rushed' || a.feel === 'uneven') { add('weeks', 3); add('breath', 4); }
+    if (['private', 'sanctioned', 'automated', 'unsure'].includes(a.ai)) { add('askperson', 4); add('claude', 1); add('chatgpt', 1); }
+    if (a.audience === 'org' || a.workflow === 'crossteam') add('topologies', 3);
+    if (a.workflow === 'approvals' || ['2', '3', 'varies'].includes(a.approvals)) { add('systems', 3); add('nochange', 2); }
+    if (['weekly', 'often'].includes(a.frequency)) add('goal', 2);
+    if (a.frequency === 'rare') add('nochange', 3);
+    if (a.audience === 'advisor') add('humble', 4);
+    if (['knowledge', 'followup', 'onboarding'].includes(a.workflow)) add('checklist', 3);
+    if ((a.tools || []).includes('slack') || (a.doors || []).includes('chat')) add('workflowbuilder', 2);
+    return Object.keys(score).sort((x, y) => score[y] - score[x]).slice(0, limit);
+  }
+
+  /* ---------------------------------------------------------------
+     Bridges: honest ways to take the observation elsewhere.
+     Each returns exactly the text that would leave the device, so the
+     app can show it before anything is sent.
+  ---------------------------------------------------------------- */
+  function facts(obs) {
+    const a = obs.answers;
+    const L = id => labelFor(id, a[id], a);
+    return [
+      ['Workflow', `${obs.workflowLabel} (${(C.AUDIENCE[obs.audience] || {}).label || ''})`.replace(' ()', '')],
+      ['Arrives through', obs.doors.join(', ')],
+      ['Passes through', obs.tools.join(', ')],
+      ['Next step usually sits with', obs.audience === 'self' ? 'Me' : L('owner')],
+      ['When they are away', L('away')],
+      ['How often it slips', L('frequency')],
+      ['How we find out', L('signal')],
+      ['Approvals before it moves', L('approvals')],
+      ['Must stay human', L('judgment')],
+      ['AI today', L('ai')],
+      ['How it feels', L('feel')],
+      ['Who could approve a test', L('sponsor')],
+      ['In my words', plain(a.note)],
+    ].filter(r => r[1]);
+  }
+
+  function aiPrompt(obs) {
+    return [
+      'I’m looking at one workflow using the Astervell method: evidence before interpretation. Below is a draft I made from my own answers. It is not verified and may be wrong.',
+      '',
+      ...facts(obs).map(([k, v]) => `${k}: ${v}`),
+      '',
+      `Working hypothesis: ${obs.hypothesis}`,
+      `Proposed test: ${obs.move.join(' ')} ${obs.change}`,
+      '',
+      'Please help me prepare a 30-minute walkthrough with the person who does this work:',
+      '1. Five neutral questions to ask them. No leading questions.',
+      '2. What evidence would show my hypothesis is wrong.',
+      '3. One way the proposed test could backfire, and what to watch for.',
+      '',
+      'Don’t invent facts about my team and don’t decide for us. Ask me if you need more. I’ve described the process only, with no records.',
+    ].join('\n');
+  }
+
+  function shareText(obs) {
+    return [
+      `Workflow check: ${obs.workflowLabel}`,
+      '',
+      `Where it slips: ${obs.flagNote}`,
+      `The question: ${obs.question}`,
+      `A small test we could try: ${obs.move.join(' ')} Five ${obs.unit}, one week, then keep, revise or undo.`,
+      `Stays human: ${obs.judgment}.`,
+      '',
+      'This is a draft from my own answers, not a finding. Does it match what you see?',
+    ].join('\n');
+  }
+
+  function brief(obs, arr) {
+    const plan = testPlan(obs, arr || { token: obs.start });
+    const rows = plan.kind === 'plan' ? plan.rows : [['Try', obs.change], ['Watch', obs.measure]];
+    const tools = obs.tools.length ? obs.tools.join(', ') : 'the tools the team already uses';
+    return [
+      `# Build brief: ${obs.move.join(' ')}`,
+      '',
+      `> From an Astervell Observatory draft (${obs.workflowLabel}). Not verified. Build nothing that makes the decisions listed under “Stays human”.`,
+      '',
+      '## Context',
+      obs.reported,
+      '',
+      '## The trial',
+      ...rows.map(([k, v]) => `- **${k}:** ${v}`),
+      '',
+      '## What a tool may do',
+      `- Make the next action and its holder visible where the work already lands (${tools}).`,
+      '- Post or log an acknowledgment that promises nothing beyond a reply time.',
+      '- Remind the cover before an absence starts, and hand open items back afterwards.',
+      '',
+      '## Stays human',
+      `- Decisions about ${obs.judgment}.`,
+      '- Accepting or declining the work, and anything said on the team’s behalf.',
+      '',
+      '## Constraints',
+      '- Reversible in one step. Keep the history.',
+      `- Prefer configuring ${tools} over adding a new tool.`,
+      '- Store no customer, patient or financial records. None are included here.',
+      '',
+      '## Ask me before',
+      '- Choosing between options, adding an integration, or changing who decides anything.',
+    ].join('\n');
+  }
+
+  const ymd = d => d.toISOString().slice(0, 10).replace(/-/g, '');
+  const addDays = (d, n) => { const x = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); x.setUTCDate(x.getUTCDate() + n); return x; };
+  const icsText = s => String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+  // RFC 5545: lines longer than 75 octets fold with CRLF + space.
+  const fold = line => {
+    const out = [];
+    let rest = line;
+    while (rest.length > 74) { out.push(rest.slice(0, 74)); rest = ' ' + rest.slice(74); }
+    out.push(rest);
+    return out.join('\r\n');
+  };
+
+  const REVIEWS = [
+    [7, 'Day 7 · look at the raw counts', 'Look at what actually happened. Who waited? Who took on more work?'],
+    [30, 'Day 30 · keep, revise or undo', 'Decide: keep it, revise one thing, or undo it without deleting the history.'],
+  ];
+
+  function ics(obs, now = new Date()) {
+    const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Astervell//Observatory//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+    for (const [n, title, desc] of REVIEWS) {
+      const day = addDays(now, n);
+      lines.push(
+        'BEGIN:VEVENT',
+        `UID:${obs.id}-d${n}@observatory.astervell.com`,
+        `DTSTAMP:${stamp}`,
+        `DTSTART;VALUE=DATE:${ymd(day)}`,
+        `DTEND;VALUE=DATE:${ymd(addDays(day, 1))}`,
+        fold(`SUMMARY:${icsText(`${title} (${obs.workflowLabel})`)}`),
+        fold(`DESCRIPTION:${icsText(`${desc}\n\nThe test: ${obs.move.join(' ')}\nStays human: ${obs.judgment}.`)}`),
+        'END:VEVENT',
+      );
+    }
+    lines.push('END:VCALENDAR');
+    return lines.join('\r\n') + '\r\n';
+  }
+
+  function googleCalUrl(obs, days, now = new Date()) {
+    const r = REVIEWS.find(x => x[0] === days) || REVIEWS[1];
+    const day = addDays(now, r[0]);
+    const q = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: `${r[1]} (${obs.workflowLabel})`,
+      dates: `${ymd(day)}/${ymd(addDays(day, 1))}`,
+      details: `${r[2]}\n\nThe test: ${obs.move.join(' ')}\nStays human: ${obs.judgment}.`,
+    });
+    return 'https://calendar.google.com/calendar/render?' + q.toString();
+  }
+
+  const chatgptUrl = text => 'https://chatgpt.com/?q=' + encodeURIComponent(text);
+  const claudeDesktopUrl = text => 'claude://claude.ai/new?q=' + encodeURIComponent(text);
+
+  function mailto(obs) {
+    const body = [
+      `Hello ${C.BRAND.founder},`,
+      '',
+      'I completed an observation in the Astervell Observatory and would like to talk about fit for the Workflow Clarity Pilot.',
+      '',
+      ...facts(obs).map(([k, v]) => `${k}: ${v}`),
+      '',
+      '(Process description only. No customer records, credentials or files.)',
+      obs.name ? `\n${obs.name}` : '',
+    ].join('\n');
+    return `mailto:${C.BRAND.email}?subject=${encodeURIComponent('Astervell workflow conversation · ' + obs.workflowLabel)}&body=${encodeURIComponent(body)}`;
+  }
+
+  function exportJSON(obs, arr) {
+    return JSON.stringify({ schema: 'astervell.observation', version: SCHEMA, observation: obs, arrangement: arr || null }, null, 2);
+  }
+
+  const api = {
+    SCHEMA, questionsFor, resolve, labelFor, prune, compose, derive, awayLabel, testPlan, recommend,
+    facts, aiPrompt, shareText, brief, ics, googleCalUrl, chatgptUrl, claudeDesktopUrl, mailto, exportJSON, plain,
+  };
+  root.AstervellEngine = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+/* Astervell Observatory — app.
+ *
+ * Choreography only. Words live in content.js, reasoning in engine.js.
+ * One scene is on stage at a time; each has a tone (night or paper) that
+ * the frame crossfades between. Sheets slide over any scene.
+ */
 (() => {
 'use strict';
 
-/* ==================================================================
-   Content — everything the Observatory says lives here, separate from
-   the choreography below, so either can change on its own.
-   ================================================================== */
-const BRAND = {
-  email: 'agentflow.work@gmail.com',
-  calendar: 'https://calendly.com/agentflow-work/30min',
-  founder: 'Rahmat',
-  site: 'https://astervell.com',
-};
+const C = window.AstervellContent;
+const E = window.AstervellEngine;
 
-const QUESTIONS = [
-  { id: 'name', type: 'text', kicker: 'Before we begin',
-    q: 'What should we <em>call</em> you?', help: 'A first name is plenty. It only appears on your observation card.',
-    placeholder: 'First name' },
-  { id: 'team', type: 'single', kicker: 'The team',
-    q: 'How many people touch the work?', help: 'Count everyone involved in the workflow, including you.',
-    options: [
-      { v: 'solo', t: 'Just me' },
-      { v: 'small', t: '2–5 people' },
-      { v: 'mid', t: '6–15 people' },
-      { v: 'large', t: '16 or more' },
-    ] },
-  { id: 'workflow', type: 'single', kicker: 'The workflow',
-    q: 'Which workflow keeps <em>slipping</em>?', help: 'Pick the one that costs you the most attention. We look at one at a time.',
-    options: [
-      { v: 'lead', t: 'Lead intake', s: 'New requests, from first contact to a reply' },
-      { v: 'scheduling', t: 'Scheduling', s: 'Finding a time and confirming it' },
-      { v: 'followup', t: 'Follow-up', s: 'What happens after the conversation ends' },
-      { v: 'knowledge', t: 'Team knowledge', s: 'Answers that live in one person’s head' },
-    ] },
-  { id: 'doors', type: 'multi', kicker: 'The doors',
-    q: 'Where does it arrive?', help: 'Choose every door work comes through. Most teams have more than they think.',
-    options: [
-      { v: 'form', t: 'Website form', short: 'Form' },
-      { v: 'email', t: 'Email', short: 'Email' },
-      { v: 'phone', t: 'Phone & voicemail', short: 'Phone' },
-      { v: 'text', t: 'Texts & DMs', short: 'Texts' },
-      { v: 'person', t: 'In person', short: 'In person' },
-      { v: 'referral', t: 'Referrals', short: 'Referrals' },
-    ] },
-  { id: 'owner', type: 'single', kicker: 'The handoff',
-    q: 'Who usually takes the <em>next step</em>?', help: 'Not who should, but who usually does.',
-    options: [
-      { v: 'founder', t: 'The owner' },
-      { v: 'coordinator', t: 'An office coordinator' },
-      { v: 'first', t: 'Whoever sees it first' },
-      { v: 'depends', t: 'It depends on the day' },
-    ] },
-  { id: 'away', type: 'single', kicker: 'The gap',
-    q: 'When that person is away, what happens?', help: 'An honest “not sure” is useful evidence too.',
-    options: [
-      { v: 'named', t: 'A named person covers' },
-      { v: 'waits', t: 'It waits for their return' },
-      { v: 'notices', t: 'Whoever notices picks it up' },
-      { v: 'unsure', t: 'Honestly, not sure' },
-    ] },
-  { id: 'frequency', type: 'single', kicker: 'The pattern',
-    q: 'How often does something slip?', help: 'Your best guess. We will treat it as reported, not measured.',
-    options: [
-      { v: 'rare', t: 'Rarely, but it stings' },
-      { v: 'monthly', t: 'A few times a month' },
-      { v: 'weekly', t: 'Most weeks' },
-      { v: 'often', t: 'More than we’d admit' },
-    ] },
-  { id: 'signal', type: 'single', kicker: 'The signal',
-    q: 'How do you usually <em>find out</em>?',
-    options: [
-      { v: 'client', t: 'The client follows up' },
-      { v: 'teammate', t: 'A teammate notices' },
-      { v: 'review', t: 'In a weekly review' },
-      { v: 'late', t: 'Weeks later, or never' },
-    ] },
-  { id: 'judgment', type: 'single', kicker: 'The boundary',
-    q: 'Which decision must stay <em>human</em>?', help: 'Technology enters only where it keeps this judgment visible.',
-    options: [
-      { v: 'fit', t: 'Who is a good fit' },
-      { v: 'urgency', t: 'What is urgent' },
-      { v: 'promise', t: 'What we promise' },
-      { v: 'tone', t: 'The relationship itself' },
-    ] },
-  { id: 'note', type: 'long', kicker: 'In your words',
-    q: 'In one sentence, where does it get stuck?', help: 'Optional. Describe the process only.',
-    placeholder: 'Requests sit in the shared inbox when…', max: 280 },
-];
-
-const LABEL = Object.fromEntries(QUESTIONS.filter(q => q.options).map(q => [q.id, Object.fromEntries(q.options.map(o => [o.v, o.t]))]));
-
-const PHRASE = {
-  owner: { founder: 'the owner', coordinator: 'the coordinator', first: 'whoever saw it first', depends: 'the person on duty' },
-  role: { founder: 'Owner', coordinator: 'Office coordinator', first: 'First to notice', depends: 'Unassigned' },
-  away: {
-    named: 'a named person is meant to cover',
-    waits: 'it waits for their return',
-    notices: 'whoever notices picks it up',
-    unsure: 'nobody is quite sure what happens',
-  },
-  frequency: { rare: 'rarely, but it stings', monthly: 'a few times a month', weekly: 'most weeks', often: 'more often than the team would admit' },
-  signal: { client: 'the client follows up', teammate: 'a teammate notices', review: 'it surfaces in a weekly review', late: 'weeks later, if at all' },
-  judgment: { fit: 'service fit', urgency: 'urgency', promise: 'commitments and promises', tone: 'the relationship and its tone' },
-};
-
-const WORKFLOWS = {
-  lead: {
-    arc: 'From a request<br>to a <em>confirmed visit.</em>',
-    unit: 'requests',
-    question: o => `Who takes the next action when ${o} is away?`,
-    flag: 1,
-    steps: (doors, role, founder) => [
-      ['Request arrives', 'Prospective client', doors],
-      ['Request received', role, 'Shared inbox'],
-      ['Fit reviewed', founder ? 'Owner' : `${role} / owner`, 'Human review'],
-      ['Times exchanged', `${role} + client`, 'Email / calendar'],
-      ['Visit confirmed', role, 'Email / calendar'],
-      ['Time accepted', 'Client', 'Acceptance route to clarify'],
-    ],
-    move: ['Name the cover.', 'Confirm the handoff.'],
-    change: 'Use the place requests already land to name the next-action role and the next action. Before any absence, the cover person explicitly accepts responsibility.',
-    measure: 'Minutes to an acknowledged owner, and whether the next action is visible. Keep unresolved requests visible.',
-  },
-  scheduling: {
-    arc: 'From a request<br>to a <em>booked time.</em>',
-    unit: 'bookings',
-    question: () => 'Who holds an open booking between messages?',
-    flag: 3,
-    steps: (doors, role) => [
-      ['Time requested', 'Client', doors],
-      ['Availability checked', role, 'Calendar'],
-      ['Options sent', role, 'Email / text'],
-      ['Client chooses', 'Client', 'Reply thread'],
-      ['Booking confirmed', role, 'Calendar'],
-      ['Reminder sent', `System or ${role.toLowerCase()}`, 'Route to clarify'],
-    ],
-    move: ['One holder per booking.', 'Pass it on out loud.'],
-    change: 'Each open scheduling thread carries one named holder until a time is confirmed. Handing it over means the next holder says so, in the thread.',
-    measure: 'Messages and hours from first request to a confirmed time, and how many threads have no visible holder.',
-  },
-  followup: {
-    arc: 'From a conversation<br>to a <em>closed loop.</em>',
-    unit: 'conversations',
-    question: () => 'Who owns the next step once the conversation ends?',
-    flag: 2,
-    steps: (doors, role) => [
-      ['Conversation ends', `Client + ${role.toLowerCase()}`, doors],
-      ['Next step noted', role, 'Notes or memory'],
-      ['Owner assigned', 'To clarify', 'Not yet visible'],
-      ['Follow-up sent', role, 'Email / phone'],
-      ['Reply received', 'Client', 'Inbox'],
-      ['Loop closed', role, 'Shared record'],
-    ],
-    move: ['Name the next step', 'before you leave the room.'],
-    change: 'Every conversation ends with a written next step, an owner and a date, recorded where the team already looks. Nothing else changes.',
-    measure: 'Share of conversations with a written next step and owner, and days to the first follow-up.',
-  },
-  knowledge: {
-    arc: 'From a question<br>to an <em>answer anyone can find.</em>',
-    unit: 'repeated questions',
-    question: o => `Where does the answer go after ${o} gives it?`,
-    flag: 4,
-    steps: (doors, role) => [
-      ['Question arises', 'Teammate', 'Chat or in person'],
-      ['Asks around', 'Teammate', 'Chat'],
-      ['Finds the go-to person', role, 'Memory'],
-      ['Answer given', role, 'Conversation'],
-      ['Answer recorded', 'To clarify', 'No shared place yet'],
-      ['Next person finds it', 'Next teammate', 'Unknown'],
-    ],
-    move: ['Write down', 'the next answer.'],
-    change: 'The next time the go-to person answers a repeated question, the answer is recorded in one shared place the team already uses.',
-    measure: 'How often the same question is asked twice, and whether the second person finds the answer without asking.',
-  },
-};
-
-const HYPOTHESIS = {
-  named: 'The cover role may exist on paper but not in practice. Requests are received, but no one visibly accepts them.',
-  waits: 'An explicitly acknowledged cover role may reduce the work left without a visible next action.',
-  notices: 'When everyone can pick it up, no one is clearly holding it. A named next-action role may reduce drift.',
-  unsure: 'The handoff may be invisible rather than broken. Making the next action visible may be the first useful change.',
-};
-const FLAGNOTE = {
-  named: 'Cover is named, but acceptance is not visible.',
-  waits: o => `When ${o} is away, this waits.`,
-  notices: 'Anyone can pick it up, so no one clearly holds it.',
-  unsure: 'What happens here is unclear from your answers.',
-};
-
-const METHOD = [
-  ['Listen', 'Walk through one concrete example without collecting sensitive records.'],
-  ['Map', 'Trace steps, owners and decisions. Ask the operator to correct the reconstruction.'],
-  ['Check', 'Label supported friction, alternative explanations and what is still unknown.'],
-  ['Design', 'Propose one reversible change, or recommend no change when evidence is insufficient.'],
-  ['Test plan', 'Define a baseline, a small trial and a 30-day keep, revise or undo decision for the client.'],
-];
-
-const RITUAL = {
-  keep: 'Keep it, and keep watching workload and handoff quality alongside speed. A faster handoff is not better if it moves work to the wrong person.',
-  revise: 'Revise it. Change one thing, name who decided, and run the same comparison again.',
-  undo: 'Undo it. Restore the prior convention without deleting the history. A finding that no change is supported is still a finding.',
-};
-
-/* ==================================================================
-   Engine — turns answers into a draft observation. Deterministic and
-   local: nothing leaves the device unless you choose to email it.
-   ================================================================== */
-function compose(a, number) {
-  const wf = WORKFLOWS[a.workflow] || WORKFLOWS.lead;
-  const doorsList = (a.doors || []).map(d => LABEL.doors[d]);
-  const doors = doorsList.length ? doorsList.slice(0, 2).join(' / ') + (doorsList.length > 2 ? ` +${doorsList.length - 2}` : '') : 'Several doors';
-  const owner = PHRASE.owner[a.owner] || 'the person on duty';
-  const role = PHRASE.role[a.owner] || 'Unassigned';
-  const away = a.away || 'unsure';
-  const steps = wf.steps(doors, role, a.owner === 'founder');
-  const flagNote = typeof FLAGNOTE[away] === 'function' ? FLAGNOTE[away](owner) : FLAGNOTE[away];
-  const judgment = PHRASE.judgment[a.judgment] || 'the relationship';
-
-  const reported = [
-    `${LABEL.workflow[a.workflow] || 'The work'} arrives through ${doorsList.length ? (doorsList.length === 1 ? 'one door' : doorsList.length + ' doors') : 'several doors'}.`,
-    `The next step usually sits with ${owner}; when they are away, ${PHRASE.away[away]}.`,
-    `It slips ${PHRASE.frequency[a.frequency] || 'sometimes'}, and you usually find out when ${PHRASE.signal[a.signal] || 'someone notices'}.`,
-  ].join(' ');
-
-  const contrary = a.frequency === 'rare'
-    ? 'At this frequency the cost may be real but rare. Adding a control could create more work than it saves.'
-    : `Some waits may be intentional: decisions about ${judgment} sometimes need time. Not every pause is a slip.`;
-  const changeMind = away === 'named'
-    ? 'A safe walkthrough shows the named cover already accepts requests reliably. Then do not add another control.'
-    : `A safe walkthrough shows ${wf.unit} already reach an acknowledged owner in reasonable time. Then no change is supported, and we say so.`;
-
-  return {
-    id: 'obs-' + Date.now().toString(36),
-    number,
-    created: new Date().toISOString(),
-    name: (a.name || '').trim(),
-    answers: a,
-    workflowLabel: LABEL.workflow[a.workflow] || 'Workflow',
-    arc: wf.arc,
-    steps, flag: wf.flag, flagNote,
-    question: wf.question(owner),
-    reported, hypothesis: HYPOTHESIS[away], contrary, changeMind,
-    judgment,
-    move: wf.move, change: wf.change, measure: wf.measure, unit: wf.unit,
-  };
-}
-
-/* ==================================================================
+/* ------------------------------------------------------------------
    Utilities
-   ================================================================== */
+------------------------------------------------------------------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pad = n => String(n).padStart(3, '0');
+const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : s);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const wait = ms => new Promise(r => setTimeout(r, reduced ? Math.min(ms, 60) : ms));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const wait = ms => sleep(reduced ? Math.min(ms, 60) : ms);
 const announce = t => { $('#announce').textContent = t; };
 const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
 const store = {
   get(k, d) { try { const v = localStorage.getItem('astervell.observatory.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('astervell.observatory.' + k, JSON.stringify(v)); } catch (e) {} },
+  clear() { try { Object.keys(localStorage).filter(k => k.startsWith('astervell.observatory.')).forEach(k => localStorage.removeItem(k)); } catch (e) {} },
 };
+
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (err) {}
+    ta.remove();
+    return ok;
+  }
+}
+
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: name });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
 const ICON = {
   back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
@@ -946,8 +1859,18 @@ const ICON = {
   explore: '<svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="16" r="4"/><path d="M9 9l5 4M5 18l2-8"/><circle cx="5" cy="19" r="1"/></svg>',
   evidence: '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h5"/></svg>',
   test: '<svg viewBox="0 0 24 24"><path d="M18 6a8 8 0 1 0 2 11M18 2v5h-5M9 12l2 2 4-4"/></svg>',
+  connect: '<svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg>',
   key: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="4"/><path d="m11 11 9 9m-6-6 3-3m0 6 3-3"/></svg>',
   lock: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 7V5a4 4 0 0 1 8 0v2M3 7h10v8H3z"/></svg>',
+  think: '<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/></svg>',
+  team: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 19c.6-3.4 3-5 6-5s5.4 1.6 6 5M15 14.2c2.6-.3 4.9 1.1 5.5 4.3"/></svg>',
+  code: '<svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg>',
+  cal: '<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  leaf: '<svg viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7"/></svg>',
+  mail: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg>',
+  book: '<svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>',
+  out: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
 };
 
 // The mark: a peak, a horizon, and three nodes along the path of the work.
@@ -961,14 +1884,14 @@ function emblem(cls = '', animated = false) {
   </svg>`;
 }
 
-/* Sky — seeded so the stars keep their places between visits */
+// A still sky, seeded so stars keep their places between visits.
 function paintSky() {
   let s = 7;
   const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
   let stars = '';
-  for (let i = 0; i < 90; i++) {
-    const r = rnd() < .9 ? .5 + rnd() * .7 : 1.2 + rnd() * .6;
-    stars += `<circle class="st" cx="${(rnd() * 100).toFixed(2)}%" cy="${(rnd() * 72).toFixed(2)}%" r="${r.toFixed(2)}" style="--o:${(.25 + rnd() * .6).toFixed(2)};--d:${(3 + rnd() * 6).toFixed(1)}s;--dl:${(-rnd() * 6).toFixed(1)}s"/>`;
+  for (let i = 0; i < 80; i++) {
+    const r = rnd() < .9 ? .5 + rnd() * .6 : 1.1 + rnd() * .5;
+    stars += `<circle class="st" cx="${(rnd() * 100).toFixed(2)}%" cy="${(rnd() * 70).toFixed(2)}%" r="${r.toFixed(2)}" style="--o:${(.15 + rnd() * .45).toFixed(2)}"/>`;
   }
   $('#sky').innerHTML = `<svg preserveAspectRatio="none">${stars}</svg><div class="horizon"></div>`;
 }
@@ -983,17 +1906,64 @@ function dial() {
   return `<div class="dial" aria-hidden="true"><svg viewBox="0 0 520 520"><circle class="ring" cx="260" cy="260" r="200"/><circle class="ring" cx="260" cy="260" r="140" stroke-dasharray="2 8"/>${ticks}</svg></div>`;
 }
 
-/* ==================================================================
-   Scene manager — one scene on stage at a time, each with a tone
-   (night or paper) that the frame crossfades between.
-   ================================================================== */
-const stage = $('#stage');
-let current = null;
+/* The breathing pause: 4 seconds in, 6 out. Real timing, even with reduced
+   motion (the circle simply doesn't move). Returns a stop function. */
+function runBreath(root, cycles, onDone) {
+  const b = $('.breath', root), cue = $('.breath-cue', root), count = $('.breath-count', root);
+  let alive = true;
+  (async () => {
+    await sleep(500);
+    for (let n = 1; n <= cycles && alive; n++) {
+      if (count) count.textContent = `${n} of ${cycles}`;
+      b.classList.remove('exhale'); b.classList.add('inhale'); cue.textContent = 'Breathe in';
+      await sleep(4000); if (!alive) return;
+      b.classList.remove('inhale'); b.classList.add('exhale'); cue.textContent = 'And out, slowly';
+      await sleep(6000);
+    }
+    if (alive) { cue.textContent = 'Thank you.'; if (count) count.textContent = ''; onDone && onDone(); }
+  })();
+  return () => { alive = false; };
+}
+const breathHTML = () => `
+  <div class="breath" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span><span class="orbit-dot"></span><span class="lung"></span></div>
+  <p class="breath-cue" aria-live="polite">&nbsp;</p>
+  <p class="num breath-count"></p>`;
+
+/* ------------------------------------------------------------------
+   State and persistence
+------------------------------------------------------------------- */
 const state = {
   answers: {},
-  obs: store.get('latest', null),
+  obs: null,
   count: store.get('count', 0),
 };
+
+function history() { return store.get('history', []); }
+function saveObservation(obs) {
+  store.set('obs.' + obs.id, obs);
+  store.set('latest', obs.id);
+  store.set('count', obs.number);
+  store.set('history', [{ id: obs.id, number: obs.number, label: obs.workflowLabel, created: obs.created },
+    ...history().filter(h => h.id !== obs.id)].slice(0, 12));
+}
+function loadObservation(id) { return id ? store.get('obs.' + id, null) : null; }
+state.obs = loadObservation(store.get('latest', null));
+
+function arrangement(o) {
+  return Object.assign({ token: o.start, away: false, compare: false, staged: false, evidenceFirst: false, correction: '' },
+    store.get('arr.' + o.id, {}), { compare: false });
+}
+function saveArrangement(o, arr) {
+  const { token, away, staged, evidenceFirst, correction } = arr;
+  store.set('arr.' + o.id, { token, away, staged, evidenceFirst, correction });
+}
+
+/* ------------------------------------------------------------------
+   Scene manager
+------------------------------------------------------------------- */
+const stage = $('#stage');
+let current = null;
+const SCENES = {};
 
 function go(name, arg, dir = 1) {
   closeSheet();
@@ -1009,7 +1979,12 @@ function go(name, arg, dir = 1) {
   stage.appendChild(el);
   const prev = current;
   current = el;
-  if (prev) { prev.style.setProperty('--dir', dir); prev.classList.remove('in'); prev.classList.add('out'); setTimeout(() => prev.remove(), 750); }
+  if (prev) {
+    prev.style.setProperty('--dir', dir);
+    prev.classList.remove('in'); prev.classList.add('out');
+    prev.dispatchEvent(new Event('leave'));
+    setTimeout(() => prev.remove(), 750);
+  }
   el.getBoundingClientRect();
   requestAnimationFrame(() => el.classList.add('in'));
   mod.mount && mod.mount(el, arg);
@@ -1017,50 +1992,47 @@ function go(name, arg, dir = 1) {
   if (focus) setTimeout(() => focus.focus({ preventScroll: true }), 60);
 }
 
-/* ==================================================================
-   Scenes
-   ================================================================== */
-const SCENES = {};
-
 /* 1 · Arrival ------------------------------------------------------ */
 SCENES.arrival = {
   tone: 'night',
   render() {
-    const back = state.obs;
+    const o = state.obs;
     return `
       ${dial()}
       <div class="arrival">
         <header class="arrival-top rise" style="--i:0">
           <div class="wordmark">Astervell<small>The Observatory</small></div>
-          <span class="num">${back ? 'N° ' + pad(state.count) : 'Est. Seattle'}</span>
+          <span class="num">Workflow · Culture · Agency</span>
         </header>
         <div class="arrival-hero">
           ${emblem('', true)}
-          <h1 class="display rise" style="--i:3" tabindex="-1" data-focus>${back ? `Welcome back${state.obs.name ? ',<br><em>' + esc(state.obs.name) + '</em>' : '.'}` : 'See where<br>work gets <em>stuck.</em>'}</h1>
-          <p class="lede rise" style="--i:4">${back
-            ? 'Your last observation is waiting. Revisit it, keep the Day&nbsp;30 decision, or begin another.'
-            : 'Answer ten small questions about one workflow that keeps slipping. We’ll return a draft observation: the workflow, the evidence and one reversible test.'}</p>
+          <h1 class="display rise" style="--i:3" tabindex="-1" data-focus>${o
+            ? `Welcome back${o.name ? ',<br><em>' + esc(o.name) + '</em>' : '.'}`
+            : 'Most work doesn’t break.<br>It <em>waits.</em>'}</h1>
+          <p class="lede rise" style="--i:4">${o
+            ? `Your ${esc(o.workflowLabel.toLowerCase())} observation is where you left it.`
+            : 'Tell us about one piece of work that keeps slipping. You’ll get a draft map, a question worth asking, and one change you can undo.'}</p>
         </div>
         <footer class="arrival-foot">
-          ${back ? `
+          ${o ? `
             <button class="btn btn-light rise" style="--i:6" data-act="home">Enter the observatory ${ICON.arrow}</button>
             <button class="btn btn-ghost rise" style="--i:7" data-act="begin">Begin a new observation</button>`
           : `
-            <button class="btn btn-light rise" style="--i:6" data-act="begin">Begin an observation ${ICON.arrow}</button>
-            <div class="meta-row rise" style="--i:7"><span>4 minutes</span><span>No records</span><span>Stays on device</span></div>`}
+            <button class="btn btn-light rise" style="--i:6" data-act="begin">Begin ${ICON.arrow}</button>
+            <div class="meta-row rise" style="--i:7"><span>5 minutes</span><span>No records</span><span>Private</span></div>`}
         </footer>
       </div>`;
   },
   mount(el) {
     el.addEventListener('click', e => {
       const act = e.target.closest('[data-act]')?.dataset.act;
-      if (act === 'begin') { state.answers = {}; go('intake', 0); }
+      if (act === 'begin') { state.answers = {}; go('intake'); }
       if (act === 'home') go('home');
     });
   },
 };
 
-/* 2 · Intake ------------------------------------------------------- */
+/* 2 · Intake — one question per screen, branching by audience ------ */
 SCENES.intake = {
   tone: 'paper',
   render() {
@@ -1068,23 +2040,32 @@ SCENES.intake = {
       <div class="intake">
         <div class="intake-bar">
           <button class="iconbtn" data-act="back" aria-label="Back">${ICON.back}</button>
-          <div class="progress" aria-hidden="true">${QUESTIONS.map(() => '<i></i>').join('')}</div>
+          <div class="progress" aria-hidden="true"></div>
           <span class="num intake-count"></span>
         </div>
         <div class="q-wrap"></div>
       </div>`;
   },
-  mount(el, start) {
-    let i = start || 0;
+  mount(el) {
+    let cur = null;
     let busy = false;
     const wrap = $('.q-wrap', el);
-    const bars = $$('.progress i', el);
+    const bar = $('.progress', el);
+    const list = () => E.questionsFor(state.answers);
 
-    const show = (n, dir) => {
-      i = n;
-      const q = QUESTIONS[i];
-      bars.forEach((b, k) => { b.className = k < i ? 'done' : k === i ? 'now' : ''; });
-      $('.intake-count', el).textContent = `${String(i + 1).padStart(2, '0')} / ${QUESTIONS.length}`;
+    const paintProgress = (qs, i) => {
+      if (bar.children.length !== qs.length) bar.innerHTML = qs.map(() => '<i></i>').join('');
+      $$('i', bar).forEach((b, k) => { b.className = k < i ? 'done' : k === i ? 'now' : ''; });
+      $('.intake-count', el).textContent = `${String(i + 1).padStart(2, '0')} / ${qs.length}`;
+    };
+
+    const show = (id, dir) => {
+      const qs = list();
+      const i = Math.max(0, qs.findIndex(q => q.id === id));
+      const q = E.resolve(qs[i], state.answers);
+      cur = q.id;
+      busy = false;
+      paintProgress(qs, i);
       const node = document.createElement('div');
       node.className = 'q enter';
       node.style.setProperty('--qdir', dir);
@@ -1095,19 +2076,29 @@ SCENES.intake = {
       node.getBoundingClientRect();
       requestAnimationFrame(() => node.classList.remove('enter'));
       el.scrollTo({ top: 0 });
-      bindQuestion(node, q);
-      announce(`Question ${i + 1} of ${QUESTIONS.length}`);
+      bind(node, q);
+      announce(`Question ${i + 1} of ${qs.length}`);
       const f = node.querySelector('input, textarea') || node.querySelector('h2');
       setTimeout(() => f && f.focus({ preventScroll: true }), reduced ? 0 : 450);
     };
 
     const next = () => {
-      if (i < QUESTIONS.length - 1) show(i + 1, 1);
-      else go('composing');
+      state.answers = E.prune(E.prune(state.answers));
+      const qs = list();
+      const i = qs.findIndex(q => q.id === cur);
+      if (i < qs.length - 1) show(qs[i + 1].id, 1);
+      else finish();
     };
 
-    const bindQuestion = (node, q) => {
-      busy = false;
+    const finish = () => {
+      state.answers = E.prune(E.prune(state.answers));
+      state.count += 1;
+      state.obs = E.compose(state.answers, state.count, new Date());
+      saveObservation(state.obs);
+      go('pause');
+    };
+
+    const bind = (node, q) => {
       if (q.type === 'single') {
         node.addEventListener('click', async e => {
           const opt = e.target.closest('.opt');
@@ -1132,6 +2123,7 @@ SCENES.intake = {
           set.has(opt.dataset.v) ? set.delete(opt.dataset.v) : set.add(opt.dataset.v);
           state.answers[q.id] = q.options.map(o => o.v).filter(v => set.has(v));
           opt.setAttribute('aria-pressed', String(set.has(opt.dataset.v)));
+          $('.key', opt).textContent = set.has(opt.dataset.v) ? '✓' : '';
           buzz(6);
           sync();
         });
@@ -1140,25 +2132,29 @@ SCENES.intake = {
       if (q.type === 'text' || q.type === 'long') {
         const input = $('input, textarea', node);
         const counter = $('.count', node);
+        const cont = $('[data-act="next"]', node);
+        const sync = () => { if (q.id === 'workflowName') cont.disabled = !input.value.trim(); };
         input.addEventListener('input', () => {
           state.answers[q.id] = input.value;
           if (counter) counter.textContent = `${input.value.length} / ${q.max}`;
+          sync();
         });
         input.addEventListener('keydown', e => {
-          if (e.key === 'Enter' && (q.type === 'text' || e.metaKey || e.ctrlKey)) { e.preventDefault(); next(); }
+          if (e.key === 'Enter' && (q.type === 'text' || e.metaKey || e.ctrlKey) && !cont.disabled) { e.preventDefault(); next(); }
         });
+        sync();
       }
-      node.addEventListener('click', e => {
-        if (e.target.closest('[data-act="next"]')) next();
-      });
+      node.addEventListener('click', e => { if (e.target.closest('[data-act="next"]')) next(); });
     };
 
     el.addEventListener('click', e => {
       if (!e.target.closest('[data-act="back"]')) return;
-      if (i === 0) go('arrival', null, -1); else show(i - 1, -1);
+      const qs = list();
+      const i = qs.findIndex(q => q.id === cur);
+      if (i <= 0) go('arrival', null, -1); else show(qs[i - 1].id, -1);
     });
 
-    // Number keys choose options, like a well-made questionnaire.
+    // Number keys choose options.
     el.addEventListener('keydown', e => {
       const n = parseInt(e.key, 10);
       if (!n || e.target.matches('input, textarea')) return;
@@ -1166,7 +2162,7 @@ SCENES.intake = {
       if (opt) opt.click();
     });
 
-    show(i, 1);
+    show(list()[0].id, 1);
   },
 };
 
@@ -1174,11 +2170,11 @@ function questionHTML(q, val) {
   let body = '';
   if (q.type === 'single' || q.type === 'multi') {
     const multi = q.type === 'multi';
-    body = `<div class="opts" role="${multi ? 'group' : 'radiogroup'}" aria-labelledby="qh">
+    body = `<div class="opts${q.layout === 'chips' ? ' chips' : ''}" role="${multi ? 'group' : 'radiogroup'}" aria-labelledby="qh">
       ${q.options.map((o, k) => {
         const on = multi ? (val || []).includes(o.v) : val === o.v;
         return `<button class="opt${multi ? ' multi' : ''}" data-v="${o.v}" style="--i:${k}" ${multi ? `aria-pressed="${on}"` : `role="radio" aria-checked="${on}"`}>
-          <span class="key" aria-hidden="true">${multi && on ? '✓' : k + 1}</span>
+          <span class="key" aria-hidden="true">${multi ? (on ? '✓' : '') : k + 1}</span>
           <span><b>${o.t}</b>${o.s ? `<small>${o.s}</small>` : ''}</span>
         </button>`;
       }).join('')}
@@ -1186,81 +2182,43 @@ function questionHTML(q, val) {
     ${multi ? `<div class="q-actions"><button class="btn btn-primary" data-act="next">Continue ${ICON.arrow}</button></div>` : ''}`;
   } else if (q.type === 'text') {
     body = `<label class="sr" for="qi">${q.placeholder}</label>
-      <input id="qi" class="field" type="text" autocomplete="given-name" maxlength="40" placeholder="${q.placeholder}" value="${esc(val)}">
+      <input id="qi" class="field" type="text" autocomplete="${q.id === 'name' ? 'given-name' : 'off'}" maxlength="${q.max || 40}" placeholder="${q.placeholder}" value="${esc(val)}">
       <div class="q-actions"><button class="btn btn-primary" data-act="next">Continue ${ICON.arrow}</button></div>`;
   } else {
-    body = `<label class="sr" for="qi">${q.q}</label>
+    body = `<label class="sr" for="qi">${E.plain(q.q)}</label>
       <textarea id="qi" class="field" maxlength="${q.max}" placeholder="${q.placeholder}">${esc(val)}</textarea>
       <p class="num count">${(val || '').length} / ${q.max}</p>
       <div class="guard">${ICON.shield}<p class="fine" style="color:var(--muted)">Describe the process only. No customer or patient records, credentials, financial files or screenshots of private data.</p></div>
-      <div class="q-actions"><button class="btn btn-primary" data-act="next">Compose my observation ${ICON.arrow}</button></div>`;
+      <div class="q-actions"><button class="btn btn-primary" data-act="next">I’m done ${ICON.arrow}</button></div>`;
   }
-  const clean = q.q.replace(/<[^>]+>/g, '');
   return `
     <div class="q-kicker eyebrow">${q.kicker}</div>
-    <h2 class="title" id="qh" tabindex="-1" aria-label="${esc(clean)}">${q.q}</h2>
+    <h2 class="title" id="qh" tabindex="-1">${q.q}</h2>
     ${q.help ? `<p class="lede">${q.help}</p>` : ''}
     ${body}`;
 }
 
-/* 3 · Composing — the curated pause -------------------------------- */
-SCENES.composing = {
+/* 3 · Pause — nothing is computed here; this moment is for the person */
+SCENES.pause = {
   tone: 'night',
   render() {
-    const a = state.answers;
-    const doors = (a.doors && a.doors.length ? a.doors : ['form', 'email', 'phone']).slice(0, 6);
-    const nodes = doors.map((d, k) => {
-      const ang = (k / doors.length) * Math.PI * 2 - Math.PI / 2;
-      const x = 150 + 118 * Math.cos(ang), y = 150 + 118 * Math.sin(ang);
-      const label = QUESTIONS.find(q => q.id === 'doors').options.find(x => x.v === d).short;
-      const ty = y < 150 ? y - 12 : y + 20;
-      return `<g class="node" style="transition-delay:${k * 120}ms"><circle cx="${x}" cy="${y}" r="6"/><text x="${x}" y="${ty}" text-anchor="middle">${esc(label)}</text></g>`;
-    }).join('');
-    const lines = [
-      `Tracing ${doors.length === 1 ? 'one door' : doors.length + ' doors'} into one workflow`,
-      'Placing the handoff where the work waits',
-      'Separating what you reported from what might explain it',
-      'Looking for a contrary explanation',
-      'Drafting one reversible move',
-    ];
     return `
-      <div class="composing">
-        <p class="eyebrow rise" style="--i:0;text-align:center">Composing your observation</p>
-        <div class="orbit" aria-hidden="true">
-          <svg viewBox="0 0 300 300">
-            <circle class="rg" cx="150" cy="150" r="118"/>
-            <g class="spin"><circle class="rg dash" cx="150" cy="150" r="80"/><circle cx="150" cy="70" r="2" fill="#b08a4a"/></g>
-            <g class="spin rev"><circle class="rg dash" cx="150" cy="150" r="140"/><circle cx="290" cy="150" r="1.6" fill="#efeadc"/></g>
-            ${nodes}
-            <circle class="pulse" cx="150" cy="150" r="14"/>
-            <circle class="core" cx="150" cy="150" r="9"/>
-          </svg>
+      <div class="pause">
+        <p class="eyebrow rise" style="--i:0;margin-top:3vh">Before you look</p>
+        <h1 class="title rise" style="--i:1" tabindex="-1" data-focus>Take one breath.</h1>
+        <p class="lede rise" style="--i:2">Your observation is already written. Nothing is being calculated. This pause is for you.</p>
+        <div class="rise" style="--i:3">${breathHTML()}</div>
+        <div class="later rise" style="--i:4">
+          <button class="btn btn-ghost" data-act="ready">I’m ready</button>
         </div>
-        <ol class="steps-log" aria-live="polite">
-          ${lines.map(l => `<li><span class="tick">${ICON.check}</span>${l}</li>`).join('')}
-        </ol>
-        <button class="skip" data-act="skip">Skip</button>
       </div>`;
   },
-  async mount(el) {
-    state.count += 1;
-    const obs = compose(state.answers, state.count);
-    state.obs = obs;
-    store.set('latest', obs);
-    store.set('count', state.count);
-
-    let skipped = false;
-    $('[data-act="skip"]', el).addEventListener('click', () => { skipped = true; go('reveal'); });
-    const items = $$('.steps-log li', el);
-    await wait(700);
-    for (let k = 0; k < items.length && !skipped; k++) {
-      items[k].classList.add('on');
-      if (k === 1) $('.orbit', el).classList.add('converge');
-      await wait(980);
-      items[k].classList.add('done');
-    }
-    await wait(600);
-    if (!skipped && current === el) go('reveal');
+  mount(el) {
+    let done = false;
+    const onward = () => { if (done) return; done = true; stop(); go('reveal'); };
+    const stop = runBreath(el, 2, () => setTimeout(onward, 900));
+    el.addEventListener('leave', () => stop());
+    $('[data-act="ready"]', el).addEventListener('click', onward);
   },
 };
 
@@ -1273,19 +2231,19 @@ SCENES.reveal = {
       <div class="reveal">
         <div class="reveal-head">
           <p class="eyebrow rise" style="--i:0">Observation N° ${pad(o.number)}</p>
-          <h1 class="title rise" style="--i:1" tabindex="-1" data-focus>${o.name ? esc(o.name) + ', your' : 'Your'} observation<br>is <em>ready.</em></h1>
+          <h1 class="title rise" style="--i:1" tabindex="-1" data-focus>${o.name ? esc(o.name) + ', it’s' : 'It’s'} <em>ready.</em></h1>
         </div>
         <div class="envelope-wrap rise" style="--i:3">
           <button class="envelope" data-act="open" aria-label="Open your observation">
-            <div class="flap"></div>
-            <div class="seal">${emblem()}</div>
-            <div class="env-inner">
-              <div style="text-align:left">
-                <p class="eyebrow" style="margin:0 0 12px">Astervell · Workflow Clarity</p>
-                <p class="env-name">${esc(o.workflowLabel)}<br><em>made visible.</em></p>
-                <p class="num" style="margin-top:12px">Draft · not a finding</p>
-              </div>
-            </div>
+            <span class="flap"></span>
+            <span class="seal">${emblem()}</span>
+            <span class="env-inner">
+              <span style="text-align:left;display:block">
+                <span class="eyebrow" style="display:block;margin:0 0 12px">${esc(o.workflowLabel)}</span>
+                <span class="env-name" style="display:block">A map, a question,<br><em>and one change you can undo.</em></span>
+                <span class="num" style="display:block;margin-top:12px">A draft from your answers. Not a finding.</span>
+              </span>
+            </span>
             <span class="hint">Tap to open</span>
           </button>
         </div>
@@ -1303,9 +2261,8 @@ SCENES.reveal = {
   },
 };
 
-/* 5 · Observation — an explorable model of the handoff -------------- */
-// Positions are shared by the people, the token and the SVG paths
-// (viewBox 400 × 360), so drag targets and drawn lines always agree.
+/* 5 · Observation — Explore · Evidence · Test · Connect ------------ */
+// Shared coordinates for people, token and SVG paths (viewBox 400 × 360).
 const MAP = {
   people: { holder: [100, 170], owner: [300, 200], cover: [110, 300] },
   token: { holder: [100, 104], owner: [300, 128], cover: [196, 286] },
@@ -1321,73 +2278,6 @@ const MAP = {
     cover: 'M200 64 C120 84 34 170 60 250 S92 296 104 298',
   },
 };
-const REQUEST = {
-  lead: 'Could we book<br>a first visit?',
-  scheduling: 'Does Thursday<br>still work?',
-  followup: 'Great talking.<br>What’s next?',
-  knowledge: 'Where’s the<br>template for this?',
-};
-const JSHORT = { fit: 'fit', urgency: 'urgency', promise: 'promises', tone: 'the relationship' };
-
-function peopleFor(o) {
-  const a = o.answers;
-  if (a.team === 'solo') return {
-    holder: { label: 'You', role: 'Replying', mono: 'Y' },
-    owner: { label: 'You', role: 'Deciding', mono: 'Y' },
-    cover: { label: 'Cover', role: 'Not yet named', mono: '✧' },
-  };
-  const holder = {
-    founder: { label: 'Teammate', role: 'Sees it first', mono: 'T' },
-    coordinator: { label: 'Coordinator', role: 'Shared inbox', mono: 'C' },
-    first: { label: 'First to see it', role: 'Whoever’s there', mono: 'F' },
-    depends: { label: 'On duty', role: 'Varies by day', mono: 'D' },
-  }[a.owner] || { label: 'Coordinator', role: 'Shared inbox', mono: 'C' };
-  return {
-    holder,
-    owner: { label: 'Owner', role: 'Decides ' + (JSHORT[a.judgment] || 'fit'), mono: 'O' },
-    cover: { label: 'Cover', role: a.away === 'named' ? 'Named, not confirmed' : 'Not yet agreed', mono: '✧' },
-  };
-}
-const startOf = o => (o.answers.owner === 'founder' ? 'owner' : 'holder');
-
-function arrangement(o) {
-  return Object.assign({ token: startOf(o), away: false, compare: false, staged: false, evidenceFirst: false, correction: '' },
-    store.get('arr.' + o.id, {}));
-}
-
-function derive(o, arr) {
-  const P = peopleFor(o);
-  const tok = arr.compare ? startOf(o) : arr.token;
-  const H = P.holder.label;
-  const j = JSHORT[o.answers.judgment] || 'fit';
-  const cover = o.answers.away === 'named' ? 'The named cover' : 'Someone';
-  if (tok === 'owner') return {
-    tok, blocked: false,
-    title: 'Even the first reply<br>comes back to the owner.',
-    body: `Move the reply token to ${H === 'You' ? 'a cover' : H.toLowerCase() + ' or a cover'}. Keep decisions about ${j} with the owner.`,
-    status: 'Permission<br>concentrates here',
-  };
-  if (tok === 'holder' && arr.away) return {
-    tok, blocked: true,
-    title: tok === startOf(o) && !arr.compare ? 'The work waits<br>at an empty desk.' : 'The permission moved.<br>The gap did not.',
-    body: `${H === 'You' ? 'You are' : H + ' is'} away. ${cover} would need to agree to cover before the work can move.`,
-    status: 'An owner,<br>nobody available',
-  };
-  if (tok === 'holder') return {
-    tok, blocked: false,
-    title: `${H === 'You' ? 'You' : H} can reply.<br>The owner still decides ${j}.`,
-    body: arr.token === startOf(o) && !arr.compare
-      ? `This is the arrangement you described. Switch ${H === 'You' ? 'yourself' : H.toLowerCase()} to away and watch where the work goes.`
-      : `${H} needs agreed wording and capacity. Try the boundary before keeping it.`,
-    status: 'Acknowledge<br>before review',
-  };
-  return {
-    tok, blocked: false,
-    title: `The cover can reply.<br>The owner still decides ${j}.`,
-    body: 'The cover needs capacity and an explicit agreement. The work has moved, not vanished.',
-    status: 'Cover<br>accepts first',
-  };
-}
 
 let obsCtl = null;
 
@@ -1408,27 +2298,22 @@ SCENES.observation = {
           <button data-view="explore">${ICON.explore}<span>Explore</span></button>
           <button data-view="evidence">${ICON.evidence}<span>Evidence</span></button>
           <button data-view="test">${ICON.test}<span>Your test</span></button>
+          <button data-view="connect">${ICON.connect}<span>Connect</span></button>
         </nav>
       </div>`;
   },
   mount(el, arg) {
     const o = state.obs;
-    const P = peopleFor(o);
-    let arr = arrangement(o);
+    const P = o.people;
+    const arr = arrangement(o);
     let view = (arg && arg.view) || 'explore';
-    let replayTimer, toastTimer;
     const viewEl = $('#obs-view', el);
-    const save = () => store.set('arr.' + o.id, { token: arr.token, away: arr.away, staged: arr.staged, evidenceFirst: arr.evidenceFirst, correction: arr.correction });
-    const toast = msg => {
-      const t = $('#toast');
-      t.textContent = msg; t.classList.add('show');
-      clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
-    };
+    const save = () => saveArrangement(o, arr);
     const pct = ([x, y]) => `left:${x / 4}%;top:${y / 3.6}%`;
 
     const person = id => {
-      const p = P[id], m = derive(o, arr);
-      const away = id === 'holder' && arr.away;
+      const p = P[id], m = E.derive(o, arr);
+      const away = id === o.start && arr.away;
       return `<button class="person ${id}${m.tok === id ? ' selected' : ''}${away ? ' away' : ''}" data-person="${id}" style="${pct(MAP.people[id])}"
           aria-pressed="${m.tok === id}" aria-label="${esc(p.label)}, ${esc(p.role)}${away ? ', away' : ''}. Give first-reply authority">
         <span class="orb">${esc(p.mono)}</span>${away ? '<span class="away-badge">Away</span>' : ''}
@@ -1437,19 +2322,21 @@ SCENES.observation = {
     };
 
     const explore = () => {
-      const m = derive(o, arr);
+      const m = E.derive(o, arr);
       const flow = o.steps.map((s, k) => `
         <li class="${k === o.flag ? 'flag' : ''}" style="--i:${k}">
           <span class="dot">${String(k + 1).padStart(2, '0')}</span>
           <div><b>${esc(s[0])}</b><small>${esc(s[1])} <i>· ${esc(s[2])}</i></small>
           ${k === o.flag ? `<div class="flagnote">${esc(o.flagNote)}</div>` : ''}</div>
         </li>`).join('');
+      const hint = arr.token === o.start && !arr.compare
+        ? `<span class="token-hint" aria-hidden="true" style="${m.tok === 'owner' ? 'left:20%;top:27%' : 'left:45%;top:31%'}">drag or tap</span>` : '';
       return `
         <section class="pane">
-          <div class="intro pop-in"><h1 class="title" tabindex="-1" data-focus>Untangle <em>the handoff.</em></h1>
-            <p class="lede">See who can act. Move one boundary.</p></div>
-          <div class="scene-top pop-in" style="--i:1"><span class="eyebrow">Your ${esc(o.workflowLabel.toLowerCase())} · as described</span>
-            <button class="chip" data-act="compare" aria-pressed="${arr.compare}">${arr.compare ? 'Your change' : 'See original'}</button></div>
+          <div class="intro pop-in"><h1 class="title" tabindex="-1" data-focus>Who can act?</h1>
+            <p class="lede">Move the first reply between people. Watch where the work goes.</p></div>
+          <div class="scene-top pop-in" style="--i:1"><span class="eyebrow">${arr.compare ? 'As you described it' : 'Your arrangement'}</span>
+            <button class="chip" data-act="compare" aria-pressed="${arr.compare}">${arr.compare ? 'Back to yours' : 'See original'}</button></div>
           <div class="system pop-in" style="--i:2" id="system" aria-label="Interactive model. Move first-reply authority between people.">
             <div class="halo" style="${pct(MAP.people[m.tok])}"></div>
             <svg class="links" viewBox="0 0 400 360" aria-hidden="true">
@@ -1457,124 +2344,164 @@ SCENES.observation = {
               <path class="${m.blocked ? 'blocked' : 'active'}" d="${MAP.path[m.tok]}"/>
               <path class="travel" d="${MAP.path[m.tok]}"/>
             </svg>
-            <button class="request" data-act="request" style="left:50%;top:10%"><small>New · ${esc(o.steps[0][2].split(' / ')[0])}</small><span>${REQUEST[o.answers.workflow] || REQUEST.lead}</span></button>
+            <button class="request" data-act="request" style="left:50%;top:10%"><small>New · ${esc((o.doors[0] || 'Arrives').split(' ')[0])}</small><span>${o.request}</span></button>
             ${person('holder')}${person('owner')}${person('cover')}
-            ${arr.token === startOf(o) && !arr.compare ? `<span class="token-hint" aria-hidden="true" style="${m.tok === 'owner' ? 'left:36%;top:37%' : 'left:45%;top:31%'}">drag or tap</span>` : ''}
+            ${hint}
             <button class="token" id="token" data-at="${m.tok}" style="${pct(MAP.token[m.tok])}" aria-label="First-reply authority, now with ${esc(P[m.tok].label)}. Drag to a person or tap for options">${ICON.key} First reply</button>
             <span class="status" aria-live="polite">${m.status}</span>
-            <span class="lock">${ICON.lock} ${esc((JSHORT[o.answers.judgment] || 'fit').replace(/^./, c => c.toUpperCase()))} stays human</span>
+            <span class="lock">${ICON.lock} ${esc(o.lock)}</span>
           </div>
-          <div class="story" aria-live="polite"><h2>${m.title}</h2><p>${m.body}</p></div>
-          <div class="control"><span><b>${esc(P.holder.label)}</b> ${P.holder.label === 'You' ? 'are' : 'is'} ${arr.away ? 'away' : 'available'}</span>
-            <button class="switch" data-act="away" role="switch" aria-checked="${!arr.away}" aria-label="${esc(P.holder.label)} available"><i></i></button></div>
+          <div class="story" aria-live="polite"><h2>${m.title}</h2><p>${esc(m.body)}</p></div>
+          <div class="control"><span>${esc(E.awayLabel(o, arr.away))}</span>
+            <button class="switch" data-act="away" role="switch" aria-checked="${!arr.away}" aria-label="${esc(E.awayLabel(o, false))}"><i></i></button></div>
           <div class="pair">
             <button class="btn btn-ghost" data-act="replay">Replay</button>
             <button class="btn btn-light" data-act="try">Try this ${ICON.arrow}</button>
           </div>
-          <p class="fine center">Explore a possibility. No outcome is being predicted.</p>
+          <p class="fine center">A way to think, not a prediction.</p>
           <details class="steps">
-            <summary><span class="eyebrow">The path, step by step</span><span class="num">6 steps</span></summary>
+            <summary><span class="eyebrow">The path, step by step</span><span class="num">${o.steps.length} steps</span></summary>
             <ol class="flow">${flow}</ol>
             <div class="block"><span class="eyebrow">The question</span><p class="q-line">${esc(o.question)}</p></div>
-            <p class="fine">Basis: your ten answers. A draft reconstruction, not observed work.</p>
+            <p class="fine">Built from your answers. A draft reconstruction, not observed work.</p>
           </details>
         </section>`;
     };
 
     const evidence = () => {
-      const reported = arr.correction || o.reported;
       const note = o.answers.note && o.answers.note.trim();
+      const quote = arr.correction || note || o.reported;
+      const reads = [
+        ['A possibility', o.hypothesis],
+        ['Another explanation', o.contrary],
+        ['What would change our mind', o.changeMind],
+        ['How it feels', o.feelNote],
+        ['AI in the work', o.aiNote],
+        ['Permission', o.sponsorNote],
+      ].filter(r => r[1]);
       return `
         <section class="pane">
           <p class="eyebrow pop-in">Before we explain it</p>
-          <h1 class="title pop-in" style="--i:1" tabindex="-1" data-focus>What do we<br><em>actually know?</em></h1>
+          <h1 class="title pop-in" style="--i:1" tabindex="-1" data-focus>What do we actually know?</h1>
           <article class="paper-note pop-in" style="--i:2">
-            <span class="eyebrow">E1 · Your account${arr.correction ? ' · corrected' : ''}</span>
-            <blockquote>“${esc(note && !arr.correction ? note : reported)}”</blockquote>
-            <small>${note && !arr.correction ? esc(reported) : 'Reported, not observed. Frequency and duration are unmeasured.'}</small>
+            <span class="eyebrow">Your account${arr.correction ? ' · corrected' : ''}</span>
+            <blockquote>“${esc(quote)}”</blockquote>
+            <small>${!arr.correction && note ? esc(o.reported) : 'Reported, not observed. Frequency and duration are unmeasured.'}</small>
           </article>
           <button class="textbtn pop-in" style="--i:3" data-act="correct">That’s not quite right</button>
-          ${[['A possibility', o.hypothesis], ['Another explanation', o.contrary], ['What would change our mind', o.changeMind]].map(([k, v], i) => `
-            <div class="read pop-in" style="--i:${4 + i}"><span class="kind"><i></i>${k}</span><p>${esc(v)}</p></div>`).join('')}
-          <div class="read ask pop-in" style="--i:7"><span class="kind">Ask before changing</span><p>${esc(o.question)}</p></div>
-          <p class="fine center" style="margin-top:22px">The map is a working interpretation. Correct it. A different account may support a different next step.</p>
+          ${reads.map(([k, v], i) => `<div class="read pop-in" style="--i:${4 + i}"><span class="kind"><i></i>${k}</span><p>${esc(v)}</p></div>`).join('')}
+          <div class="read ask pop-in" style="--i:10"><span class="kind">Ask before changing</span><p>${esc(o.question)}</p></div>
+          <p class="fine center" style="margin-top:22px">This is a working interpretation. Correct it. A different account may support a different next step.</p>
         </section>`;
     };
 
     const test = () => {
-      const tok = arr.token, name = P[tok].label;
-      const gap = tok === 'holder' && arr.away;
-      const j = JSHORT[o.answers.judgment] || 'fit';
+      const plan = E.testPlan(o, arr);
       const choice = store.get('ritual.' + o.id, null);
-      const inviteBtn = `<button class="btn btn-light" data-act="invite" style="margin-top:12px">${store.get('accepted', null) === o.id ? 'Review your invitation' : 'Continue to your invitation'} ${ICON.arrow}</button>`;
-      if (arr.staged) return `
+      const inviteBtn = `<button class="btn btn-light" data-act="invite" style="margin-top:12px">Talk it through with Astervell ${ICON.arrow}</button>`;
+      if (arr.staged && plan.kind !== 'unchanged') return `
         <section class="pane center-pane">
           <div class="seal-done pop-in">${ICON.check}</div>
-          <p class="eyebrow pop-in" style="--i:1">A small test, held lightly</p>
-          <h1 class="title pop-in" style="--i:2" tabindex="-1" data-focus>Keep the learning.<br><em>Keep your choice.</em></h1>
-          <p class="lede pop-in" style="--i:3">${arr.evidenceFirst ? 'Check the decision boundary with the person doing the work before changing it.' : `${esc(name)} acknowledges the next five ${esc(o.unit)}. The owner keeps decisions about ${esc(j)}.`}</p>
+          <p class="eyebrow pop-in" style="--i:1">Saved for review</p>
+          <h1 class="title pop-in" style="--i:2" tabindex="-1" data-focus>A small test,<br>held lightly.</h1>
+          <p class="lede pop-in" style="--i:3">${esc(plan.staged)}</p>
           <div class="rowlist pop-in" style="--i:4">
             <div><small>Notice</small><p>Who waits? Who takes on more work? What would change your mind?</p></div>
-            <div><small>Return</small><p>Review raw counts after one week. Keep, revise or undo by Day 30.</p></div>
+            <div><small>Return</small><p>Look at the raw counts after a week. Keep, revise or undo by Day 30.</p></div>
           </div>
           <div class="decide3 pop-in" style="--i:5" role="group" aria-label="Day 30 decision">
-            ${['keep', 'revise', 'undo'].map(c => `<button data-rit="${c}" aria-pressed="${choice === c}">${c[0].toUpperCase() + c.slice(1)}</button>`).join('')}
+            ${['keep', 'revise', 'undo'].map(c => `<button data-rit="${c}" aria-pressed="${choice === c}">${cap(c)}</button>`).join('')}
           </div>
-          <p class="fine center" role="status">${choice ? esc(RITUAL[choice]) : 'Saved on this device. No real workflow has changed.'}</p>
+          <p class="fine center" role="status">${choice ? esc(C.RITUAL[choice]) : 'Saved on this device. No real workflow has changed.'}</p>
+          <button class="btn btn-ghost" data-view="connect" style="margin-top:14px">Put the dates in your calendar</button>
           ${inviteBtn}
           <button class="textbtn" data-act="explore">Back to the model</button>
         </section>`;
-      if (tok === startOf(o) && !arr.evidenceFirst) return `
+      if (plan.kind === 'unchanged') return `
         <section class="pane center-pane">
           <p class="eyebrow pop-in">One reversible change</p>
-          <h1 class="title pop-in" style="--i:1" tabindex="-1" data-focus>What would you<br><em>like to try?</em></h1>
-          <div class="empty-orbit pop-in" style="--i:2"><span class="orb">${esc(P[tok].mono)}</span></div>
-          <p class="lede pop-in" style="--i:3">The arrangement hasn’t changed yet. Move first-reply authority in the model, or check the evidence first.</p>
-          <div class="suggest pop-in" style="--i:4"><span class="eyebrow">Astervell would start with</span><p class="big-move">${esc(o.move[0])} <span>${esc(o.move[1])}</span></p><p class="fine">${esc(o.change)}</p></div>
+          <h1 class="title pop-in" style="--i:1" tabindex="-1" data-focus>What would you like to try?</h1>
+          <div class="empty-orbit pop-in" style="--i:2"><span class="orb">${esc(P[o.start].mono)}</span></div>
+          <p class="lede pop-in" style="--i:3">Nothing has moved yet. Move the first reply in the model, or check the evidence first.</p>
+          <div class="suggest pop-in" style="--i:4"><span class="eyebrow">Where Astervell would start</span><p class="big-move">${esc(o.move[0])} <span>${esc(o.move[1])}</span></p><p class="fine">${esc(o.change)}</p></div>
           <button class="btn btn-light" data-act="explore">Explore a change ${ICON.arrow}</button>
           <button class="textbtn" data-act="evfirst">Check the evidence first</button>
         </section>`;
-      const ef = arr.evidenceFirst;
-      const rows = ef ? [
-        ['First', 'Walk through two more real examples with the person doing the work.'],
-        ['Ask', o.question],
-        ['Watch', 'What would contradict the explanation you started with?'],
-        ['Then', 'Correct the map. Decide whether any change is justified.'],
-      ] : [
-        ['First', gap ? `Agree who covers while ${P.holder.label === 'You' ? 'you are' : P.holder.label.toLowerCase() + ' is'} away. Permission alone is not enough.` : `Agree wording, capacity and the boundary with ${tok === 'cover' ? 'the cover' : name.toLowerCase()}.`],
-        ['Try', `${tok === 'cover' ? 'The cover' : name} acknowledges the next five comparable ${o.unit} over one week. The owner decides ${j}.`],
-        ['Watch', o.measure],
-        ['Undo if', 'Ownership gets less clear, capacity fails, or someone makes a commitment without authority.'],
-      ];
       return `
         <section class="pane">
-          <p class="eyebrow pop-in">${ef ? 'Understanding is a valid next step' : 'Keep it small. Keep it reversible.'}</p>
-          <h1 class="title pop-in" style="--i:1" tabindex="-1" data-focus>${ef ? 'Check before<br><em>you change.</em>' : `Five ${esc(o.unit)}.<br><em>One new boundary.</em>`}</h1>
-          <div class="token static pop-in" style="--i:2">${ICON.key} ${ef ? 'An evidence-first plan' : 'First reply · ' + esc(tok === 'cover' ? 'Cover' : name)}</div>
-          <div class="rowlist pop-in" style="--i:3">${rows.map(r => `<div><small>${r[0]}</small><p>${esc(r[1])}</p></div>`).join('')}</div>
-          <button class="btn btn-light" data-act="stage">${ef ? 'Keep this evidence plan' : 'Keep this test for review'} ${ICON.arrow}</button>
-          <button class="textbtn" data-act="evfirst">${ef ? 'Return to the trial' : 'Not enough evidence yet'}</button>
+          <p class="eyebrow pop-in">${esc(plan.eyebrow)}</p>
+          <h1 class="title pop-in" style="--i:1" tabindex="-1" data-focus>${plan.title}</h1>
+          <div class="token static pop-in" style="--i:2">${ICON.key} ${esc(plan.chip)}</div>
+          <div class="rowlist pop-in" style="--i:3">${plan.rows.map(r => `<div><small>${r[0]}</small><p>${esc(r[1])}</p></div>`).join('')}</div>
+          <button class="btn btn-light" data-act="stage">${plan.kind === 'evidence' ? 'Keep this evidence plan' : 'Keep this test for review'} ${ICON.arrow}</button>
+          <button class="textbtn" data-act="evfirst">${plan.kind === 'evidence' ? 'Return to the trial' : 'Not enough evidence yet'}</button>
           <p class="fine center">A draft plan. Real changes need the people involved to agree.</p>
         </section>`;
     };
 
-    const VIEWS = { explore, evidence, test };
+    const connect = () => {
+      const pauses = C.RESOURCES.filter(r => r.kind === 'pause' && r.url);
+      return `
+        <section class="pane">
+          <p class="eyebrow pop-in">Connect</p>
+          <h1 class="title pop-in" style="--i:1" tabindex="-1" data-focus>Take it where<br>the work happens.</h1>
+          <p class="lede pop-in" style="--i:2">Nothing leaves this device until you choose it, and you’ll see exactly what goes.</p>
+
+          <div class="bridge-group pop-in" style="--i:3"><span class="eyebrow">Think it through</span>
+            <button class="bridge" data-bridge="chatgpt"><span class="glyph">${ICON.think}</span><span><b>Ask ChatGPT</b><small>Opens ChatGPT with your observation as a prompt.</small></span><span class="go-arrow">›</span></button>
+            <button class="bridge" data-bridge="claude"><span class="glyph">${ICON.think}</span><span><b>Ask Claude</b><small>Copies the prompt and opens Claude. The desktop app can take it filled in.</small></span><span class="go-arrow">›</span></button>
+          </div>
+
+          <div class="bridge-group pop-in" style="--i:4"><span class="eyebrow">Bring in your team</span>
+            <button class="bridge" data-bridge="share"><span class="glyph">${ICON.team}</span><span><b>Share to Slack or Teams</b><small>A short message asking “does this match what you see?”</small></span><span class="go-arrow">›</span></button>
+          </div>
+
+          <div class="bridge-group pop-in" style="--i:5"><span class="eyebrow">Build the trial</span>
+            <button class="bridge" data-bridge="brief"><span class="glyph">${ICON.code}</span><span><b>Brief for Claude Code, Codex or Cowork</b><small>The trial, its guardrails, and what must stay human.</small></span><span class="go-arrow">›</span></button>
+          </div>
+
+          <div class="bridge-group pop-in" style="--i:6"><span class="eyebrow">Keep the dates</span>
+            <button class="bridge" data-act="ics"><span class="glyph">${ICON.cal}</span><span><b>Add Day 7 and Day 30</b><small>A calendar file for Apple, Outlook and most calendars.</small></span><span class="go-arrow">↓</span></button>
+            <div class="bridge-row">
+              <a class="pill" href="${esc(E.googleCalUrl(o, 7))}" target="_blank" rel="noopener">Google Calendar · Day 7</a>
+              <a class="pill" href="${esc(E.googleCalUrl(o, 30))}" target="_blank" rel="noopener">Day 30</a>
+            </div>
+          </div>
+
+          <div class="bridge-group pop-in" style="--i:7"><span class="eyebrow">Stay human</span>
+            <button class="bridge" data-act="breathe"><span class="glyph">${ICON.leaf}</span><span><b>One long exhale</b><small>A minute of breathing, right here. Before a decision helps most.</small></span><span class="go-arrow">›</span></button>
+            <div class="bridge-row">${pauses.map(r => `<a class="pill" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)} ↗</a>`).join('')}</div>
+          </div>
+
+          <div class="bridge-group pop-in" style="--i:8"><span class="eyebrow">Go further</span>
+            <button class="bridge" data-act="library"><span class="glyph">${ICON.book}</span><span><b>Library</b><small>Practices, reading and tools chosen for this kind of work.</small></span><span class="go-arrow">›</span></button>
+            <button class="bridge" data-act="invite"><span class="glyph">${ICON.mail}</span><span><b>Talk to Astervell</b><small>A person, not a bot. ${esc(C.BRAND.founder)} reads every message.</small></span><span class="go-arrow">›</span></button>
+          </div>
+
+          <div class="honest pop-in" style="--i:9">
+            <span class="eyebrow">Not here yet</span>
+            <p>Live connections that read your Slack channels or calendar. Those need an Astervell account and your explicit permission, so we’re building them carefully instead of pretending now.</p>
+          </div>
+        </section>`;
+    };
+
+    const VIEWS = { explore, evidence, test, connect };
+    const replay = () => {
+      const t = $('.travel', viewEl);
+      if (!t) return;
+      t.classList.remove('go'); void t.getBoundingClientRect(); t.classList.add('go');
+    };
     const render = (scrollTop = true) => {
       viewEl.innerHTML = VIEWS[view]();
       $$('.obs-nav [data-view]', el).forEach(b => { b.classList.toggle('on', b.dataset.view === view); b.setAttribute('aria-current', b.dataset.view === view ? 'page' : 'false'); });
       if (scrollTop) el.scrollTo({ top: 0 });
       if (view === 'explore') bindDrag();
     };
-    const show = v => { view = v; clearTimeout(replayTimer); render(); const f = $('[data-focus]', viewEl); f && f.focus({ preventScroll: true }); };
+    const show = v => { view = v; render(); const f = $('[data-focus]', viewEl); f && f.focus({ preventScroll: true }); };
     const assign = id => {
       arr.token = id; arr.compare = false; arr.staged = false; arr.evidenceFirst = false;
-      save(); buzz(10); render(false);
-      toast(id === startOf(o) ? 'First reply returned to the original arrangement' : `First reply moved to ${id === 'cover' ? 'the cover' : P[id].label === 'You' ? 'you' : P[id].label.toLowerCase()}`);
-    };
-    const replay = () => {
-      const t = $('.travel', viewEl);
-      if (!t) return;
-      t.classList.remove('go'); void t.getBoundingClientRect(); t.classList.add('go');
+      save(); buzz(10); render(false); replay();
+      toast(id === o.start ? 'Back to the arrangement you described' : `First reply moved to ${P[id].the}`);
     };
 
     function bindDrag() {
@@ -1590,22 +2517,20 @@ SCENES.observation = {
         if (!drag) return;
         if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 7) { drag.moved = true; token.classList.add('dragging'); }
         if (!drag.moved) return;
-        const x = Math.max(6, Math.min(94, (e.clientX - drag.box.left) / drag.box.width * 100));
-        const y = Math.max(6, Math.min(94, (e.clientY - drag.box.top) / drag.box.height * 100));
-        token.style.left = x + '%'; token.style.top = y + '%';
+        token.style.left = Math.max(6, Math.min(94, (e.clientX - drag.box.left) / drag.box.width * 100)) + '%';
+        token.style.top = Math.max(6, Math.min(94, (e.clientY - drag.box.top) / drag.box.height * 100)) + '%';
         $$('.person', sys).forEach(p => {
           const r = $('.orb', p).getBoundingClientRect();
           p.classList.toggle('target', Math.hypot(e.clientX - r.x - r.width / 2, e.clientY - r.y - r.height / 2) < 64);
         });
       });
-      const end = e => {
+      token.addEventListener('pointerup', () => {
         if (!drag) return;
         dragged = drag.moved;
         const target = drag.moved && $('.person.target', sys);
         drag = null;
         if (target) assign(target.dataset.person); else if (dragged) render(false);
-      };
-      token.addEventListener('pointerup', end);
+      });
       token.addEventListener('pointercancel', () => { drag = null; render(false); });
       token.addEventListener('click', () => { if (!dragged) openSheet('assign'); });
     }
@@ -1617,6 +2542,8 @@ SCENES.observation = {
       if (p) return assign(p.dataset.person);
       const rit = e.target.closest('[data-rit]');
       if (rit) { store.set('ritual.' + o.id, rit.dataset.rit); buzz(10); return render(false); }
+      const bridge = e.target.closest('[data-bridge]');
+      if (bridge) return openSheet('preview', { kind: bridge.dataset.bridge, arr });
       const act = e.target.closest('[data-act]')?.dataset.act;
       if (!act) return;
       if (act === 'home') go('home', null, -1);
@@ -1631,12 +2558,15 @@ SCENES.observation = {
       if (act === 'stage') { arr.staged = true; save(); render(); toast('Saved for review on this device'); }
       if (act === 'correct') openSheet('correct');
       if (act === 'invite') go('invite');
+      if (act === 'library') go('library', { from: 'observation' });
+      if (act === 'breathe') openSheet('breathe');
+      if (act === 'ics') { download(`astervell-${o.number}-reviews.ics`, E.ics(o), 'text/calendar'); toast('Calendar file saved. Open it to add both dates.'); }
     });
 
     obsCtl = {
-      people: P, arr: () => arr, start: startOf(o),
+      arr: () => arr,
       assign: id => { closeSheet(); assign(id); },
-      correct: text => { arr.correction = text; arr.staged = false; save(); closeSheet(); render(); toast('Account corrected. Recheck the interpretation.'); },
+      correct: text => { arr.correction = text; arr.staged = false; save(); closeSheet(); render(); toast('Account corrected. Read the interpretation again.'); },
     };
     render();
     setTimeout(replay, reduced ? 0 : 1200);
@@ -1644,59 +2574,36 @@ SCENES.observation = {
 };
 
 /* 6 · Invitation --------------------------------------------------- */
-function mailto(o) {
-  const a = o.answers;
-  const L = (k) => LABEL[k][a[k]] || '—';
-  const body = [
-    `Hello ${BRAND.founder},`,
-    '',
-    'I completed an observation in the Astervell Observatory and would like to talk about fit for the Workflow Clarity Pilot.',
-    '',
-    `Workflow: ${L('workflow')}`,
-    `Team: ${L('team')}`,
-    `Arrives through: ${(a.doors || []).map(d => LABEL.doors[d]).join(', ') || '—'}`,
-    `Next step usually sits with: ${L('owner')}`,
-    `When they are away: ${L('away')}`,
-    `How often it slips: ${L('frequency')}`,
-    `How we find out: ${L('signal')}`,
-    `Must stay human: ${L('judgment')}`,
-    a.note && a.note.trim() ? `In one sentence: ${a.note.trim()}` : null,
-    '',
-    '(Process description only. No customer records, credentials or files.)',
-    '',
-    o.name ? `— ${o.name}` : '',
-  ].filter(x => x !== null).join('\n');
-  return `mailto:${BRAND.email}?subject=${encodeURIComponent('Astervell workflow conversation · ' + L('workflow'))}&body=${encodeURIComponent(body)}`;
-}
-
 SCENES.invite = {
   tone: 'night',
   render() {
     const o = state.obs;
+    const org = o.audience === 'org';
     return `
       <div class="invite">
         <div class="obs-head" style="margin-bottom:0">
-          <button class="iconbtn" data-act="back" aria-label="Back to your test">${ICON.back}</button>
-          <span class="num" style="color:var(--on-night-faint)">Invitation · N° ${pad(o.number)}</span>
+          <button class="iconbtn" data-act="back" aria-label="Back to your observation">${ICON.back}</button>
+          <span class="num" style="color:var(--on-night-faint)">Workflow Clarity Pilot</span>
         </div>
         <div class="invite-card rise" style="--i:1">
-          <p class="eyebrow">${o.name ? 'For ' + esc(o.name) : 'You are invited'}</p>
+          <p class="eyebrow">${o.name ? 'For ' + esc(o.name) : 'An invitation'}</p>
           <h2 tabindex="-1" data-focus>One workflow.<br><em>One clear next move.</em></h2>
-          <p class="lede">The Workflow Clarity Pilot takes your ${esc(o.workflowLabel.toLowerCase())} observation from draft to a checked map, with the person who does the work.</p>
-          <div class="price"><b>$750</b><span>Fixed pilot fee<br>USD</span></div>
+          <p class="lede">Your ${esc(o.workflowLabel.toLowerCase())} observation is a draft. The pilot checks it with the person who does the work, and turns it into a map you can trust.</p>
+          ${org ? `<div class="price"><b style="font-size:34px">Scoped with you</b><span>Fee agreed<br>in writing</span></div>`
+            : `<div class="price"><b>$750</b><span>Fixed pilot fee<br>USD</span></div>`}
           <dl class="rows">
-            <div><dt>Scope</dt><dd>One operator, one workflow. Short private intake, a 60-minute mapping session and a 30-minute readout.</dd></div>
-            <div><dt>Timing</dt><dd>Three business days after activation.</dd></div>
+            <div><dt>Scope</dt><dd>${org ? 'One workflow and one team, with the people who do the work.' : 'One operator, one workflow. A short private intake, a 60-minute mapping session and a 30-minute readout.'}</dd></div>
+            <div><dt>Timing</dt><dd>${org ? 'Agreed in writing before anything starts.' : 'Three business days after activation.'}</dd></div>
             <div><dt>You receive</dt><dd><ul class="receive">
               <li>Visual workflow map</li><li>Up to three evidence-labeled friction points</li><li>Human-judgment boundaries</li><li>One reversible quick win</li><li>30-day action sheet</li></ul></dd></div>
           </dl>
-          <div class="sig">${emblem()}<p>You work directly with ${BRAND.founder}, founder of Astervell, Seattle. No purchase is required to ask about fit.</p></div>
+          <div class="sig">${emblem()}<p>You work directly with ${esc(C.BRAND.founder)}, founder of Astervell, in Seattle. Asking about fit costs nothing.</p></div>
         </div>
         <div class="invite-actions" id="invite-actions">
-          <a class="btn btn-light rise" style="--i:3;text-decoration:none" href="${esc(mailto(o))}" data-act="accept">Accept · draft the email ${ICON.arrow}</a>
-          <a class="btn btn-ghost rise" style="--i:4;text-decoration:none" href="${BRAND.calendar}" target="_blank" rel="noopener">Book a problem conversation</a>
-          <button class="fine rise" style="--i:5;padding:12px;text-decoration:underline;text-underline-offset:3px" data-act="terms">Before you commit: activation, scope and exclusions</button>
-          <button class="fine rise" style="--i:6;padding:8px" data-act="home">Not now · enter the observatory</button>
+          <a class="btn btn-light rise" style="--i:3;text-decoration:none" href="${esc(E.mailto(o))}" data-act="accept">Write to ${esc(C.BRAND.founder)} ${ICON.arrow}</a>
+          <a class="btn btn-ghost rise" style="--i:4;text-decoration:none" href="${C.BRAND.calendar}" target="_blank" rel="noopener">Book a 30-minute conversation</a>
+          <button class="fine rise" style="--i:5;padding:12px;text-decoration:underline;text-underline-offset:3px" data-act="terms">Before you commit: scope and exclusions</button>
+          <button class="fine rise" style="--i:6;padding:8px" data-act="home">Not now</button>
         </div>
       </div>`;
   },
@@ -1707,13 +2614,12 @@ SCENES.invite = {
       if (act === 'home') go('home');
       if (act === 'terms') openSheet('terms');
       if (act === 'accept') {
-        store.set('accepted', state.obs.id);
         setTimeout(() => {
           $('#invite-actions', el).innerHTML = `
             <div class="sent pop-in" style="--i:0">
               <p class="eyebrow" style="color:var(--gold)">Draft opened</p>
               <p class="title">Nothing is sent<br>until <em>you</em> send it.</p>
-              <p class="lede">Review the email in your mail app first. It describes the process only.</p>
+              <p class="lede">Read the email in your mail app first. It describes the process only.</p>
             </div>
             <button class="btn btn-light pop-in" style="--i:2" data-act="home">Enter the observatory ${ICON.arrow}</button>`;
         }, 400);
@@ -1722,7 +2628,52 @@ SCENES.invite = {
   },
 };
 
-/* 7 · Home — the observatory, in modules --------------------------- */
+/* 7 · Library ------------------------------------------------------ */
+const KIND = { practice: 'Practice', read: 'Reading', pause: 'Pause', tool: 'Tool' };
+
+SCENES.library = {
+  tone: 'paper',
+  render() {
+    return `
+      <div class="lib-head">
+        <button class="iconbtn" data-act="back" aria-label="Back">${ICON.back}</button>
+        <span class="num">Library</span>
+      </div>
+      <h1 class="title rise" style="--i:0" tabindex="-1" data-focus>A small shelf.</h1>
+      <p class="lede rise" style="--i:1">Practices from the Astervell method, reading we trust, and a few ways to slow down. Nothing here is sponsored.</p>
+      <div class="filters rise" style="--i:2" role="group" aria-label="Filter">
+        ${C.LIBRARY_FILTERS.filter(([k]) => k !== 'foryou' || state.obs).map(([k, t]) => `<button data-filter="${k}">${t}</button>`).join('')}
+      </div>
+      <ul class="shelf rise" style="--i:3" id="shelf"></ul>`;
+  },
+  mount(el, arg) {
+    let filter = state.obs ? 'foryou' : 'practice';
+    const paint = () => {
+      $$('[data-filter]', el).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
+      const items = filter === 'foryou'
+        ? E.recommend(state.obs, 8).map(id => C.RESOURCES.find(r => r.id === id)).filter(Boolean)
+        : C.RESOURCES.filter(r => r.kind === filter);
+      $('#shelf', el).innerHTML = items.map(r => {
+        const inner = `<span><span class="kind">${KIND[r.kind]}</span><b>${esc(r.title)}</b><span class="meta">${esc(r.meta)}</span><p>${esc(r.note)}</p></span>`;
+        if (r.url) return `<li><a class="item" href="${r.url}" target="_blank" rel="noopener">${inner}<span class="act">${ICON.out}</span></a></li>`;
+        if (r.steps || r.action) return `<li><button class="item" data-res="${r.id}">${inner}<span class="act">${ICON.go}</span></button></li>`;
+        return `<li><div class="item">${inner}</div></li>`;
+      }).join('');
+    };
+    el.addEventListener('click', e => {
+      const f = e.target.closest('[data-filter]');
+      if (f) { filter = f.dataset.filter; paint(); return; }
+      const r = e.target.closest('[data-res]');
+      if (r) { const res = C.RESOURCES.find(x => x.id === r.dataset.res); return openSheet(res.action === 'breathe' ? 'breathe' : 'practice', res); }
+      if (e.target.closest('[data-act="back"]')) {
+        if (arg && arg.from === 'observation') go('observation', { from: 'home', view: 'connect' }, -1); else go('home', null, -1);
+      }
+    });
+    paint();
+  },
+};
+
+/* 8 · Home — the observatory, in modules --------------------------- */
 function greeting() {
   const h = new Date().getHours();
   return h < 5 ? 'Late evening' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
@@ -1734,51 +2685,63 @@ SCENES.home = {
     const o = state.obs;
     const choice = o ? store.get('ritual.' + o.id, null) : null;
     const mini = o ? o.steps.map((_, k) => `<i class="${k === o.flag ? 'flag' : ''}"></i>`).join('<b></b>') : '';
+    const earlier = history().filter(h => !o || h.id !== o.id).slice(0, 4);
     return `
       <div class="home-head">
         <div>
           <p class="eyebrow rise" style="--i:0">${greeting()}${o && o.name ? ', ' + esc(o.name) : ''}</p>
-          <h1 class="title rise" style="--i:1" tabindex="-1" data-focus>The <em>Observatory</em></h1>
+          <h1 class="title rise" style="--i:1" tabindex="-1" data-focus>The Observatory</h1>
         </div>
-        <button class="iconbtn rise" style="--i:1" data-act="arrival" aria-label="Back to arrival">${emblem()}</button>
+        <button class="iconbtn rise" style="--i:1" data-act="arrival" aria-label="Back to the start">${emblem()}</button>
       </div>
       <div class="modules">
         ${o ? `
         <button class="mod wide dark rise" style="--i:2" data-act="obs">
           <span class="go">${ICON.go}</span>
-          <div><p class="eyebrow">Latest · N° ${pad(o.number)}</p><h4>${esc(o.workflowLabel)}, made visible</h4></div>
+          <div><p class="eyebrow">Latest · N° ${pad(o.number)}</p><h4>${esc(o.workflowLabel)}</h4></div>
           <div><div class="mini-flow" aria-hidden="true">${mini}</div><p class="fine" style="margin-top:12px">${esc(o.question)}</p></div>
         </button>
         <section class="mod ritual rise" style="--i:3" aria-labelledby="rit">
           <div><p class="eyebrow">Day 30 · you decide</p><h4 id="rit">${esc(o.move[0])} ${esc(o.move[1])}</h4></div>
           <div>
             <div class="choices" role="group" aria-label="Day 30 decision">
-              ${['keep', 'revise', 'undo'].map(c => `<button data-rit="${c}" aria-pressed="${choice === c}">${c[0].toUpperCase() + c.slice(1)}<small>${c === 'keep' ? 'it works' : c === 'revise' ? 'adjust one thing' : 'restore'}</small></button>`).join('')}
+              ${['keep', 'revise', 'undo'].map(c => `<button data-rit="${c}" aria-pressed="${choice === c}">${cap(c)}<small>${c === 'keep' ? 'it works' : c === 'revise' ? 'change one thing' : 'restore'}</small></button>`).join('')}
             </div>
-            <p class="answer" aria-live="polite">${choice ? RITUAL[choice] : 'After the trial, record the decision here. Every recommendation is a small test you can keep, revise or undo.'}</p>
+            <p class="answer" aria-live="polite">${choice ? C.RITUAL[choice] : 'After the trial, record the decision here. Every change is a small test you can keep, revise or undo.'}</p>
           </div>
-        </section>` : ''}
-        <button class="mod rise" style="--i:4" data-act="method">
+        </section>
+        <button class="mod wide rise" style="--i:4;min-height:0" data-act="connect">
+          <span class="go">${ICON.go}</span>
+          <p class="eyebrow">Connect</p><h4 style="font-size:22px">ChatGPT, Claude, Slack, your calendar, and a breath.</h4>
+        </button>` : ''}
+        <button class="mod rise" style="--i:5" data-act="library">
+          <span class="go">${ICON.go}</span>
+          <p class="eyebrow">Library</p><h4>Practices, reading, pauses.</h4>
+        </button>
+        <button class="mod rise" style="--i:6" data-act="method">
           <span class="go">${ICON.go}</span>
           <p class="eyebrow">The method</p><h4>Evidence before interpretation.</h4>
         </button>
-        <button class="mod rise" style="--i:5" data-act="boundary">
+        ${earlier.length ? `
+        <section class="mod wide rise" style="--i:7;min-height:0">
+          <p class="eyebrow">Earlier observations</p>
+          <ul class="shelf" style="margin:0">${earlier.map(h => `<li><button class="item" data-open="${h.id}" style="padding:12px 0"><span><b style="font-size:19px;margin:0">${esc(h.label)}</b><span class="meta">N° ${pad(h.number)} · ${new Date(h.created).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span></span><span class="act">${ICON.go}</span></button></li>`).join('')}</ul>
+        </section>` : ''}
+        ${o ? `<button class="mod wide dark rise" style="--i:8" data-act="invite">
           <span class="go">${ICON.go}</span>
-          <p class="eyebrow">Your data</p><h4>A conversation, not system access.</h4>
+          <div><p class="eyebrow">Workflow Clarity Pilot</p><h4>Check the draft with a person.</h4></div>
+          <p class="fine">One workflow, one clear next move. You keep the decision.</p>
+        </button>` : ''}
+        <button class="mod rise" style="--i:9;min-height:0" data-act="data">
+          <p class="eyebrow">Your data</p><h4 style="font-size:20px">On this device only.</h4>
         </button>
-        <button class="mod wide dark rise" style="--i:6" data-act="invite">
-          <span class="go">${ICON.go}</span>
-          <div><p class="eyebrow">Workflow Clarity Pilot</p><h4>One workflow. One clear next move.</h4></div>
-          <p class="fine">$750 fixed · three business days · you keep the decision</p>
-        </button>
-        <button class="mod wide rise" style="--i:7;min-height:0" data-act="begin">
-          <span class="go">${ICON.go}</span>
-          <p class="eyebrow">New observation</p><h4 style="font-size:22px">Another workflow slipping?</h4>
+        <button class="mod rise" style="--i:9;min-height:0" data-act="begin">
+          <p class="eyebrow">New</p><h4 style="font-size:20px">Observe another workflow.</h4>
         </button>
       </div>
-      <footer class="home-foot rise" style="--i:8">
+      <footer class="home-foot rise" style="--i:10">
         <p>Human judgment, made navigable.</p>
-        <a class="fine link" href="${BRAND.site}" target="_blank" rel="noopener">astervell.com</a>
+        <a class="fine link" href="${C.BRAND.site}" target="_blank" rel="noopener">astervell.com</a>
       </footer>`;
   },
   mount(el) {
@@ -1790,94 +2753,176 @@ SCENES.home = {
         $$('[data-rit]', el).forEach(b => b.setAttribute('aria-pressed', String(b === rit)));
         const ans = $('.ritual .answer', el);
         ans.style.opacity = 0;
-        setTimeout(() => { ans.textContent = RITUAL[c]; ans.style.transition = 'opacity .5s'; ans.style.opacity = 1; }, 150);
+        setTimeout(() => { ans.textContent = C.RITUAL[c]; ans.style.transition = 'opacity .5s'; ans.style.opacity = 1; }, 150);
         buzz(10);
+        return;
+      }
+      const open = e.target.closest('[data-open]');
+      if (open) {
+        const o = loadObservation(open.dataset.open);
+        if (o) { state.obs = o; store.set('latest', o.id); go('observation', { from: 'home' }); }
         return;
       }
       const act = e.target.closest('[data-act]')?.dataset.act;
       if (act === 'obs') go('observation', { from: 'home' });
+      if (act === 'connect') go('observation', { from: 'home', view: 'connect' });
       if (act === 'invite') go('invite');
-      if (act === 'method' || act === 'boundary') openSheet(act);
+      if (act === 'library') go('library', { from: 'home' });
+      if (act === 'method' || act === 'data') openSheet(act);
       if (act === 'arrival') go('arrival', null, -1);
-      if (act === 'begin') { state.answers = {}; go('intake', 0); }
+      if (act === 'begin') { state.answers = {}; go('intake'); }
     });
   },
 };
 
-/* ==================================================================
-   Sheets — method, data boundary, terms
-   ================================================================== */
+/* ------------------------------------------------------------------
+   Sheets
+------------------------------------------------------------------- */
+const BRIDGE = {
+  chatgpt: {
+    title: 'Ask ChatGPT', text: o => E.aiPrompt(o),
+    note: 'ChatGPT opens with this as your message. It may send straight away, so read it here first.',
+    actions: o => `<a class="btn btn-primary" href="${esc(E.chatgptUrl(E.aiPrompt(o)))}" target="_blank" rel="noopener" data-done>Open ChatGPT ${ICON.arrow}</a>
+      <button class="btn btn-ghost" data-copy>Copy instead</button>`,
+  },
+  claude: {
+    title: 'Ask Claude', text: o => E.aiPrompt(o),
+    note: 'On the web, Claude can’t take a prompt from a link, so this copies it and opens a new chat for you to paste into.',
+    actions: o => `<button class="btn btn-primary" data-copy-open="https://claude.ai/new">Copy and open Claude ${ICON.arrow}</button>
+      <a class="btn btn-ghost" href="${esc(E.claudeDesktopUrl(E.aiPrompt(o)))}" data-done>Open in the Claude desktop app</a>`,
+  },
+  share: {
+    title: 'Share with your team', text: o => E.shareText(o),
+    note: 'Your device’s share sheet reaches Slack, Teams and Messages. On a computer, this copies the message for you to paste.',
+    actions: () => `${navigator.share ? `<button class="btn btn-primary" data-share>Share… ${ICON.arrow}</button>` : ''}
+      <button class="btn ${navigator.share ? 'btn-ghost' : 'btn-primary'}" data-copy>Copy message</button>`,
+  },
+  brief: {
+    title: 'A brief for a coding agent', text: (o, arr) => E.brief(o, arr),
+    note: 'For Claude Code, Codex or Cowork. It says what a tool may do, and what it must leave to people.',
+    actions: o => `<button class="btn btn-primary" data-copy>Copy brief</button>
+      <button class="btn btn-ghost" data-download="astervell-${o.number}-brief.md">Download .md</button>`,
+  },
+};
+
 const SHEETS = {
-  assign: () => {
-    const { people: P, arr, start } = obsCtl;
-    const cur = arr().token;
-    return `
-    <p class="eyebrow">Move one decision</p>
-    <h2 class="title" id="sheet-title">Who may send<br><em>the first reply?</em></h2>
-    <p class="lede">This allows acknowledgment, not acceptance of the work.</p>
-    <div class="owners">${['holder', 'owner', 'cover'].map(id => `
-      <button data-assign="${id}" aria-pressed="${cur === id}"><span class="orb sm">${esc(P[id].mono)}</span>
-        <span><b>${esc(P[id].label)}${id === start ? ' <em>· as described</em>' : ''}</b><small>${esc(P[id].role)}${id === 'holder' && arr().away ? ' · away' : ''}</small></span></button>`).join('')}
-    </div>
-    <p class="fine" style="margin-top:14px">The owner keeps the decisions you said must stay human.</p>`;
-  },
-  correct: () => `
-    <p class="eyebrow">You can correct the map</p>
-    <h2 class="title" id="sheet-title">What is closer<br><em>to what happens?</em></h2>
-    <form id="correction-form">
-      <label class="sr" for="correction">Your account</label>
-      <textarea class="field" id="correction" maxlength="280" required>${esc(obsCtl.arr().correction || state.obs.reported)}</textarea>
-      <div class="guard">${ICON.shield}<p class="fine" style="color:var(--muted)">Describe the process only. No names of clients, records or credentials.</p></div>
-      <button class="btn btn-primary" style="margin-top:16px">Apply correction</button>
-    </form>`,
-  request: () => {
-    const o = state.obs;
-    return `
-    <p class="eyebrow">${esc(o.steps[0][2])} · a typical arrival</p>
-    <h2 class="title" id="sheet-title">“${(REQUEST[o.answers.workflow] || REQUEST.lead).replace('<br>', ' ')}”</h2>
-    <p class="lede">In what you described, the work reaches ${esc(PHRASE.owner[o.answers.owner] || 'the person on duty')}. The first acknowledgment and the decision about ${esc(JSHORT[o.answers.judgment] || 'fit')} can end up bundled together.</p>
-    <p class="lede" style="margin-top:12px">Those are different decisions. The model lets you explore separating them.</p>`;
-  },
-  about: () => `
-    <p class="eyebrow">Astervell</p>
-    <h2 class="title" id="sheet-title">Understand your work.<br><em>Choose what changes.</em></h2>
-    <div class="fineprint">
-      <p>Astervell helps owner-led teams reconstruct a stuck workflow, question the explanation, and try one reversible change.</p>
-      <p>This model is rule-based and built from your answers. It does not predict outcomes or use live AI. Only first-reply authority moves here; real changes need the people involved to agree.</p>
-      <p>Your answers and choices stay on this device unless you email them.</p>
-    </div>`,
   method: () => `
     <p class="eyebrow">The method</p>
-    <h2 class="title" id="sheet-title">Evidence before <em>interpretation.</em></h2>
-    <p class="lede">Reconstruct one real work example. Separate what was reported from what might explain it. Check the map with the operator, consider another explanation, and agree what evidence would change the recommendation.</p>
-    <ol class="method">${METHOD.map((m, k) => `<li><span>${String(k + 1).padStart(2, '0')}</span><div><b>${m[0]}</b><p>${m[1]}</p></div></li>`).join('')}</ol>`,
-  boundary: () => `
-    <p class="eyebrow">How we handle information</p>
-    <h2 class="title" id="sheet-title">A conversation, <em>not system access.</em></h2>
-    <p class="lede">We start with how the work moves, not your files. The private intake comes only after scope is agreed. Your answers here stay on this device unless you choose to email them.</p>
+    <h2 class="title" id="sheet-title">Evidence before interpretation.</h2>
+    <p class="lede">Reconstruct one real example. Separate what was reported from what might explain it. Check the map with the person who does the work, consider another explanation, and agree what evidence would change the recommendation.</p>
+    <ol class="method">${C.METHOD.map((m, k) => `<li><span>${String(k + 1).padStart(2, '0')}</span><div><b>${m[0]}</b><p>${m[1]}</p></div></li>`).join('')}</ol>`,
+  data: () => `
+    <p class="eyebrow">Your data</p>
+    <h2 class="title" id="sheet-title">A conversation, not system access.</h2>
+    <p class="lede">Everything you’ve answered is stored in this browser and nowhere else. Nothing is sent unless you open a Connect option or write to us, and you see the text first.</p>
     <div class="ask">
       <div class="yes">${ICON.check}How the work moves, in your words</div>
       <div class="no">${ICON.cross}<span>Customer or patient records</span></div>
       <div class="no">${ICON.cross}<span>Passwords and system access</span></div>
       <div class="no">${ICON.cross}<span>Screenshots of private data</span></div>
     </div>
-    <button class="btn btn-ghost" style="margin-top:22px" data-act="forget">Forget my observations on this device</button>`,
+    <div class="sheet-actions">
+      ${state.obs ? '<button class="btn btn-ghost" data-act="export">Download my observation (.json)</button>' : ''}
+      <button class="btn btn-ghost" data-act="forget">Forget everything on this device</button>
+    </div>`,
   terms: () => `
     <p class="eyebrow">Before you commit</p>
-    <h2 class="title" id="sheet-title">Activation, scope <em>and exclusions.</em></h2>
+    <h2 class="title" id="sheet-title">Scope and exclusions.</h2>
     <div class="fineprint">
-      <p>Written scope and activation terms are agreed before payment. The $750 fee is due before kickoff, after written scope acceptance.</p>
+      <p>Written scope and activation terms are agreed before payment. The fee is due before kickoff, after written scope acceptance.</p>
       <p>The delivery clock starts only after written scope acceptance, cleared payment, private intake review, acknowledgement of the data boundary, confirmation of the workflow and decision authority, and scheduling of the mapping session.</p>
       <p>Excludes implementation, software, additional workflows, staff evaluation, regulated data, professional advice and guaranteed results.</p>
       <p>A finding may be that no meaningful change is supported. The quick win is a recommendation to test, not implementation or a promised saving.</p>
     </div>`,
+  assign: () => {
+    const o = state.obs, P = o.people, cur = obsCtl.arr().token;
+    return `
+    <p class="eyebrow">Move one decision</p>
+    <h2 class="title" id="sheet-title">Who may send the first reply?</h2>
+    <p class="lede">This allows acknowledgment, not acceptance of the work.</p>
+    <div class="owners">${['holder', 'owner', 'cover'].map(id => `
+      <button data-assign="${id}" aria-pressed="${cur === id}"><span class="orb sm">${esc(P[id].mono)}</span>
+        <span><b>${esc(P[id].label)}${id === o.start ? ' <em>· as described</em>' : ''}</b><small>${esc(P[id].role)}${id === o.start && obsCtl.arr().away ? ' · away' : ''}</small></span></button>`).join('')}
+    </div>
+    <p class="fine" style="margin-top:14px">Decisions about ${esc(o.judgment)} stay where they are.</p>`;
+  },
+  correct: () => `
+    <p class="eyebrow">You can correct the map</p>
+    <h2 class="title" id="sheet-title">What is closer to what happens?</h2>
+    <form id="correction-form">
+      <label class="sr" for="correction">Your account</label>
+      <textarea class="field" id="correction" maxlength="280" required>${esc(obsCtl.arr().correction || state.obs.reported)}</textarea>
+      <div class="guard">${ICON.shield}<p class="fine" style="color:var(--muted)">Describe the process only. No client names, records or credentials.</p></div>
+      <button class="btn btn-primary" style="margin-top:16px">Apply correction</button>
+    </form>`,
+  request: () => {
+    const o = state.obs;
+    return `
+    <p class="eyebrow">${esc(o.doors[0] || 'A typical arrival')}</p>
+    <h2 class="title" id="sheet-title">“${E.plain(o.request)}”</h2>
+    <p class="lede">The first acknowledgment and the decision about ${esc(o.judgment)} often end up bundled together, so both wait for the same person.</p>
+    <p class="lede" style="margin-top:12px">They are different decisions. The model lets you try separating them.</p>`;
+  },
+  about: () => `
+    <p class="eyebrow">About this model</p>
+    <h2 class="title" id="sheet-title">Rules, not magic.</h2>
+    <div class="fineprint">
+      <p>The observation is built from your answers by plain, readable rules. No AI writes it, and it predicts nothing. That’s deliberate: you should be able to see why it says what it says.</p>
+      <p>Only first-reply authority moves in the model. Real changes need the people involved to agree.</p>
+      <p>Your answers and choices stay on this device unless you send them somewhere yourself.</p>
+    </div>`,
+  practice: r => `
+    <p class="eyebrow">${esc(r.meta)}</p>
+    <h2 class="title" id="sheet-title">${esc(r.title)}</h2>
+    <p class="lede">${esc(r.note)}</p>
+    <ol class="steps-list">${r.steps.map(s => `<li><span>${esc(s)}</span></li>`).join('')}</ol>`,
+  breathe: {
+    html: () => `
+      <p class="eyebrow">In this app · 1 minute</p>
+      <h2 class="title" id="sheet-title">One long exhale.</h2>
+      <p class="lede">In through the nose for four. Out through the mouth for six, slower than feels natural.</p>
+      ${breathHTML()}
+      <p class="fine" style="text-align:center">Based on exhale-focused breathing studied at Stanford (Balban et al., 2023).</p>`,
+    mount: body => { sheetCleanup = runBreath(body, 6); },
+  },
+  preview: {
+    html: ({ kind, arr }) => {
+      const b = BRIDGE[kind];
+      return `
+        <p class="eyebrow">Connect</p>
+        <h2 class="title" id="sheet-title">${b.title}</h2>
+        <p class="lede">${b.note}</p>
+        <pre class="preview" tabindex="0">${esc(b.text(state.obs, arr))}</pre>
+        <p class="leaves fine">${ICON.shield}This is exactly what leaves this device.</p>
+        <div class="sheet-actions">${b.actions(state.obs)}</div>`;
+    },
+    mount: (body, { kind, arr }) => {
+      const text = BRIDGE[kind].text(state.obs, arr);
+      body.addEventListener('click', async e => {
+        if (e.target.closest('[data-copy]')) { toast(await copy(text) ? 'Copied' : 'Couldn’t copy. Select the text above.'); }
+        const co = e.target.closest('[data-copy-open]');
+        if (co) { await copy(text); window.open(co.dataset.copyOpen, '_blank', 'noopener'); toast('Copied. Paste it into the new chat.'); }
+        if (e.target.closest('[data-share]')) { try { await navigator.share({ title: `Workflow check: ${state.obs.workflowLabel}`, text }); } catch (err) {} }
+        const dl = e.target.closest('[data-download]');
+        if (dl) download(dl.dataset.download, text, 'text/markdown');
+        if (e.target.closest('[data-done]')) setTimeout(closeSheet, 300);
+      });
+    },
+  },
 };
 
 const sheetRoot = $('#sheet');
 let lastFocus = null;
-function openSheet(name) {
+let sheetCleanup = null;
+function openSheet(name, arg) {
   lastFocus = document.activeElement;
-  $('#sheet-body').innerHTML = SHEETS[name]();
+  const def = SHEETS[name];
+  const body = $('#sheet-body');
+  if (sheetCleanup) { sheetCleanup(); sheetCleanup = null; }
+  body.replaceWith(body.cloneNode(false)); // drop listeners from the previous sheet
+  const fresh = $('#sheet-body');
+  fresh.innerHTML = typeof def === 'function' ? def(arg) : def.html(arg);
+  if (def.mount) def.mount(fresh, arg);
   sheetRoot.classList.add('open');
   sheetRoot.setAttribute('aria-hidden', 'false');
   $('.sheet', sheetRoot).scrollTop = 0;
@@ -1886,6 +2931,7 @@ function openSheet(name) {
   setTimeout(() => title.focus({ preventScroll: true }), 80);
 }
 function closeSheet() {
+  if (sheetCleanup) { sheetCleanup(); sheetCleanup = null; }
   if (!sheetRoot.classList.contains('open')) return;
   sheetRoot.classList.remove('open');
   sheetRoot.setAttribute('aria-hidden', 'true');
@@ -1895,13 +2941,22 @@ sheetRoot.addEventListener('click', e => {
   if (e.target.closest('[data-close]')) closeSheet();
   const who = e.target.closest('[data-assign]');
   if (who && obsCtl) obsCtl.assign(who.dataset.assign);
+  if (e.target.closest('[data-act="export"]')) {
+    download(`astervell-observation-${state.obs.number}.json`, E.exportJSON(state.obs, store.get('arr.' + state.obs.id, null)), 'application/json');
+  }
   if (e.target.closest('[data-act="forget"]')) {
-    try { Object.keys(localStorage).filter(k => k.startsWith('astervell.observatory.')).forEach(k => localStorage.removeItem(k)); } catch (err) {}
+    store.clear();
     state.obs = null; state.count = 0; state.answers = {};
     go('arrival', null, -1);
+    toast('Forgotten. Nothing is left on this device.');
   }
 });
-// Drag the sheet down to dismiss
+sheetRoot.addEventListener('submit', e => {
+  e.preventDefault();
+  const v = $('#correction', sheetRoot)?.value.trim();
+  if (v && obsCtl) obsCtl.correct(v);
+});
+// Drag the sheet down to dismiss.
 (() => {
   const sheet = $('.sheet', sheetRoot);
   let y0 = null, dy = 0;
@@ -1918,16 +2973,11 @@ sheetRoot.addEventListener('click', e => {
     y0 = null;
   });
 })();
-sheetRoot.addEventListener('submit', e => {
-  e.preventDefault();
-  const v = $('#correction', sheetRoot)?.value.trim();
-  if (v && obsCtl) obsCtl.correct(v);
-});
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 
-/* ==================================================================
+/* ------------------------------------------------------------------
    Begin
-   ================================================================== */
+------------------------------------------------------------------- */
 paintSky();
 // The frame is a viewport, never a scroller: undo any focus-driven scroll.
 $('#app').addEventListener('scroll', e => { e.currentTarget.scrollTop = 0; e.currentTarget.scrollLeft = 0; });

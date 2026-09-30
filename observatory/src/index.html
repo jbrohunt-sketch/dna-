@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-tone="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07110e">
+<meta name="description" content="Astervell — The Observatory. Describe one workflow that keeps slipping. Get a draft map, a question worth asking, and one change you can undo.">
+<title>Astervell — The Observatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"></div>
+<div class="backdrop-copy" aria-hidden="true"><b>Human judgment, made navigable.</b>Astervell · The Observatory<br>Best on a phone</div>
+
+<main id="app">
+  <div id="sky" aria-hidden="true"></div>
+  <div id="stage"></div>
+  <div class="sheet-root" id="sheet" aria-hidden="true">
+    <div class="sheet-scrim" data-close></div>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><div class="grab" data-close></div><div id="sheet-body"></div></div>
+  </div>
+  <div class="toast" role="status" id="toast"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <p class="sr" aria-live="polite" id="announce"></p>
+</main>
+
+<noscript><p style="color:#efeadc;padding:24px;font-family:Georgia,serif">The Observatory needs JavaScript. You can still reach Astervell at <a style="color:#b08a4a" href="https://astervell.com">astervell.com</a>.</p></noscript>
+
+<script src="content.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
