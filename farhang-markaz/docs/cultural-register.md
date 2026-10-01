@@ -11,11 +11,11 @@ Source quality: primary · academic · museum · secondary · tourism · commerc
 | ID | Claim (calibrated) | Design consequence | Conf. | Excl. | Strongest source | Conflicting evidence |
 |---|---|---|---|---|---|---|
 | R1 | The black Chust doppi (four white qalampir pods) is documented as the classic **men's** cap of the Fergana Valley. | Not used as the female dancer's headwear; the pod motif may appear elsewhere. | High (men's-coded) / Med (female use reads as error) | STRONG | [C] secondary / official tourism | [D] says black-and-white doppi are worn by men, women and children; stage practice unverified. |
-| R2 | A women's square doppi with four identical floral-bush motifs (*chamanda gul* type) is documented for Margilan and Tashkent, mid-20th c. | Headpiece = square doppi with four bush motifs. Flower count and ground colour are **stylisation**. | Med | STRONG (Tashkent–Fergana) | [A] academic (Náprstek Museum caption, Margilan 1950s, iroki) | [B] gives chamandagul as a Tashkent 1940s velvet-cap ornament; other Fergana women's cap types exist. |
+| R2 | A women's square doppi with four identical floral-bush motifs (*chamanda gul* type) is documented for Margilan and Tashkent, mid-20th c. | Headpiece = square doppi with four bush motifs. Flower count and ground colour are **stylisation**; ishkor teal stands in for the documented green bush. | Med | STRONG (Tashkent–Fergana) | [A] academic (Náprstek Museum caption, Margilan 1950s, iroki) | [B] gives chamandagul as a Tashkent 1940s velvet-cap ornament; other Fergana women's cap types exist. |
 | R3 | Many thin braids (*qirq kokil*, conventionally "forty") marked an unmarried girl. | Imply 30–40 braids: 7 grouped masses × 5 implied strands; whole figure reads as a young unmarried woman. | Med-High | STRONG (pan-Uzbek, documented for Fergana) | [E] academic (minor journal) | None on meaning; "forty" is conventional; stage counts undocumented. |
 | R4 | *Sochpopuk*: silk/cotton tassels with silver pendants, coral or glass beads. | Tassel = milk (silver) cap + red (coral/silk) tassel. No steel. | Med | SHARED | [G] secondary; [G2] museum/academic | None found. |
 | R5 | Khan-atlas is warp-ikat satin anchored in Margilan; its familiar look is vertical zigzag/flame bands (crimson, magenta, golden yellow, green, blue). | Ikat = stepped flame columns along the warp. Lozenges only if relabelled *abrbandi*. Pink, sky and the stepped misregistration are stylisation. | High (Margilan) / Med (look, palette) | STRONG; lozenges SHARED | [H] UNESCO 2017 (primary); [I] commercial | 19th-c. Central Asian ikats also use lozenges/medallions. |
-| R6 | A nimcha is sleeveless; visible sleeves belong to the dress (atlas or plain silk) unless a sleeved jacket is chosen. | Sleeves are dress sleeves, flat cobalt; no velvet. | Med-High | — | [J] tourism | [F]: Fergana stage dances used long-sleeved white crepe dresses; sleeved jackets (mursak, kamzul) exist. |
+| R6 | A nimcha is sleeveless; visible sleeves belong to the dress (atlas or plain silk) unless a sleeved jacket is chosen. | Sleeves are milk — plain silk / white ko'ylak under the outer dress [J]; Bahor used white long-sleeved dresses [F]. No velvet. | Med-High | — | [J] tourism | [F]: Fergana stage dances used long-sleeved white crepe dresses; sleeved jackets (mursak, kamzul) exist. |
 | R7 | Zardozi gold embroidery is chiefly associated with Bukhara (court craft). | Not used. No metallic gold anywhere. | High | STRONG | [K] ICH inventory / secondary | Gold-embroidered caps and stage costumes are made across Uzbekistan today. |
 | R8 | Fergana style: flowing rounded arms and wrist circles; palms often shown upward. Turns occur across Uzbek dance (Fergana, Bukhara), rarely in Khorezm. | Rounded arms, open palm-up hands. The spin itself is not a Fergana marker. | Med (wrist circles) / Low-Med (palms up) | Spins SHARED | [L] scholar-practitioner; [M] tourism | [M] notes prominent rotations in Bukhara dance. |
 | R9 | An abstracted open-arm spin can be misread as a dervish form (Mevlevi sema; with a multicoloured skirt, more likely Egyptian tanoura). | Avoid sema markers (right palm up/left palm down, head tilt, white skirt, tall hat). Female cues (braids, doppi) must stay legible at thumbnail size. | Med (judgement, not audience data) | SHARED | [N] secondary | Spinning is legitimately Uzbek; the risk is misreading only. |
@@ -34,6 +34,9 @@ Source quality: primary · academic · museum · secondary · tourism · commerc
   concentric geometric/foliate bands.
 - **Colour order:** milky-white ground → dark brown/manganese outline → cobalt → translucent
   turquoise/green ishkor.
+- **Four-lobed centre:** four-lobed centres are documented on a 19th-c. "probably Kokand" dish
+  (V&A O225424). Deriving our centre from the doppi's four bushes is a **design rhyme, not a
+  cultural link**.
 - **Segment count: no canonical number** (4- and 5-fold documented). Our 12 compartments
   (= skirt panels = warp columns, for shared-count morphing) is a **design choice**.
 - **Mostly floral**; geometric ornament historically minor ([Y], tourism, Low-Med).
@@ -46,11 +49,12 @@ Source quality: primary · academic · museum · secondary · tourism · commerc
 - **Documented** [A]: square women's cap, iroki embroidery, "four identical motifs of chamanda
   gul (flowers on a small grassy clearing)": green bushes, bright pink flowers, black outline;
   Margilan, 15.5 × 15.5 cm, cotton + velvet.
-- **Inferred (Low-Med):** one motif per face of the square crown, rotated 90°; dark ground.
+- **Inferred (Low-Med):** one motif per face of the square crown, rotated 90°. Ground colour undocumented.
 - **Not documented:** flowers per bush.
-- **Abstraction used:** rounded square with a thin band border; four identical bushes at the
-  edge midpoints, stems toward the centre; ~3 pink flowers + green leaves per bush; dark
-  ground. Flower count and ground colour are stylisation.
+- **Abstraction used:** rounded square with a band border; four identical bushes at the
+  edge midpoints, stems toward the centre; 3 pink flowers + ishkor (standing in for green)
+  leaves per bush; **milk ground** (stylisation — the dark ground failed the 0.1× thumbnail
+  test and read as the black men's cap [R1]). Flower count and ground colour are stylisation.
 
 ## Design decisions recorded after the Phase 2 gate
 

@@ -168,7 +168,7 @@ export const GrammarBoard: React.FC = () => {
         <Small x={430} y={520} anchor="start">film scale: solid tail</Small>
       </Cell>
 
-      <Cell i={6} title="DRESS / IKAT" caption="Khan-atlas (Margilan) [R5]: stepped flames tapering at both ends, stacked tip-to-base into continuous zigzag columns; misregistration = whole-step offsets. On the skirt: plain panels + one hem band of 36 flames (≥2× long as wide). ◇ Colours are stylisation.">
+      <Cell i={6} title="DRESS / IKAT" caption="Khan-atlas (Margilan) [R5]: stepped flames tapering at both ends, stacked tip-to-base into flame columns; misregistration = whole-step offsets. On the skirt: plain panels + one hem band of 36 flames (≥2× long as wide). ◇ Colours are stylisation.">
         <IkatStrip strip={{ cx: 175, baseY: 495, W: 300, t: 0 }} columns={6} H={440} flames={4} misregister />
         <Arrow x={370} y={mid} />
         <Skirt id="b-ik" cx={555} cy={mid} R={150} rotation={0} />
@@ -178,7 +178,7 @@ export const GrammarBoard: React.FC = () => {
         <Doira id="b-do" cx={360} cy={mid} R={230} strike={{ x: 205, y: mid - 120, r: 80, w: 10 }} />
       </Cell>
 
-      <Cell i={8} title="FERGANA-SCHOOL PLATE · RISHTAN PALETTE" caption="Replaces the architecture beat [R12, R13]. Milk ground, dark outlines, cobalt + ishkor. Four-lobed centre grown from the doppi's four bushes; bodom leaves in 12 compartments (the bent warp); checked rim = the doira's 24 rings. ◇ Counts are stylisation.">
+      <Cell i={8} title="FERGANA-SCHOOL PLATE · RISHTAN PALETTE" caption="Replaces the architecture beat [R12, R13]. Milk ground, dark outlines, cobalt + ishkor. Four-lobed centres are documented (V&A O225424, 'probably Kokand'); growing it from the doppi's bushes is a design rhyme, not a cultural link. Bodom leaves in 12 compartments; checked rim = the doira's 24 rings. ◇ Counts are stylisation.">
         <RishtanPlate cx={360} cy={mid} R={235} />
       </Cell>
 

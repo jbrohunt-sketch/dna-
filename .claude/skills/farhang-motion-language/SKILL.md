@@ -126,7 +126,7 @@ hues without updating tokens.ts and this table together.
 - **Dutar:** exactly two parallel lines with short tied-fret bars; if the body is shown, the
   long-neck pear silhouette.
 - **Ikat:** stepped flames tapering at both ends, stacked tip-to-base into continuous
-  zigzag columns; misregistration = whole-step offsets, never blur. One column in three
+  flame columns; misregistration = whole-step offsets, never blur. One column in three
   carries ishkor (atlas green). Pink, sky and the misregistration are stylisation [R5].
 - **Fergana-school plate, Rishtan palette** [R12]: milk ground; dark zone outlines; cobalt +
   ishkor only (no red, no pink). Centre = radiating four-lobed motif grown from the doppi's
@@ -148,7 +148,9 @@ Every transition shares geometry, direction, rhythm or material logic. Objects n
   relaxes into a bodom leaf (same vertices, `smooth` 0 → 1) and re-glazes to the Rishtan
   palette — a formal rhyme between pointed-oval shapes, **not** a claim that ikat flames
   derive from bodom.
-- **Origins inside the plate:** rim checks = doira rings; four-lobed centre = doppi bushes.
+- **Origins inside the plate:** rim checks = doira rings; four-lobed centre = doppi bushes
+  (four-lobed centres are documented on Fergana-school dishes; the doppi derivation is a
+  design rhyme, not a cultural link).
 - **Hem band → identity ring → frame 0:** the identity ring is the hem band with its 36
   flames at the frame-0 centre, radius and rotation; the loop blooms back into the spin.
 - The world accumulates: each return to the dancer keeps something from the scene before.
