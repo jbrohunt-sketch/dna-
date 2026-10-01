@@ -1,33 +1,41 @@
 import React from "react";
-import { color, material } from "../design/tokens";
+import { color } from "../design/tokens";
 
-// Chust doppi seen from above: four-sided black skullcap, white qalampir (pepper-pod)
-// motifs on each face, thin white crown border.
+// Chust doppi from above: four-sided black skullcap with white qalampir (pepper-pod)
+// motifs on each face and a white crown border. Satin-black, lit from the key.
 
-const qalampir = "M-11 2 C-6 -6 6 -7 11 -1 C8 1 4 2 1 1 C-3 0 -6 2 -11 2 Z";
+const qalampir = "M-12 2.5 C-7 -6.5 6 -7.5 12 -1.5 C9 0.8 5 2 1.5 1.2 C-3 0.4 -6.5 2.4 -12 2.5 Z";
 
-export const Doppi: React.FC<{ readonly size?: number }> = ({ size = 70 }) => {
+export const Doppi: React.FC<{ readonly size?: number; readonly uid: string }> = ({ size = 70, uid }) => {
   const h = size / 2;
   return (
     <g>
-      <rect x={-h} y={-h} width={size} height={size} rx={size * 0.24} fill={material.doppi} />
+      <defs>
+        <radialGradient id={`${uid}-dp`} cx="32%" cy="28%" r="80%">
+          <stop offset="0" stopColor="#34343A" />
+          <stop offset="0.45" stopColor="#111114" />
+          <stop offset="1" stopColor="#050506" />
+        </radialGradient>
+      </defs>
+      <rect x={-h} y={-h} width={size} height={size} rx={size * 0.26} fill={`url(#${uid}-dp)`} />
       <rect
         x={-h + 9}
         y={-h + 9}
         width={size - 18}
         height={size - 18}
-        rx={size * 0.14}
+        rx={size * 0.15}
         fill="none"
         stroke={color.bone}
-        strokeWidth={1.3}
-        opacity={0.85}
+        strokeWidth={1.2}
+        strokeDasharray="2.2 1.6"
+        opacity={0.9}
       />
       {[0, 90, 180, 270].map((r) => (
-        <g key={r} transform={`rotate(${r}) translate(0 ${-h + 4.5}) scale(0.82)`}>
+        <g key={r} transform={`rotate(${r}) translate(0 ${-h + 4.6}) scale(0.8)`}>
           <path d={qalampir} fill={color.bone} />
+          <path d="M-7 1 C-3 -3 3 -4 8 -1" stroke="#0A0A0C" strokeWidth={0.9} fill="none" />
         </g>
       ))}
-      <circle r={2.2} fill={color.bone} opacity={0.9} />
     </g>
   );
 };

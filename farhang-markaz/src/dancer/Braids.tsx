@@ -2,81 +2,85 @@ import React from "react";
 import { color, dancer, material } from "../design/tokens";
 import { polar, rng, smoothOpen, type Pt } from "../design/geometry";
 
-// Many thin braids (the qirq kokil tradition) flung radially by the spin,
-// each finished with a sochpopuk tassel — the film's only moving gold.
+// Many thin braids (qirq kokil) flung outward by the spin, each finished with a
+// sochpopuk tassel: steel cap, ruby silk threads, one gold bead.
 
 type Props = {
   readonly cx: number;
   readonly cy: number;
-  readonly rotation: number; // body rotation, deg
+  readonly rotation: number;
   readonly lag: number; // deg the tips trail behind the spin
-  readonly reach?: number; // 0 = hanging, 1 = fully radial
+  readonly reach?: number; // 0 hanging … 1 fully radial
   readonly count?: number;
   readonly length?: number;
   readonly smear?: number;
-  readonly straighten?: { index: number; amount: number; to: Pt }; // braid → dutar string
+  readonly straighten?: { index: number; amount: number; to: Pt };
 };
 
-export const braidSpine = (
-  cx: number,
-  cy: number,
-  baseAngle: number,
-  lag: number,
-  reach: number,
-  length: number,
-): Pt[] => {
+export const braidSpine = (cx: number, cy: number, base: number, lag: number, reach: number, length: number, droop = 0): Pt[] => {
   const pts: Pt[] = [];
-  const steps = 30;
+  const steps = 34;
   for (let i = 0; i <= steps; i++) {
     const s = i / steps;
-    const a = baseAngle - lag * Math.pow(s, 1.6);
-    const r = 34 + s * length * (0.25 + 0.75 * reach);
+    const a = base - lag * Math.pow(s, 1.45) + droop * Math.sin(s * Math.PI) ;
+    const r = 30 + s * length * (0.25 + 0.75 * reach);
     pts.push(polar(cx, cy, r, a));
   }
   return pts;
 };
 
+// Three-strand plait: alternating lobes along the spine; lobes catch the key light.
 export const Plait: React.FC<{ readonly pts: Pt[]; readonly width: number; readonly opacity?: number }> = ({
   pts,
   width,
   opacity = 1,
 }) => {
-  const d = smoothOpen(pts);
-  // plait texture: alternating short angled ticks along the spine
-  const ticks: string[] = [];
+  const lobes: React.ReactNode[] = [];
   for (let i = 1; i < pts.length - 1; i++) {
     const [x0, y0] = pts[i - 1];
     const [x1, y1] = pts[i + 1];
-    const tx = x1 - x0;
-    const ty = y1 - y0;
-    const len = Math.hypot(tx, ty) || 1;
-    const nx = -ty / len;
-    const ny = tx / len;
-    const w = width * (1 - (i / pts.length) * 0.5) * 0.5;
+    const ang = (Math.atan2(y1 - y0, x1 - x0) * 180) / Math.PI;
+    const seg = Math.hypot(x1 - x0, y1 - y0) / 2;
+    const w = width * (1 - (i / pts.length) * 0.55);
     const side = i % 2 ? 1 : -1;
     const [px, py] = pts[i];
-    ticks.push(
-      `M${px - nx * w * side} ${py - ny * w * side} L${px + nx * w * side * 0.2 + (tx / len) * 6} ${
-        py + ny * w * side * 0.2 + (ty / len) * 6
-      }`,
+    lobes.push(
+      <ellipse
+        key={i}
+        cx={px}
+        cy={py}
+        rx={seg * 0.62}
+        ry={w * 0.36}
+        transform={`rotate(${ang + side * 32} ${px} ${py}) translate(0 ${side * w * 0.12})`}
+        fill={side > 0 ? material.hairSheen : "#2A201B"}
+      />,
     );
   }
   return (
     <g opacity={opacity}>
-      <path d={d} fill="none" stroke={material.hair} strokeWidth={width} strokeLinecap="round" />
-      <path d={ticks.join(" ")} fill="none" stroke={material.hairSheen} strokeWidth={1.1} strokeLinecap="round" />
+      <path d={smoothOpen(pts)} fill="none" stroke={material.hair} strokeWidth={width} strokeLinecap="round" />
+      {lobes}
     </g>
   );
 };
 
 const Sochpopuk: React.FC<{ readonly at: Pt; readonly dir: number }> = ({ at, dir }) => {
-  const threads = [-14, 0, 14].map((o) => polar(at[0], at[1], 22, dir + o));
+  const threads = [-18, -9, 0, 9, 18].map((o, i) => polar(at[0], at[1], 20 + (i % 2) * 5, dir + o));
+  const cap = polar(at[0], at[1], 4, dir);
   return (
     <g>
       {threads.map((t, i) => (
-        <line key={i} x1={at[0]} y1={at[1]} x2={t[0]} y2={t[1]} stroke={color.ruby} strokeWidth={1.4} opacity={0.9} />
+        <path
+          key={i}
+          d={`M${cap[0]} ${cap[1]} Q${(cap[0] + t[0]) / 2 + 2} ${(cap[1] + t[1]) / 2 - 2} ${t[0]} ${t[1]}`}
+          stroke={i % 2 ? color.pomegranate : color.ruby}
+          strokeWidth={1.3}
+          fill="none"
+        />
       ))}
-      <circle cx={at[0]} cy={at[1]} r={5} fill={color.gold} />
+      <circle cx={cap[0]} cy={cap[1]} r={4.2} fill="#8E949A" />
+      <circle cx={cap[0] - 1.2} cy={cap[1] - 1.4} r={1.4} fill="#E3E6E8" />
+      <circle cx={at[0]} cy={at[1]} r={3.4} fill={color.gold} />
     </g>
   );
 };
@@ -93,20 +97,20 @@ export const Braids: React.FC<Props> = ({
   straighten,
 }) => {
   const rand = rng(21);
-  // braids leave from the back of the head (local +90°), fanning around ±150°
   const braids = Array.from({ length: count }, (_, i) => {
-    const spread = -105 + (210 * i) / (count - 1);
+    const spread = -100 + (200 * i) / (count - 1);
     return {
-      base: rotation + 90 + spread + (rand() - 0.5) * 14,
-      len: length * (0.62 + rand() * 0.38),
-      lag: lag * (0.75 + rand() * 0.5),
+      base: rotation + 90 + spread + (rand() - 0.5) * 16,
+      len: length * (0.7 + rand() * 0.42),
+      lag: lag * (0.45 + rand() * 1.0),
+      droop: (rand() - 0.5) * 10,
+      w: 6.5 + rand() * 2,
     };
   });
-
   return (
     <g>
       {braids.map((b, i) => {
-        let pts = braidSpine(cx, cy, b.base, b.lag, reach, b.len);
+        let pts = braidSpine(cx, cy, b.base, b.lag, reach, b.len, b.droop);
         if (straighten && straighten.index === i && straighten.amount > 0) {
           const s0 = pts[0];
           const t = straighten.amount;
@@ -118,14 +122,21 @@ export const Braids: React.FC<Props> = ({
           });
         }
         const tip = pts[pts.length - 1];
-        const prev = pts[pts.length - 2];
+        const prev = pts[pts.length - 3];
         const dir = (Math.atan2(tip[1] - prev[1], tip[0] - prev[0]) * 180) / Math.PI;
         return (
           <g key={i}>
             {smear > 0 && (
-              <Plait pts={braidSpine(cx, cy, b.base - smear, b.lag, reach, b.len)} width={5} opacity={0.14} />
+              <path
+                d={smoothOpen(braidSpine(cx, cy, b.base - smear * 0.6, b.lag, reach, b.len, b.droop))}
+                stroke={material.hair}
+                strokeWidth={b.w}
+                fill="none"
+                opacity={0.22}
+                strokeLinecap="round"
+              />
             )}
-            <Plait pts={pts} width={5.5} />
+            <Plait pts={pts} width={b.w} />
             <Sochpopuk at={tip} dir={dir} />
           </g>
         );

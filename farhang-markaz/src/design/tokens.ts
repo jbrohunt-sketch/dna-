@@ -34,6 +34,8 @@ export const material = {
   membraneShadow: "#9C8A6C",
   silk: "#EDE4D0",
   doppi: "#0A0A0C",
+  steel: "#8E949A",
+  steelLight: "#E3E6E8",
 } as const;
 
 // Hard limit for gold coverage, used by review tooling / eyeballing.

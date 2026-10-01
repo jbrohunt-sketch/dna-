@@ -135,13 +135,20 @@ circular graphic form; long braids move radially.
 
 ## 8. Named motifs in the codebase (reuse, don't reinvent)
 
+Materials are rendered by per-pixel shaders (`src/render/*`, drawn into `PixelCanvas`) under
+one light rig (`shading.ts`: KEY from upper-left/above, RAKING for the doira). Graphic
+linework stays SVG. Never fake material with flat fills or gradients alone.
+
 | component | what it is (be this specific) |
 |---|---|
-| `dancer/IkatSkirt` | khan-atlas warp-ikat skirt, abr lozenges running radially, zardozi gold hem hairline |
-| `dancer/Braids` | many thin braids (qirq kokil) with sochpopuk tassels — gold bead + ruby threads |
-| `dancer/Doppi` | Chust doppi from above: black, four white qalampir motifs |
-| `motifs/Doira` | bent-wood frame, goat-skin membrane, halqa rings on inner wall; `Ripple` = strike; `DoiraGround` = what stays under the dancer |
-| `motifs/Dutar` | two silk strings, tied gut frets, top of string still a braid |
-| `motifs/Warp` | warp threads with resist-dyed ikat (per-thread misregistration + bleed along warp), optional weft |
+| `render/ikat.ts` | THE khan-atlas warp-ikat function: stepped abr lozenges, bundle-tied misregistration, dye creep along the warp. Skirt, warp and identity ring all sample it — same fabric everywhere |
+| `render/skirtShader` | overhead satin skirt: ikat in fabric space, irregular radial pleats lit in world space, rotational motion blur, couched zardozi gold thread at the hem |
+| `dancer/OverheadDancer` | floor shadow + skirt canvas + lit rig (velvet lapis sleeves, emerald nimcha, Fergana-school hands) with cast shadows |
+| `dancer/Braids` | many thin braids (qirq kokil), three-strand plait lobes, sochpopuk tassels (steel cap, ruby threads, one gold bead) |
+| `dancer/Doppi` | Chust doppi from above: satin black, four white qalampir motifs, stitched crown border |
+| `motifs/Doira` + `render/membraneShader` | lacquered walnut frame, goat-skin membrane under raking light, strike = physical wave in the height field; `Halqa` steel rings in pairs; `DoiraGround` = what stays under the dancer |
+| `motifs/Dutar` | two silk strings a fourth apart, tied gut frets, top still a braid, long-exposure vibration, shadow cast on what's beneath |
+| `motifs/Warp` + `render/warpShader` | fan of threads from the string → discrete lit warp threads carrying the ikat → weft. Ikat is the loom's original raster: this is the heritage/machine bridge |
 | `motifs/Girih` | eight-point star-and-cross (khatam) strapwork, Timurid tile linework |
 | `motifs/GoldOrbit` | the tassel's path as one gold hairline |
+| `identity/IkatRing` + `Wordmark` | identity ring = the skirt's hem band (outer r = skirtRadius, loop anchor); wordmark inside, divider is a silk string |
