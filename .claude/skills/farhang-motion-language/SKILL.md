@@ -84,19 +84,23 @@ cues (e.g. headscarf over the braids).
   alternating cobalt / sky. **Hem band** 0.84–0.97R (`dancer.band` = 0.13R, shared with the
   doira rim and the identity ring) carries 36 red flames with milk cores, each ≥ 2× as long
   as wide. Flare scales R from 0.35R → R.
-- **Nimcha:** sleeveless, one red capsule.
+- **Nimcha:** sleeveless, one red rounded rectangle 0.62R × 0.38R — it must clear the doppi
+  front and back by ≥ 0.05R so it reads as a garment, not earmuffs.
 - **Sleeves:** plain-silk dress sleeves [R6] — milk, with a red cuff.
 - **Arms:** rounded curved capsules, never a rigid straight T. **Hands:** open palm-up ovals,
   no fingers; hand tips ≤ 0.80R.
 - **Headpiece:** square doppi, side 0.28R, **milk ground** (the dark ground failed the
   thumbnail test and read as the black men's cap [R1]), band border, four bushes filling
   ~65% of each face, stems toward the centre, 3 pink flowers each (stylisation).
-- **Braids:** a **tail**, not spokes — 7 solid ink masses rooted along the back edge of the
-  doppi (0.12R behind centre), spread ±32°, width 0.06R → 0.03R, length 0.50–0.62R (tassels
+- **Braids:** a **tail**, not spokes — one merged ink root mass for the first ~30% of the
+  length, then splitting into 7 solid masses rooted along the back edge of the doppi (0.12R
+  behind centre); only the outer silhouette carries a cream keyline; spread ±32°, width 0.06R → 0.03R, length 0.50–0.62R (tassels
   stay off the hem). Strand subdivision (5 per mass, ≈35 implied) only in close-ups.
   **Hero braid:** 2 strands with a cream divider, length 0.7R — it unzips into the dutar
   strings. Sochpopuk = silver cap (milk) + coral/silk tassel (red) [R4].
-- **Minimum feature size:** 3 px at film scale (`dancer.minFeature`). Nothing thinner.
+- **Minimum feature size:** 3 px at film scale (`dancer.minFeature`), including outlines and
+  keylines. Nothing thinner — if an outline can't be ≥ 3 px, remove it (milk on blue needs none).
+- **Hands:** palm ≈ 1.3× cuff width, teardrop pointing outward.
 - **Never drawn:** face, skin tone rendering, fingers, feet, body curves, hair strands,
   fabric folds, stitching, shadows.
 
@@ -162,7 +166,8 @@ Every transition shares geometry, direction, rhythm or material logic. Objects n
 
 - Wordmark **FARHANG MARKAZ** in a clean geometric sans (default: Inter Tight, OFL,
   vendored in `public/fonts`), ink on cream, set inside the identity ring (markaz = centre).
-  Divider = the dutar string.
+  Divider = the two dutar strings spanning the full inner diameter of the ring, anchored on
+  the hem band, one slightly plucked — never a short double bar (it reads as "=").
 - No wide-tracked luxury serif. Size/tracking/entry timing are provisional pending the
   reference.
 - Safe areas in 1080×1920: key text ≥ 80 px from sides, ≥ 160 px from top/bottom.

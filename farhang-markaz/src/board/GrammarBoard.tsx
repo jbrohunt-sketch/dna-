@@ -83,9 +83,9 @@ export const GrammarBoard: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: color.cream }}>
       <div style={{ position: "absolute", left: M, top: 70, fontFamily: sans, color: color.ink }}>
-        <div style={{ fontSize: 64, fontWeight: 700, letterSpacing: "-0.01em" }}>Farhang Markaz — Visual Grammar v3 · rev 2</div>
+        <div style={{ fontSize: 64, fontWeight: 700, letterSpacing: "-0.01em" }}>Farhang Markaz — Visual Grammar v3 · rev 3</div>
         <div style={{ fontSize: 26, marginTop: 10, opacity: 0.75 }}>
-          After Art Director + Cultural Auditor conditional passes · flat shapes on cream · Fergana anchor · [R#] = cultural register entry · ◇ = provisional / stylisation
+          After two Art Director + Cultural Auditor review rounds · flat shapes on cream · Fergana anchor · [R#] = cultural register entry · ◇ = provisional / stylisation
         </div>
       </div>
 
@@ -115,11 +115,10 @@ export const GrammarBoard: React.FC = () => {
         })}
       </Cell>
 
-      <Cell i={2} title="TYPOGRAPHY · IDENTITY ◇" caption="The identity ring IS the hem band (0.13R, 36 flames) at the frame-0 rotation — so the last frame blooms back into the spin. Inter Tight 700, ink. Divider = the two dutar strings. ◇ Size, tracking, timing pending the reference.">
+      <Cell i={2} title="TYPOGRAPHY · IDENTITY ◇" caption="The identity ring IS the hem band (0.13R, 36 flames) at the frame-0 rotation — so the last frame blooms back into the spin. Inter Tight 700, ink. Divider = the two dutar strings spanning the ring, one plucked — never a short double bar. ◇ Size, tracking, timing pending the reference.">
         <HemBand cx={360} cy={mid} R={268} rotation={FRAME0_ROT} />
         <text x={360} y={mid - 30} fontFamily={sans} fontSize={60} fontWeight={700} textAnchor="middle" fill={color.ink} letterSpacing="0.02em">FARHANG</text>
-        <line x1={295} x2={425} y1={mid - 4} y2={mid - 4} stroke={color.ink} strokeWidth={3} strokeLinecap="round" />
-        <line x1={295} x2={425} y1={mid + 6} y2={mid + 6} stroke={color.ink} strokeWidth={3} strokeLinecap="round" />
+        <Dutar a={[360 - 268 * 0.845, mid + 1]} b={[360 + 268 * 0.845, mid + 1]} gap={10} pluck={{ at: 0.32, amp: -5 }} weight={3} />
         <text x={360} y={mid + 76} fontFamily={sans} fontSize={60} fontWeight={700} textAnchor="middle" fill={color.ink} letterSpacing="0.02em">MARKAZ</text>
       </Cell>
 
@@ -128,7 +127,7 @@ export const GrammarBoard: React.FC = () => {
         <Label from={[235 + 0.45 * 200, mid + 10 - 0.82 * 200]} to={[460, 40]} text="hem band · 36 flames" />
         <Label from={[235 + 0.45 * 200, mid + 10 - 0.13 * 200]} to={[460, 100]} text="silk sleeve + cuff" />
         <Label from={[235 + 0.74 * 200, mid + 10 - 0.08 * 200]} to={[460, 160]} text="palm-up hand" />
-        <Label from={[235 + 0.2 * 200, mid + 10 + 0.04 * 200]} to={[460, 220]} text="nimcha" />
+        <Label from={[235 + 0.24 * 200, mid + 10 + 0.12 * 200]} to={[460, 220]} text="nimcha" />
         <Label from={[235, mid + 10]} to={[460, 280]} text="doppi 0.28R" />
         <Label from={[235 + 0.08 * 200, mid + 10 + 0.5 * 200]} to={[460, 340]} text="braid tail ×7" />
         <Label from={[235 - 0.42 * 200, mid + 10 + 0.42 * 200]} to={[460, 400]} text="hero braid" />
@@ -160,8 +159,7 @@ export const GrammarBoard: React.FC = () => {
         <Small x={70} y={60} anchor="start">close-up: 5 strands</Small>
         <HeroBraid sp={spine(70, 230, 6, 6, 0, 330)} R={520} />
         <Small x={70} y={205} anchor="start">hero braid: 2 strands</Small>
-        <Braids cx={520} cy={320} R={240} rotation={-60} lag={18} />
-        <HeroBraid sp={heroSpine(520, 320, 240, -60, 18)} R={240} />
+        <Braids cx={520} cy={320} R={240} rotation={-60} lag={18} hero />
         <g transform={`translate(520 320) rotate(-60)`}>
           <Doppi size={dancer.doppi * 240} keyline={3} />
         </g>
@@ -178,7 +176,7 @@ export const GrammarBoard: React.FC = () => {
         <Doira id="b-do" cx={360} cy={mid} R={230} strike={{ x: 205, y: mid - 120, r: 80, w: 10 }} />
       </Cell>
 
-      <Cell i={8} title="FERGANA-SCHOOL PLATE · RISHTAN PALETTE" caption="Replaces the architecture beat [R12, R13]. Milk ground, dark outlines, cobalt + ishkor. Four-lobed centres are documented (V&A O225424, 'probably Kokand'); growing it from the doppi's bushes is a design rhyme, not a cultural link. Bodom leaves in 12 compartments; checked rim = the doira's 24 rings. ◇ Counts are stylisation.">
+      <Cell i={8} title="PLATE · FERGANA-SCHOOL, RISHTAN PALETTE" caption="Replaces architecture [R12, R13]. Milk ground, dark outlines, cobalt + ishkor. Four-lobed centres are documented (V&A O225424); growing it from the doppi's bushes is a design rhyme. Bodom leaves in 12 compartments; checked rim = doira's 24 rings. ◇ Counts are stylisation.">
         <RishtanPlate cx={360} cy={mid} R={235} />
       </Cell>
 
@@ -227,8 +225,7 @@ export const GrammarBoard: React.FC = () => {
             <g key={k}>
               {k === 0 && (
                 <g>
-                  <Braids cx={x + 30} cy={mid - 130} R={150} rotation={-40} lag={18} />
-                  <HeroBraid sp={hs} R={150} minFeature={1.5} />
+                  <Braids cx={x + 30} cy={mid - 130} R={150} rotation={-40} lag={18} hero minFeature={1.5} />
                   <g transform={`translate(${x + 30} ${mid - 130}) rotate(-40)`}>
                     <Doppi size={dancer.doppi * 150} keyline={2} />
                   </g>

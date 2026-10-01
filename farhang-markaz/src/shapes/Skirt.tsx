@@ -76,7 +76,7 @@ export const Skirt: React.FC<Props> = ({ cx, cy, R, rotation, flare = 1, scallop
         {Array.from({ length: N / 2 }, (_, j) => {
           const a = rotation + (2 * j + 1) * step - 90;
           const rIn = Re * (0.97 - dancer.band);
-          const wedge = [[cx, cy] as const, polar(cx, cy, rIn, a - step / 2), polar(cx, cy, rIn, a + step / 2)];
+          const wedge = [[cx, cy] as const, ...Array.from({ length: 13 }, (_, q) => polar(cx, cy, rIn, a - step / 2 + (q * step) / 12))];
           return <path key={j} d={path(wedge)} fill={color.sky} opacity={panels} />;
         })}
         <HemBand cx={cx} cy={cy} R={Re} rotation={rotation} flames={flames} />

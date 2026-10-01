@@ -2,7 +2,7 @@ import React from "react";
 import { color, dancer } from "../design/tokens";
 import { path, taper, type Pt } from "./geo";
 import { Skirt } from "./Skirt";
-import { Braids, HeroBraid, heroSpine } from "./Braids";
+import { Braids } from "./Braids";
 import { Doppi } from "./Doppi";
 
 // The overhead dancer as ~10 shape families: skirt (panels + hem band), two plain-silk dress
@@ -39,16 +39,20 @@ export const handAt = (s: 1 | -1, R: number): { at: Pt; dir: number } => {
   return { at: end, dir: (Math.atan2(end[1] - prev[1], end[0] - prev[0]) * 180) / Math.PI };
 };
 
-const Arm: React.FC<{ readonly s: 1 | -1; readonly R: number; readonly lift: number; readonly kl: number }> = ({ s, R, lift, kl }) => {
+const Arm: React.FC<{ readonly s: 1 | -1; readonly R: number; readonly lift: number }> = ({ s, R, lift }) => {
   const sp = armSpine(s, R);
   const cuffFrom = Math.floor(sp.length * 0.82);
   const { at, dir } = handAt(s, R);
   return (
     <g transform={`rotate(${s * lift})`}>
-      <path d={path(taper(sp, R * 0.1, R * 0.075))} fill={color.milk} stroke={color.ink} strokeWidth={kl * 0.5} strokeLinejoin="round" />
+      <path d={path(taper(sp, R * 0.1, R * 0.075))} fill={color.milk} />
       <path d={path(taper(sp.slice(cuffFrom), R * 0.08, R * 0.075))} fill={color.red} />
       <g transform={`translate(${at[0]} ${at[1]}) rotate(${dir})`}>
-        <ellipse cx={R * 0.075} cy={0} rx={R * 0.07} ry={R * 0.048} fill={color.milk} stroke={color.ink} strokeWidth={kl * 0.5} />
+        {/* open palm, ~1.3× cuff width: teardrop pointing outward */}
+        <path
+          d={`M0 ${-R * 0.05} C${R * 0.07} ${-R * 0.055} ${R * 0.13} ${-R * 0.02} ${R * 0.15} 0 C${R * 0.13} ${R * 0.02} ${R * 0.07} ${R * 0.055} 0 ${R * 0.05} Z`}
+          fill={color.milk}
+        />
       </g>
     </g>
   );
@@ -71,12 +75,11 @@ export const Dancer: React.FC<
       <Skirt id={id} cx={cx} cy={cy} R={R} rotation={rotation} flare={flare} />
       <g transform={`translate(${cx} ${cy}) scale(${body}) translate(${-cx} ${-cy})`}>
         <g transform={`translate(${cx} ${cy}) rotate(${rotation})`}>
-          <Arm s={1} R={R} lift={armLift} kl={kl} />
-          <Arm s={-1} R={R} lift={armLift} kl={kl} />
-          <rect x={-0.27 * R} y={-0.1 * R} width={0.54 * R} height={0.2 * R} rx={0.1 * R} fill={color.red} />
+          <Arm s={1} R={R} lift={armLift} />
+          <Arm s={-1} R={R} lift={armLift} />
+          <rect x={-0.31 * R} y={-0.19 * R} width={0.62 * R} height={0.38 * R} rx={0.17 * R} fill={color.red} />
         </g>
-        <Braids cx={cx} cy={cy} R={R} rotation={rotation} lag={braidLag} reach={braidReach} minFeature={mf} />
-        {hero && <HeroBraid sp={heroSpine(cx, cy, R, rotation, braidLag, braidReach)} R={R} minFeature={mf} />}
+        <Braids cx={cx} cy={cy} R={R} rotation={rotation} lag={braidLag} reach={braidReach} minFeature={mf} hero={hero} />
         <g transform={`translate(${cx} ${cy}) rotate(${rotation})`}>
           <Doppi size={dancer.doppi * R} keyline={kl * 2} ground={doppiGround} />
         </g>

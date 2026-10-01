@@ -48,26 +48,33 @@ export const BraidMass: React.FC<{
   readonly strands?: number;
   readonly divider?: number;
   readonly keyline?: number;
-}> = ({ sp, w0, w1, strands = 3, divider = dancer.minFeature, keyline }) => {
+  readonly pass?: "keyline" | "fill" | "both";
+}> = ({ sp, w0, w1, strands = 3, divider = dancer.minFeature, keyline, pass = "both" }) => {
   const n = sp.length;
   const tip = sp[n - 1];
   const prev = sp[n - 3];
   const dir = (Math.atan2(tip[1] - prev[1], tip[0] - prev[0]) * 180) / Math.PI;
   const kl = keyline ?? Math.max(1.5, w0 * 0.14);
+  const body = path(taper(sp, w0, w1));
   return (
     <g>
-      <path d={path(taper(sp, w0, w1))} fill={color.ink} stroke={color.cream} strokeWidth={kl} strokeLinejoin="round" />
-      {Array.from({ length: strands - 1 }, (_, k) => (
-        <path
-          key={k}
-          d={path(offsetLine(sp, -0.5 + (k + 1) / strands, w0, w1), false)}
-          fill="none"
-          stroke={color.cream}
-          strokeWidth={divider}
-          strokeLinecap="round"
-        />
-      ))}
-      <Tassel at={tip} dir={dir} s={Math.max(dancer.minFeature, w1 * 0.6)} />
+      {pass !== "fill" && <path d={body} fill={color.cream} stroke={color.cream} strokeWidth={kl * 2} strokeLinejoin="round" />}
+      {pass !== "keyline" && (
+        <g>
+          <path d={body} fill={color.ink} />
+          {Array.from({ length: strands - 1 }, (_, k) => (
+            <path
+              key={k}
+              d={path(offsetLine(sp, -0.5 + (k + 1) / strands, w0, w1), false)}
+              fill="none"
+              stroke={color.cream}
+              strokeWidth={divider}
+              strokeLinecap="round"
+            />
+          ))}
+          <Tassel at={tip} dir={dir} s={Math.max(dancer.minFeature, w1 * 0.6)} />
+        </g>
+      )}
     </g>
   );
 };
@@ -81,24 +88,46 @@ type TailProps = {
   readonly reach?: number;
   readonly strands?: number;
   readonly minFeature?: number;
-};
-
-export const Braids: React.FC<TailProps> = ({ cx, cy, R, rotation, lag, reach = 1, strands = 1, minFeature = dancer.minFeature }) => {
-  const N = count.braidClusters;
-  return (
-    <g>
-      {Array.from({ length: N }, (_, i) => {
-        const spread = -32 + (64 * i) / (N - 1);
-        const L = R * (0.5 + 0.12 * (0.5 + 0.5 * Math.sin(i * 2.3))) * reach;
-        const sp = spine(cx, cy, rotation + 90 + spread, lag * (0.8 + 0.25 * Math.cos(i * 1.3)), R * 0.12, L);
-        return <BraidMass key={i} sp={sp} w0={R * 0.06} w1={R * 0.03} strands={strands} divider={minFeature} />;
-      })}
-    </g>
-  );
+  readonly hero?: boolean;
 };
 
 export const heroSpine = (cx: number, cy: number, R: number, rotation: number, lag: number, reach = 1) =>
-  spine(cx, cy, rotation + 90 + 44, lag, R * 0.12, R * 0.7 * reach);
+  spine(cx, cy, rotation + 90 + 40, lag, R * 0.12, R * 0.7 * reach);
+
+/**
+ * The braid tail: one merged ink root mass for the first ~30% (a head with a tail of hair),
+ * splitting into 7 masses; the hero braid peels off the edge. Keylines are drawn in a first
+ * pass so only the outer silhouette carries one.
+ */
+export const Braids: React.FC<TailProps> = ({ cx, cy, R, rotation, lag, reach = 1, strands = 1, minFeature = dancer.minFeature, hero = false }) => {
+  const N = count.braidClusters;
+  const spines = Array.from({ length: N }, (_, i) => {
+    const spread = -32 + (64 * i) / (N - 1);
+    const L = R * (0.5 + 0.12 * (0.5 + 0.5 * Math.sin(i * 2.3))) * reach;
+    return spine(cx, cy, rotation + 90 + spread, lag * (0.8 + 0.25 * Math.cos(i * 1.3)), R * 0.12, L);
+  });
+  const hs = heroSpine(cx, cy, R, rotation, lag, reach);
+  const k = Math.round(spines[0].length * 0.3);
+  const rootPoly = [polar(cx, cy, R * 0.06, rotation + 90), ...spines[0].slice(0, k), ...spines[N - 1].slice(0, k).reverse()];
+  const kl = Math.max(1.5, R * 0.06 * 0.14);
+  const root = path(rootPoly);
+  const mass = (p: "keyline" | "fill") => (
+    <g>
+      {spines.map((sp, i) => (
+        <BraidMass key={i} sp={sp} w0={R * 0.06} w1={R * 0.03} strands={strands} divider={minFeature} pass={p} />
+      ))}
+      {hero && <BraidMass sp={hs} w0={R * 0.05} w1={R * 0.03} strands={2} divider={minFeature} pass={p} />}
+    </g>
+  );
+  return (
+    <g>
+      <path d={root} fill={color.cream} stroke={color.cream} strokeWidth={R * 0.06 + kl * 2} strokeLinejoin="round" />
+      {mass("keyline")}
+      {mass("fill")}
+      <path d={root} fill={color.ink} stroke={color.ink} strokeWidth={R * 0.06} strokeLinejoin="round" />
+    </g>
+  );
+};
 
 /** Two strands with a cream divider: it unzips into the two dutar strings. */
 export const HeroBraid: React.FC<{ readonly sp: readonly Pt[]; readonly R: number; readonly minFeature?: number }> = ({
