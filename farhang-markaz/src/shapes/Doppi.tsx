@@ -1,44 +1,59 @@
 import React from "react";
-import { color } from "../design/tokens";
+import { color, dancer } from "../design/tokens";
 
-// Women's square doppi seen from above — register R2 (Med): four identical floral-bush
-// motifs of the chamanda gul type (Margilan / Tashkent, mid-20th c.), one per edge, stems
-// toward the centre, thin band border, dark ground. Flower count and ground are stylisation.
+// Women's square doppi seen from above — register R2 (Med): four identical floral-bush motifs
+// of the chamanda gul type (Margilan / Tashkent, mid-20th c.), one per edge, stems toward the
+// centre, band border. Bushes fill ~65% of each face so the pink survives at thumbnail size.
+// Flower count (3) and ground colour are stylisation.
 
 const Bush: React.FC<{ readonly s: number }> = ({ s }) => (
   // local −y points toward the cap's edge
   <g>
-    <line x1={0} y1={s * 0.1} x2={0} y2={-s * 0.03} stroke={color.leaf} strokeWidth={s * 0.022} strokeLinecap="round" />
+    <line x1={0} y1={s * 0.07} x2={0} y2={-s * 0.06} stroke={color.ishkor} strokeWidth={Math.max(dancer.minFeature, s * 0.03)} strokeLinecap="round" />
     {[-1, 1].map((d) => (
-      <ellipse key={d} cx={d * s * 0.045} cy={s * 0.035} rx={s * 0.022} ry={s * 0.05} fill={color.leaf} transform={`rotate(${d * 48} ${d * s * 0.045} ${s * 0.035})`} />
+      <ellipse
+        key={d}
+        cx={d * s * 0.06}
+        cy={s * 0.02}
+        rx={s * 0.035}
+        ry={s * 0.075}
+        fill={color.ishkor}
+        transform={`rotate(${d * 52} ${d * s * 0.06} ${s * 0.02})`}
+      />
     ))}
     {[
-      [-0.068, -0.045],
-      [0, -0.075],
-      [0.068, -0.045],
+      [-0.088, -0.085],
+      [0, -0.12],
+      [0.088, -0.085],
     ].map(([x, y], i) => (
-      <circle key={i} cx={x * s} cy={y * s} r={s * 0.038} fill={color.pink} />
+      <circle key={i} cx={x * s} cy={y * s} r={s * 0.07} fill={color.pink} />
     ))}
   </g>
 );
 
-export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number }> = ({ size, keyline = 6 }) => {
+export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number; readonly ground?: "ink" | "milk" }> = ({
+  size,
+  keyline = 6,
+  ground = "milk",
+}) => {
   const h = size / 2;
+  const fill = ground === "ink" ? color.ink : color.milk;
+  const band = ground === "ink" ? color.milk : color.ink;
   return (
     <g>
-      <rect x={-h} y={-h} width={size} height={size} rx={size * 0.22} fill={color.ink} stroke={color.cream} strokeWidth={keyline} />
+      <rect x={-h} y={-h} width={size} height={size} rx={size * 0.22} fill={fill} stroke={color.cream} strokeWidth={keyline} />
       <rect
-        x={-h + size * 0.06}
-        y={-h + size * 0.06}
-        width={size * 0.88}
-        height={size * 0.88}
+        x={-h + size * 0.055}
+        y={-h + size * 0.055}
+        width={size * 0.89}
+        height={size * 0.89}
         rx={size * 0.17}
         fill="none"
-        stroke={color.milk}
-        strokeWidth={Math.max(0.8, size * 0.018)}
+        stroke={band}
+        strokeWidth={Math.max(1, size * 0.03)}
       />
       {[0, 90, 180, 270].map((r) => (
-        <g key={r} transform={`rotate(${r}) translate(0 ${-h * 0.56})`}>
+        <g key={r} transform={`rotate(${r}) translate(0 ${-size * 0.2})`}>
           <Bush s={size} />
         </g>
       ))}

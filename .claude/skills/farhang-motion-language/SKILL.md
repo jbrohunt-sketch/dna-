@@ -80,17 +80,23 @@ cues (e.g. headscarf over the braids).
 
 ## 3. Shape vocabulary — the dancer (overhead; R = skirt radius = 360 px, loop anchor)
 
-- **Skirt:** circle of radius R with shallow scallops; khan-atlas flame columns as flat
-  radial bands; flare scales R from 0.35R → R.
-- **Bodice:** sleeveless nimcha as one flat shape.
-- **Sleeves:** belong to the dress (ko'ylak) — khan-atlas, as flat capsules.
-- **Arms:** rounded (curved capsules), never a rigid straight T.
-- **Hands:** simple rounded palm-up shapes, no articulated fingers.
-- **Headpiece:** square doppi seen from above, thin band border; four identical bush motifs
-  at the edge midpoints, stems toward the centre, ~3 pink flowers + green leaves each.
-- **Braids:** 7 grouped braid masses, each subdivided into 5 strands (≈35 implied braids),
-  each ending in a sochpopuk; plus **one hero braid** that separates and becomes the dutar
-  string.
+- **Skirt:** circle of radius R with shallow scallops. Inner field = 12 plain panels
+  alternating cobalt / sky. **Hem band** 0.84–0.97R (`dancer.band` = 0.13R, shared with the
+  doira rim and the identity ring) carries 36 red flames with milk cores, each ≥ 2× as long
+  as wide. Flare scales R from 0.35R → R.
+- **Nimcha:** sleeveless, one red capsule.
+- **Sleeves:** plain-silk dress sleeves [R6] — milk, with a red cuff.
+- **Arms:** rounded curved capsules, never a rigid straight T. **Hands:** open palm-up ovals,
+  no fingers; hand tips ≤ 0.80R.
+- **Headpiece:** square doppi, side 0.28R, **milk ground** (the dark ground failed the
+  thumbnail test and read as the black men's cap [R1]), band border, four bushes filling
+  ~65% of each face, stems toward the centre, 3 pink flowers each (stylisation).
+- **Braids:** a **tail**, not spokes — 7 solid ink masses rooted along the back edge of the
+  doppi (0.12R behind centre), spread ±32°, width 0.06R → 0.03R, length 0.50–0.62R (tassels
+  stay off the hem). Strand subdivision (5 per mass, ≈35 implied) only in close-ups.
+  **Hero braid:** 2 strands with a cream divider, length 0.7R — it unzips into the dutar
+  strings. Sochpopuk = silver cap (milk) + coral/silk tassel (red) [R4].
+- **Minimum feature size:** 3 px at film scale (`dancer.minFeature`). Nothing thinner.
 - **Never drawn:** face, skin tone rendering, fingers, feet, body curves, hair strands,
   fabric folds, stitching, shadows.
 
@@ -98,46 +104,53 @@ cues (e.g. headscarf over the braids).
 
 | token | hex | source | role |
 |---|---|---|---|
-| cream | `#F3ECDF` | Rishtan milky slip ground | background — always, except a shape that scales to fill frame |
-| milk | `#FFFAF2` | slip white | doira skin, light shapes, keylines |
-| ink | `#15183A` | — | braids, doppi body, type |
-| cobalt | `#1D3FD6` | Rishtan cobalt; indigo atlas | primary bold blue |
-| sky | `#6F8BF7` | — | secondary blue, alternating panels |
-| ishkor | `#14A39A` | Rishtan ishkor glaze | turquoise accent; ceramic beat |
-| red | `#E5323F` | madder red in atlas; pomegranate | bodice, tassels, strike accent |
-| pink | `#F49AB6` | chamanda gul flower | floral accent |
-| leaf | `#2F9A5E` | chamanda gul bush | floral accent only |
-| saffron | `#F4AE2A` | isparak yellow in atlas | tiny accent only |
+| cream | `#F3ECDF` | Rishtan milky slip | background — always, except a shape that scales to fill frame |
+| milk | `#FFFAF2` | slip white | doira skin, sleeves, doppi ground, flame cores |
+| ink | `#15183A` | Rishtan dark outline (stylised blue-black) | braids, outlines, type |
+| cobalt | `#1D3FD6` | Rishtan cobalt; indigo atlas | primary blue, hem band, rim |
+| sky | `#6F8BF7` | stylisation | alternate skirt panels |
+| ishkor | `#14A39A` | Rishtan ishkor; stands in for atlas / chamanda-gul green | plate, doppi bushes, one ikat column |
+| red | `#E5323F` | madder red (atlas) | flames, nimcha, cuffs, tassels, strike |
+| pink | `#F49AB6` | chamanda gul flower | florals only |
+| saffron | `#F4AE2A` | isparak yellow (atlas) | dutar frets only |
 
-Retired: ink/night dark grounds, gold, pomegranate/emerald dark jewels, ash, all `material.*`.
-Do not introduce new hues without updating tokens.ts and this table together.
+Every **accent** colour traces to a named source; ink and sky are stylisation. Retired: dark
+grounds, gold/metallics, leaf (merged into ishkor), all `material.*`. Do not introduce new
+hues without updating tokens.ts and this table together.
 
 ## 5. Motif abstractions
 
-- **Doira:** seen from the open side: cobalt rim ring + milk skin disc + small rings in pairs
-  on the inner wall. The strike is a flat expanding ring, synced to *dum* / *tak*.
+- **Doira:** seen from the open side [R10]: cobalt rim (width = hem band) + milk skin + 12
+  ring pairs on the inner wall (stylised count). The strike is a flat red wave in the skin
+  (struck on the far side), synced to *dum* / *tak*.
 - **Dutar:** exactly two parallel lines with short tied-fret bars; if the body is shown, the
   long-neck pear silhouette.
-- **Ikat:** stepped flame columns; misregistration expressed as an offset of whole steps,
-  never as blur.
-- **Rishtan geometry:** milk ground; centre zone = cinquefoil floral rosette; middle field =
-  radiating almond leaves (bodom), each in its own compartment; rim = checked band; zones
-  separated by dark outlines; cobalt + ishkor only. 12 compartments is a design choice
-  (= skirt panels = warp columns), not a documented count.
+- **Ikat:** stepped flames tapering at both ends, stacked tip-to-base into continuous
+  zigzag columns; misregistration = whole-step offsets, never blur. One column in three
+  carries ishkor (atlas green). Pink, sky and the misregistration are stylisation [R5].
+- **Fergana-school plate, Rishtan palette** [R12]: milk ground; dark zone outlines; cobalt +
+  ishkor only (no red, no pink). Centre = radiating four-lobed motif grown from the doppi's
+  four bushes; middle field = bodom leaves, each in its own compartment (the bent warp);
+  rim = checked band, 24 cells per row = the doira's 24 rings. Counts are stylisation.
+- **Identity divider:** the two dutar strings (two parallel lines), never one line.
 
 ## 6. Transition grammar (preserved from v1–v2 — this is the project's core asset)
 
 Every transition shares geometry, direction, rhythm or material logic. Objects never pop in.
-- **Skirt circle → doira:** scallops flatten, hem → rim, panels clear to the skin.
-- **Hero braid → dutar string:** the braid separates from its group, straightens, splits
-  into two lines; frets tick on.
-- **String → warp → ikat:** the plucked line divides into parallel warp bands; flame steps
-  fill column by column.
-- **Ikat columns → Rishtan plate:** the straight warp columns bend into polar coordinates and
-  become the plate's compartments; the stepped ikat flame smooths into the bodom almond
-  leaf (textile steps → glaze curves) and re-colours from atlas to Rishtan palette.
-- **Hem band → identity ring → frame 0:** the identity ring is the skirt's hem at the same
-  centre, radius, rotation phase and colors; the loop blooms back into the spin.
+- **T1 skirt → doira:** *tak* — her hand meets the hem and the strike wave starts at the hand;
+  *dum* — the body (arms, nimcha, braids, doppi) draws into the centre and the milk skin opens
+  from that point. Flames retract; the hem band becomes the rim; rings settle in pairs.
+- **T2 hero braid → dutar:** the 2-strand hero braid peels from the tail, straightens under
+  tension and unzips along its divider into the two strings; tied frets tick on; the pluck
+  is the instant-after-release triangle.
+- **T3 strings → warp → plate:** each string throws stepped echoes → 12 warp columns; flames
+  dye the columns; the warp bends into a ring (`bend`, t 0 → 1) while each stepped flame
+  relaxes into a bodom leaf (same vertices, `smooth` 0 → 1) and re-glazes to the Rishtan
+  palette — a formal rhyme between pointed-oval shapes, **not** a claim that ikat flames
+  derive from bodom.
+- **Origins inside the plate:** rim checks = doira rings; four-lobed centre = doppi bushes.
+- **Hem band → identity ring → frame 0:** the identity ring is the hem band with its 36
+  flames at the frame-0 centre, radius and rotation; the loop blooms back into the spin.
 - The world accumulates: each return to the dancer keeps something from the scene before.
 - Speed is shown through shape (braid lag, stretch, spacing), never through blur.
 - Morph engineering: generate paths in code with identical structure (same vertex/segment
@@ -183,6 +196,7 @@ around her. 7. Final spin → hem ring → FARHANG MARKAZ identity → loops to 
   2. Is the ground cream/light, and is there zero simulated lighting/material?
   3. Can any element be removed without loss? (If yes, remove it.)
   4. Can each motif be named (object, place, technique) with a register entry?
-  5. Does it read at thumbnail size (108×192)?
+  5. Does it read at a true 0.1× render (108×192), checked by actually downscaling the frame
+     (`Checks/DancerCheck` + ffmpeg `scale=108:192:flags=area`)?
   6. Does every transformation have an audible cause?
   7. Does the last frame loop into the first (centre, radius, rotation, color)?

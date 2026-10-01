@@ -7,14 +7,13 @@ export const CENTER = { x: FRAME.width / 2, y: FRAME.height / 2 } as const;
 export const color = {
   cream: "#F3ECDF", // Rishtan milky slip — the ground
   milk: "#FFFAF2", // slip white — doira skin, light shapes, keylines
-  ink: "#15183A", // braids, doppi body, type
+  ink: "#15183A", // Rishtan dark outline (stylised blue-black) — braids, outlines, type
   cobalt: "#1D3FD6", // Rishtan cobalt / indigo atlas — primary blue
-  sky: "#6F8BF7", // secondary blue
-  ishkor: "#14A39A", // Rishtan ishkor glaze — turquoise accent
+  sky: "#6F8BF7", // secondary blue — stylisation, no source claimed
+  ishkor: "#14A39A", // Rishtan ishkor glaze; also stands in for atlas / chamanda-gul green (stylisation)
   red: "#E5323F", // madder red / pomegranate
-  pink: "#F49AB6", // chamanda gul flower
-  leaf: "#2F9A5E", // chamanda gul bush
-  saffron: "#F4AE2A", // isparak yellow — tiny accent only
+  pink: "#F49AB6", // chamanda gul flower — florals only
+  saffron: "#F4AE2A", // isparak yellow — dutar frets only
 } as const;
 
 export type ColorName = keyof typeof color;
@@ -29,4 +28,7 @@ export const count = {
 
 export const dancer = {
   R: 360, // skirt radius at full flare — also identity ring radius (loop anchor)
+  band: 0.13, // hem band width (× R) = doira rim width = identity ring width
+  doppi: 0.28, // doppi side (× R)
+  minFeature: 3, // px at film scale — nothing thinner or smaller
 } as const;
