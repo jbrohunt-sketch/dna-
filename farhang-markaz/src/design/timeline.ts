@@ -1,5 +1,6 @@
 // Cue map: one source of truth for audio onsets AND visual events.
-// Frame numbers at 30 fps. 14 s = 420 frames. DRAFT — locked after styleframe review.
+// Frame numbers at 30 fps, ~14–15 s. PLACEHOLDER values — no BPM is locked. The Sound Director
+// sets the rhythmic grid from the actual doira/dutar material; these cues are then re-derived.
 // Rule: gesture → sound → transformation (sound onset 0–2 frames before the visual change).
 
 export const DURATION = 420;
