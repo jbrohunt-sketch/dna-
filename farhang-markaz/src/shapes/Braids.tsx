@@ -88,7 +88,7 @@ export const Braids: React.FC<{
         const spread = -68 + (136 * i) / (N - 1);
         const L = R * (0.62 + 0.14 * Math.sin(i * 1.9)) * reach;
         const sp = spine(cx, cy, rotation + 90 + spread, lag * (0.85 + 0.25 * Math.cos(i * 1.3)), R * 0.06, L);
-        return <BraidMass key={i} sp={sp} w0={R * 0.1} w1={R * 0.045} />;
+        return <BraidMass key={i} sp={sp} w0={R * 0.1} w1={R * 0.045} strands={5} />;
       })}
     </g>
   );

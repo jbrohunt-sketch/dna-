@@ -136,7 +136,7 @@ export const GrammarBoard: React.FC = () => {
         <Label from={[250 - 0.55 * 205, mid + 10 + 0.32 * 205]} to={[500, 405]} text="hero braid" />
       </Cell>
 
-      <Cell i={4} title="HEADPIECE ◇" caption="Women's Fergana square doppi: four-fold square, one chamanda gul (green bush + pink flower) per face, rotated 90°. Replaces the men's Chust doppi. ◇ Motif structure pending the cultural register.">
+      <Cell i={4} title="HEADPIECE" caption="Women's square doppi, chamanda gul type (Margilan/Tashkent, mid-20th c.) [R2 Med]: four identical bushes at the edge midpoints, stems to centre, thin band border. ◇ Flower count and dark ground are stylisation. Chust doppi not used (men's-coded) [R1].">
         <g transform={`translate(230 ${mid})`}>
           <Doppi size={300} keyline={0} />
         </g>
@@ -150,8 +150,8 @@ export const GrammarBoard: React.FC = () => {
         <text x={640} y={mid + 10} fontFamily={sans} fontSize={18} textAnchor="middle" fill={color.ink}>thumbnail</text>
       </Cell>
 
-      <Cell i={5} title="BRAID CONSTRUCTION" caption="qirq kokil as 7 grouped braid masses; inner cream lines imply several braids per mass; each ends in a sochpopuk (milk cap, red silk tassel). One slimmer hero braid separates and becomes the dutar string.">
-        <BraidMass sp={spine(120, 120, 20, 14, 0, 380)} w0={44} w1={22} />
+      <Cell i={5} title="BRAID CONSTRUCTION" caption="qirq kokil (unmarried girl) [R3]: 7 grouped masses × 5 strands ≈ 35 implied braids. Each ends in a sochpopuk: silver cap (milk) + coral/silk tassel (red) [R4]. One slimmer hero braid separates and becomes the dutar string.">
+        <BraidMass sp={spine(120, 120, 20, 14, 0, 380)} w0={52} w1={24} strands={5} />
         <HeroBraid sp={spine(120, 260, 18, 8, 0, 400)} R={420} />
         <g>
           <circle cx={560} cy={150} r={0} />
@@ -161,7 +161,7 @@ export const GrammarBoard: React.FC = () => {
             <Doppi size={34} keyline={3} />
           </g>
         </g>
-        <text x={120} y={430} fontFamily={sans} fontSize={18} fill={color.ink}>mass (3 strands implied) · hero braid</text>
+        <text x={120} y={430} fontFamily={sans} fontSize={18} fill={color.ink}>mass (5 strands) · hero braid</text>
       </Cell>
 
       <Cell i={6} title="DRESS / IKAT" caption="Khan-atlas (Margilan) as stepped FLAME columns along the warp — steps from bundle tying, misregistration as whole-step offsets, never blur or generic diamonds. On the overhead skirt the warp runs radially.">
@@ -170,11 +170,11 @@ export const GrammarBoard: React.FC = () => {
         <Skirt id="b-ik" cx={555} cy={mid} R={150} rotation={0} />
       </Cell>
 
-      <Cell i={7} title="DOIRA" caption="Cobalt rim, milk skin, inner ring of small rings in pairs (the rings hang on the frame). The strike is one flat red ring from the contact point, landing on dum / tak. No skin texture, no wood.">
+      <Cell i={7} title="DOIRA" caption="Seen from the open side, where the rings hang on the inner wall [R10]: cobalt rim, milk skin, small rings in pairs. The strike is one flat red ring from the contact point, landing on dum / tak. No skin texture, no wood.">
         <Doira id="b-do" cx={360} cy={mid} R={230} strike={{ x: 250, y: mid - 60, r: 70, w: 10 }} />
       </Cell>
 
-      <Cell i={8} title="RISHTAN GEOMETRY ◇" caption="Replaces the architecture beat. Plate = the ikat warp columns bent into a ring, re-glazed ishkor + cobalt on milk slip, with rim and centre medallion. ◇ Zones, segment count and medallion motif pending the cultural register.">
+      <Cell i={8} title="RISHTAN GEOMETRY" caption="Replaces the architecture beat [R12, R13]. Milk ground, dark zone outlines, cobalt + ishkor; cinquefoil centre; radiating bodom leaves each in a compartment; checked rim. ◇ 12 compartments is a shared-count design choice, not documented.">
         <RishtanPlate cx={360} cy={mid} R={230} />
       </Cell>
 
@@ -223,7 +223,7 @@ export const GrammarBoard: React.FC = () => {
         })}
       </Cell>
 
-      <Cell i={11} title="MORPH 3 — IKAT WARP → RISHTAN PLATE" caption="Shared columns. The straight warp bends into polar coordinates (one transform, t: 0 → 1); the columns become the plate's radial segments and re-glaze from atlas to Rishtan colours; rim and medallion close it.">
+      <Cell i={11} title="MORPH 3 — IKAT WARP → RISHTAN PLATE" caption="Shared columns + shared leaf. The warp bends into a ring (t: 0 → 1) while each stepped ikat flame relaxes into a smooth bodom leaf (same vertices) and re-glazes from atlas to Rishtan colours; rim and rosette close it.">
         {[0, 1, 2, 3].map((k) => {
           const x = step(k);
           const t = [0, 0.4, 0.8, 1][k];
@@ -232,7 +232,7 @@ export const GrammarBoard: React.FC = () => {
           return (
             <g key={k}>
               {k < 3 ? (
-                <IkatStrip strip={{ cx: x, baseY: mid, W, t }} columns={6} H={50} flames={1} specs={k < 2 ? undefined : RISHTAN_SPECS} centreY={mid} />
+                <IkatStrip strip={{ cx: x, baseY: mid, W, t }} columns={6} H={50} flames={1} specs={k < 2 ? undefined : RISHTAN_SPECS} centreY={mid} smooth={[0, 0.35, 0.75][k]} dividers={k === 2 ? color.ink : undefined} />
               ) : (
                 <RishtanPlate cx={x} cy={mid} R={78} />
               )}

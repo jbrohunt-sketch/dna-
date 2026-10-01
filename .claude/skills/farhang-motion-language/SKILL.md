@@ -54,22 +54,29 @@ The calibrated register lives in `farhang-markaz/docs/cultural-register.md`; the
 only the design consequence. Specificity, not brittle certainty: where an association is
 strong but not exclusive, say "strongly associated", not "only".
 
-Anchors in use:
-- **Khan-atlas warp ikat (abr)** — Margilan. Abstracted as stepped *flame columns* running
-  along the warp (radially on the overhead skirt), never as symmetric generic diamonds.
-- **Rishtan ceramics** — ishkor (turquoise) and cobalt on a milky ground. Source of the
-  cream + blue palette and of the geometry beat (replaces the former architecture/girih beat).
-- **Women's Fergana square doppi with chamanda gul** — square, four-fold, pink flower + green
-  bush motifs. Replaces the black-and-white Chust doppi (see register for confidence).
-- **Many braids (qirq kokil tradition) with sochpopuk tassels** — expressed as grouped
-  braid masses, not as dozens of separate strokes.
-- **Doira** (frame drum, rings on the frame) and **dutar** (two strings, tied frets).
-- **Fergana dance cues** — rounded arms, open palm-up hands. Avoid a straight-armed,
-  palm-up/palm-down pose that reads as Mevlevi sema.
+Anchors in use (register IDs in brackets):
+- **Khan-atlas warp ikat** — anchored in Margilan [R5, High]. Abstracted as stepped *flame
+  columns* along the warp (radial on the overhead skirt). Lozenges only if labelled *abrbandi*.
+- **Rishtan ceramics** — ishkor glaze; cobalt and turquoise on a milky ground with dark
+  outlines; mainly floral [R12, High/Med]. Source of the cream + blue palette and of the
+  ceramic beat, which replaces the former architecture beat: **radial floral zoning, not girih**.
+- **Women's square doppi with four floral-bush motifs (chamanda gul type)** — documented for
+  Margilan and Tashkent [R2, Med]. Flower count and ground colour are stylisation. The black
+  Chust doppi is strongly men's-coded [R1] and is not used on her.
+- **Many braids (qirq kokil, conventionally "forty")** — marks an unmarried girl [R3, Med-High]:
+  7 grouped masses × 5 implied strands. **Sochpopuk** = silver cap + coral/silk tassel [R4].
+- **Doira** — rings fixed inside the frame on the open side, not visible from the skin face
+  [R10]. **Dutar** — two strings, ~13–15 tied frets [R11].
+- **Dance cues** — rounded arms, wrist circles, palms often upward [R8, Med / Low-Med]. The
+  spin is shared across Uzbek dance, not a Fergana marker. An abstracted open-arm spin risks
+  a dervish misreading (sema, or tanoura with a coloured skirt) [R9]: avoid right-palm-up /
+  left-palm-down, head tilt, white skirt, tall hat, and keep the female cues (braids, doppi)
+  legible at thumbnail size.
 
-Do not use: zardozi gold (Bukhara court craft), velvet-and-gold Bukhara costume cues,
-isolated eight-point stars, mosque/madrasa façades, married-woman cues (e.g. headscarf over
-the braids) on this dancer.
+Do not use: zardozi or metallic gold [R7]; eight-point star-and-cross or any isolated octagram
+[R13]; palak discs [R14]; Iznik cues on ceramics (raised tomato red, tulip/carnation/saz leaf,
+central star, calligraphy band, mehrob niche) [R12]; mosque/madrasa façades; married-woman
+cues (e.g. headscarf over the braids).
 
 ## 3. Shape vocabulary — the dancer (overhead; R = skirt radius = 360 px, loop anchor)
 
@@ -79,10 +86,11 @@ the braids) on this dancer.
 - **Sleeves:** belong to the dress (ko'ylak) — khan-atlas, as flat capsules.
 - **Arms:** rounded (curved capsules), never a rigid straight T.
 - **Hands:** simple rounded palm-up shapes, no articulated fingers.
-- **Headpiece:** square doppi seen from above; four chamanda gul motifs, rotated 90°.
-- **Braids:** 6–8 grouped braid masses, each with internal subdivision implying several
-  braids, each ending in a sochpopuk shape; plus **one hero braid** that separates and
-  becomes the dutar string.
+- **Headpiece:** square doppi seen from above, thin band border; four identical bush motifs
+  at the edge midpoints, stems toward the centre, ~3 pink flowers + green leaves each.
+- **Braids:** 7 grouped braid masses, each subdivided into 5 strands (≈35 implied braids),
+  each ending in a sochpopuk; plus **one hero braid** that separates and becomes the dutar
+  string.
 - **Never drawn:** face, skin tone rendering, fingers, feet, body curves, hair strands,
   fabric folds, stitching, shadows.
 
@@ -106,14 +114,16 @@ Do not introduce new hues without updating tokens.ts and this table together.
 
 ## 5. Motif abstractions
 
-- **Doira:** cobalt rim ring + milk skin disc + a dotted inner ring of small rings in pairs.
-  The strike is a flat expanding ring, synced to *dum* / *tak*.
+- **Doira:** seen from the open side: cobalt rim ring + milk skin disc + small rings in pairs
+  on the inner wall. The strike is a flat expanding ring, synced to *dum* / *tak*.
 - **Dutar:** exactly two parallel lines with short tied-fret bars; if the body is shown, the
   long-neck pear silhouette.
 - **Ikat:** stepped flame columns; misregistration expressed as an offset of whole steps,
   never as blur.
-- **Rishtan geometry:** plate structure (centre medallion, radial segments, border band) per
-  the register; flat ishkor/cobalt on milk.
+- **Rishtan geometry:** milk ground; centre zone = cinquefoil floral rosette; middle field =
+  radiating almond leaves (bodom), each in its own compartment; rim = checked band; zones
+  separated by dark outlines; cobalt + ishkor only. 12 compartments is a design choice
+  (= skirt panels = warp columns), not a documented count.
 
 ## 6. Transition grammar (preserved from v1–v2 — this is the project's core asset)
 
@@ -123,8 +133,9 @@ Every transition shares geometry, direction, rhythm or material logic. Objects n
   into two lines; frets tick on.
 - **String → warp → ikat:** the plucked line divides into parallel warp bands; flame steps
   fill column by column.
-- **Ikat columns → Rishtan plate:** the straight warp columns wrap into polar coordinates and
-  become the plate's radial segments (and, implicitly, the skirt's radial panels).
+- **Ikat columns → Rishtan plate:** the straight warp columns bend into polar coordinates and
+  become the plate's compartments; the stepped ikat flame smooths into the bodom almond
+  leaf (textile steps → glaze curves) and re-colours from atlas to Rishtan palette.
 - **Hem band → identity ring → frame 0:** the identity ring is the skirt's hem at the same
   centre, radius, rotation phase and colors; the loop blooms back into the spin.
 - The world accumulates: each return to the dancer keeps something from the scene before.
