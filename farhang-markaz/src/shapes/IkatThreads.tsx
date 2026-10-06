@@ -16,49 +16,54 @@ export type Thread = {
   readonly misreg: number; // offset along t (bundle shift)
 };
 
-type Span = { readonly pts: Pt[]; readonly fill: string };
+type Layer = "outer" | "core";
 
-const spansFor = (th: Thread, motif: { t0: number; t1: number; half: number; steps: number }, samples: number): Span[] => {
-  const out: Span[] = [];
-  let cur: { pts: Pt[]; fill: string } | null = null;
+const spansFor = (th: Thread, motif: { t0: number; t1: number; half: number; steps: number }, samples: number, layer: Layer): Pt[][] => {
+  const out: Pt[][] = [];
+  let cur: Pt[] | null = null;
   for (let k = 0; k <= samples; k++) {
     const t = k / samples;
     const tau = (t - th.misreg - motif.t0) / (motif.t1 - motif.t0);
     const q = (Math.floor(tau * motif.steps) + 0.5) / motif.steps;
-    const outer = Math.abs(th.u) < motif.half * flameProfile(q);
-    const qc = (q - 0.16) / 0.58;
-    const core = Math.abs(th.u) < motif.half * 0.42 * flameProfile(qc);
-    const fill = core ? color.milk : outer ? color.red : null;
-    if (fill && cur && cur.fill === fill) cur.pts.push(th.at(t));
-    else {
-      if (cur) {
-        cur.pts.push(th.at(t));
-        out.push(cur);
-      }
-      cur = fill ? { pts: [th.at(t)], fill } : null;
+    const on =
+      layer === "outer"
+        ? Math.abs(th.u) < motif.half * flameProfile(q)
+        : Math.abs(th.u) < motif.half * 0.42 * flameProfile((q - 0.16) / 0.58);
+    if (on) {
+      if (!cur) cur = [];
+      cur.push(th.at(t));
+    } else if (cur) {
+      cur.push(th.at(t));
+      out.push(cur);
+      cur = null;
     }
   }
   if (cur) out.push(cur);
   return out;
 };
 
+/** Outer dye (red) then core (pink) drawn on top — overlapping layers, never abutting seams. */
 export const DyedThreads: React.FC<{
   readonly threads: readonly Thread[];
   readonly motif: { readonly t0: number; readonly t1: number; readonly half: number; readonly steps?: number };
   readonly width: number;
   readonly samples?: number;
-}> = ({ threads, motif, width, samples = 240 }) => (
+  readonly outer?: string;
+  readonly core?: string;
+}> = ({ threads, motif, width, samples = 240, outer = color.red, core = color.pink }) => (
   <g>
-    {threads.flatMap((th, i) =>
-      spansFor(th, { steps: 5, ...motif }, samples).map((s, j) => (
-        <polyline
-          key={`${i}-${j}`}
-          points={s.pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ")}
-          fill="none"
-          stroke={s.fill}
-          strokeWidth={width}
-        />
-      )),
+    {(["outer", "core"] as const).map((layer) =>
+      threads.flatMap((th, i) =>
+        spansFor(th, { steps: 5, ...motif }, samples, layer).map((pts, j) => (
+          <polyline
+            key={`${layer}-${i}-${j}`}
+            points={pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ")}
+            fill="none"
+            stroke={layer === "outer" ? outer : core}
+            strokeWidth={width}
+          />
+        )),
+      ),
     )}
   </g>
 );

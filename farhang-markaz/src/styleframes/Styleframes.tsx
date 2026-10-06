@@ -36,17 +36,20 @@ export const SF2Transform: React.FC = () => {
   const cols = count.warpThreads;
   const pitch = (2 * R) / cols; // field edges = disc edges
   const lw = dancer.lineWeight;
-  const pluckY = cy + R * 0.18;
-  const sigma = R * 0.75;
-  const amp = 46;
+  const amp = 40;
   const H = FRAME.height;
   const threads = Array.from({ length: cols }, (_, i) => {
     const x = cx - R + pitch * (i + 0.5);
-    const k = Math.abs(i - (cols - 1) / 2) - 0.5; // 0 = the plucked centre pair (the strings)
-    const a = amp * Math.exp(-k / 6);
+    const plucked = cols / 2 - 1; // the plucked string (left of the centre pair)
+    const k = i - plucked;
+    const a = amp * (k >= 0 ? Math.exp(-k / 5) : Math.exp(k / 1.6)); // spreads to one side
+    const y0 = cy - R;
+    const y1 = cy + R;
     const at = (t: number): Pt => {
       const y = t * H;
-      return [x + a * Math.exp(-(((y - pluckY) / sigma) ** 2)), y];
+      const inRing = y > y0 && y < y1;
+      // standing wave, 2nd harmonic between the ring edges: one string set vibrating
+      return [x + (inRing ? a * Math.sin((2 * Math.PI * (y - y0)) / (y1 - y0)) : 0), y];
     };
     return { at, u: x - cx, misreg: symmetricShift(i, cols, 3, 0.014) };
   });
@@ -81,20 +84,18 @@ export const SF2Transform: React.FC = () => {
 // rotation while the arms and braids bloom out of it. ◇ type pending the reference.
 export const SF3Identity: React.FC = () => {
   const { cx, cy, R } = FRAME0;
-  const band = R * dancer.band;
-  const capSize = R * 0.62;
-  const rIn = R - band;
+  const capSize = R * 0.7;
   return (
     <Canvas>
       <circle cx={cx} cy={cy} r={R} fill={color.cobalt} />
-      <circle cx={cx} cy={cy} r={rIn} fill="none" stroke={color.ink} strokeWidth={dancer.lineWeight} />
-      <g transform={`translate(${cx} ${cy})`}>
-        <Doppi size={capSize} keyline={0} />
+      {/* tilted to the frame-0 rotation: it implies the spin and is the loop's start pose */}
+      <g transform={`translate(${cx} ${cy}) rotate(${FRAME0.rotation})`}>
+        <Doppi size={capSize} keyline={0} band={false} />
       </g>
       <text
-        x={cx - rIn}
-        y={cy + R + capSize}
-        textLength={2 * rIn}
+        x={cx - R}
+        y={cy + R + capSize / 2}
+        textLength={2 * R}
         lengthAdjust="spacing"
         fontFamily={sans}
         fontWeight={600}

@@ -33,10 +33,11 @@ const Bush: React.FC<{ readonly s: number }> = ({ s }) => (
   </g>
 );
 
-export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number; readonly ground?: "ink" | "milk" }> = ({
+export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number; readonly ground?: "ink" | "milk"; readonly band?: boolean }> = ({
   size,
   keyline = 6,
   ground = "milk",
+  band: showBand = true,
 }) => {
   const h = size / 2;
   const fill = ground === "ink" ? color.ink : color.milk;
@@ -44,7 +45,7 @@ export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number;
   return (
     <g>
       <rect x={-h} y={-h} width={size} height={size} rx={size * 0.22} fill={fill} stroke={color.cream} strokeWidth={keyline} />
-      <rect
+      {showBand && <rect
         x={-h + size * 0.055}
         y={-h + size * 0.055}
         width={size * 0.89}
@@ -53,7 +54,7 @@ export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number;
         fill="none"
         stroke={band}
         strokeWidth={Math.max(1, size * 0.03)}
-      />
+      />}
       {[0, 90, 180, 270].map((r) => (
         <g key={r} transform={`rotate(${r}) translate(0 ${-size * 0.2})`}>
           <Bush s={size} />

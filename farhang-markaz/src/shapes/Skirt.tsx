@@ -9,7 +9,7 @@ import { DyedThreads, symmetricShift, type Thread } from "./IkatThreads";
 // The outer `dancer.band` of the disc is the hem band = doira rim = identity ring.
 
 export const SKIRT_MOTIFS = 6;
-const STRIPS = 9;
+const STRIPS = 7;
 
 
 /** Plain hem band (used when the skirt's inner field clears: doira, identity). */
@@ -30,9 +30,8 @@ export const Skirt: React.FC<{
   const Re = R * (0.35 + 0.65 * flare);
   const r0 = Re * 0.42; // columns start clear of each other (no central asterisk)
   const r1 = Re * 1.05; // columns run off the hem; clipped by the disc
-  const half = Re * 0.13;
+  const half = Re * 0.1; // narrow + long along the warp → a flame, not a lozenge
   const pitch = (2 * half) / STRIPS;
-  const colHalf = half * 1.12;
   return (
     <g>
       <defs>
@@ -42,21 +41,6 @@ export const Skirt: React.FC<{
       </defs>
       <circle cx={cx} cy={cy} r={Re} fill={color.cobalt} />
       <g clipPath={`url(#skirt-${Math.round(cx)}-${Math.round(cy)}-${Math.round(Re)})`}>
-      {Array.from({ length: SKIRT_MOTIFS }, (_, m) => {
-        const a = rotation + (m * 360) / SKIRT_MOTIFS - 90;
-        // constant-width warp column (not a wedge): the cloth ground under the dye
-        const col = [
-          ...Array.from({ length: 9 }, (_, q) => {
-            const r = r0 + ((r1 - r0) * q) / 8;
-            return polar(cx, cy, r, a - (colHalf / r) * (180 / Math.PI));
-          }),
-          ...Array.from({ length: 9 }, (_, q) => {
-            const r = r1 - ((r1 - r0) * q) / 8;
-            return polar(cx, cy, r, a + (colHalf / r) * (180 / Math.PI));
-          }),
-        ];
-        return <path key={`c${m}`} d={`M${col.map((p) => p.join(" ")).join(" L")} Z`} fill={color.sky} />;
-      })}
       {flames > 0.01 &&
         Array.from({ length: SKIRT_MOTIFS }, (_, m) => {
           const a = rotation + (m * 360) / SKIRT_MOTIFS - 90;
@@ -71,7 +55,20 @@ export const Skirt: React.FC<{
               },
             };
           });
-          return <DyedThreads key={m} threads={threads} motif={{ t0: 0.12, t1: 0.12 + 0.86 * flames, half }} width={pitch * 0.62} samples={120} />;
+          return (
+            <g key={m}>
+              {/* the warp bundle itself: sky threads, waist → hem (no card, no rectangle) */}
+              {threads.map((th, j) => (
+                <polyline
+                  key={j}
+                  points={[0, 1].map((t) => th.at(t).join(",")).join(" ")}
+                  stroke={color.sky}
+                  strokeWidth={pitch * 0.55}
+                />
+              ))}
+              <DyedThreads threads={threads} motif={{ t0: 0.08, t1: 0.08 + 0.88 * flames, half }} width={pitch * 0.55} samples={120} />
+            </g>
+          );
         })}
       </g>
     </g>

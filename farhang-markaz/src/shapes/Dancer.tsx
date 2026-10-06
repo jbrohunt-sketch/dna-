@@ -39,15 +39,25 @@ export const handAt = (s: 1 | -1, R: number): { at: Pt; dir: number } => {
   return { at: end, dir: (Math.atan2(end[1] - prev[1], end[0] - prev[0]) * 180) / Math.PI };
 };
 
-const Arm: React.FC<{ readonly s: 1 | -1; readonly R: number; readonly lift: number }> = ({ s, R, lift }) => {
-  const sp = armSpine(s, R);
-  const { at, dir } = handAt(s, R);
-  const palm = [at[0] + Math.cos((dir * Math.PI) / 180) * R * 0.05, at[1] + Math.sin((dir * Math.PI) / 180) * R * 0.05];
+/** Both arms as ONE continuous milk arc through the shoulders (rounded, forward). */
+const ArmsArc: React.FC<{ readonly R: number; readonly lift: number }> = ({ R, lift }) => {
+  const left = armSpine(-1, R).slice().reverse();
+  const right = armSpine(1, R);
+  const sp = [...left, [0, 0.03 * R] as Pt, ...right];
+  const palm = (s: 1 | -1) => {
+    const { at, dir } = handAt(s, R);
+    // open palm facing camera: flat-ended fan, wider than the wrist, distinct from round beads
+    return (
+      <g transform={`translate(${at[0]} ${at[1]}) rotate(${dir})`}>
+        <rect x={-R * 0.01} y={-R * 0.07} width={R * 0.11} height={R * 0.14} rx={R * 0.04} fill={color.milk} />
+      </g>
+    );
+  };
   return (
-    <g transform={`rotate(${s * lift})`}>
-      <path d={path(taper(sp, R * 0.1, R * 0.08))} fill={color.milk} />
-      {/* open palm, seen from above: one disc */}
-      <circle cx={palm[0]} cy={palm[1]} r={R * 0.065} fill={color.milk} />
+    <g transform={`rotate(${lift})`}>
+      <path d={path(taper(sp, R * 0.085, R * 0.085))} fill={color.milk} />
+      {palm(1)}
+      {palm(-1)}
     </g>
   );
 };
@@ -61,7 +71,7 @@ export const Dancer: React.FC<
     readonly hero?: boolean;
     readonly doppiGround?: "ink" | "milk";
   }
-> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 38, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
+> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 62, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
   const kl = Math.max(1.2, R * 0.012);
   const mf = Math.max(1, (dancer.minFeature * R) / dancer.R);
   return (
@@ -69,9 +79,7 @@ export const Dancer: React.FC<
       <Skirt id={id} cx={cx} cy={cy} R={R} rotation={rotation} flare={flare} />
       <g transform={`translate(${cx} ${cy}) scale(${body}) translate(${-cx} ${-cy})`}>
         <g transform={`translate(${cx} ${cy}) rotate(${rotation})`}>
-          <Arm s={1} R={R} lift={armLift} />
-          <Arm s={-1} R={R} lift={armLift} />
-          <rect x={-0.28 * R} y={-0.15 * R} width={0.56 * R} height={0.3 * R} rx={0.15 * R} fill={color.red} />
+          <ArmsArc R={R} lift={armLift} />
         </g>
         <Braids cx={cx} cy={cy} R={R} rotation={rotation} lag={braidLag} reach={braidReach} minFeature={mf} hero={hero} />
         <g transform={`translate(${cx} ${cy}) rotate(${rotation})`}>

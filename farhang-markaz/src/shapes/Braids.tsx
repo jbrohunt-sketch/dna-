@@ -94,28 +94,41 @@ export const heroSpine = (cx: number, cy: number, R: number, rotation: number, l
   spine(cx, cy, rotation + 90 + 60 + 22, lag, R * 0.11, R * 0.7 * reach);
 
 /**
- * The braids: count.braidClusters thin masses flung evenly around the back half of the
- * head, all swept against the spin by the same lag; the hero braid sits at the edge of the
- * fan. Keylines are drawn in a first pass so only outer silhouettes carry one.
+ * The braids as ONE swept ribbon: count.braidClusters thin braids run tightly parallel along
+ * a shared spiral that wraps behind the spin (hair flung in a turn), ends staggered, a
+ * sochpopuk bead at each tip. The outermost braid is the hero braid (→ dutar string).
  */
-export const Braids: React.FC<TailProps> = ({ cx, cy, R, rotation, lag, reach = 1, strands = 1, minFeature = dancer.minFeature, hero = false }) => {
+export const Braids: React.FC<TailProps> = ({ cx, cy, R, rotation, lag, reach = 1, hero = false }) => {
   const N = count.braidClusters;
-  const spines = Array.from({ length: N }, (_, i) => {
-    // all leave one ~120° arc at the back of the cap and sweep the same way, lagging the spin
-    const spread = -60 + (120 * i) / (N - 1);
-    const L = R * (0.56 + 0.1 * (0.5 + 0.5 * Math.sin(i * 2.3))) * reach;
-    return spine(cx, cy, rotation + 90 + spread, lag, R * 0.11, L);
+  const w = R * 0.03;
+  const gap = w * 1.25;
+  const n = 30;
+  const base: Pt[] = Array.from({ length: n }, (_, k) => {
+    const s = k / (n - 1);
+    return polar(cx, cy, R * 0.12 + s * R * 0.62 * reach, rotation + 90 - lag * s);
   });
-  const hs = heroSpine(cx, cy, R, rotation, lag, reach);
-  const mass = (p: "keyline" | "fill") => (
+  const offsetSpine = (d: number, frac: number): Pt[] => {
+    const m = Math.max(3, Math.round(n * frac));
+    return base.slice(0, m).map((p, k) => {
+      const a = base[Math.max(0, k - 1)];
+      const b = base[Math.min(n - 1, k + 1)];
+      const tx = b[0] - a[0];
+      const ty = b[1] - a[1];
+      const l = Math.hypot(tx, ty) || 1;
+      const taperD = d * (1 - 0.35 * (k / (n - 1)));
+      return [p[0] - (ty / l) * taperD, p[1] + (tx / l) * taperD] as Pt;
+    });
+  };
+  return (
     <g>
-      {spines.map((sp, i) => (
-        <BraidMass key={i} sp={sp} w0={R * 0.05} w1={R * 0.026} strands={strands} divider={minFeature} pass={p} />
-      ))}
-      {hero && <BraidMass sp={hs} w0={R * 0.045} w1={R * 0.026} strands={2} divider={minFeature} pass={p} />}
+      {Array.from({ length: N }, (_, j) => {
+        const d = (j - (N - 1) / 2) * gap;
+        const frac = 0.72 + 0.28 * (j / (N - 1)); // outer braids longer
+        const isHero = hero && j === N - 1;
+        return <BraidMass key={j} sp={offsetSpine(d, frac)} w0={w * (isHero ? 1.15 : 1)} w1={w * 0.7} strands={isHero ? 2 : 1} />;
+      })}
     </g>
   );
-  return <g>{mass("fill")}</g>;
 };
 
 /** Two strands with a cream divider: it unzips into the two dutar strings. */
