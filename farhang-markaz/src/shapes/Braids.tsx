@@ -91,7 +91,7 @@ type TailProps = {
 };
 
 export const heroSpine = (cx: number, cy: number, R: number, rotation: number, lag: number, reach = 1) =>
-  spine(cx, cy, rotation + 90 + 95 + 22, lag, R * 0.11, R * 0.66 * reach);
+  spine(cx, cy, rotation + 90 + 60 + 22, lag, R * 0.11, R * 0.7 * reach);
 
 /**
  * The braids: count.braidClusters thin masses flung evenly around the back half of the
@@ -101,26 +101,21 @@ export const heroSpine = (cx: number, cy: number, R: number, rotation: number, l
 export const Braids: React.FC<TailProps> = ({ cx, cy, R, rotation, lag, reach = 1, strands = 1, minFeature = dancer.minFeature, hero = false }) => {
   const N = count.braidClusters;
   const spines = Array.from({ length: N }, (_, i) => {
-    // flung outward around the back half of the head, evenly, all swept against the spin
-    const spread = -95 + (190 * i) / (N - 1);
-    const L = R * 0.6 * reach;
+    // all leave one ~120° arc at the back of the cap and sweep the same way, lagging the spin
+    const spread = -60 + (120 * i) / (N - 1);
+    const L = R * (0.56 + 0.1 * (0.5 + 0.5 * Math.sin(i * 2.3))) * reach;
     return spine(cx, cy, rotation + 90 + spread, lag, R * 0.11, L);
   });
   const hs = heroSpine(cx, cy, R, rotation, lag, reach);
   const mass = (p: "keyline" | "fill") => (
     <g>
       {spines.map((sp, i) => (
-        <BraidMass key={i} sp={sp} w0={R * 0.04} w1={R * 0.022} strands={strands} divider={minFeature} pass={p} />
+        <BraidMass key={i} sp={sp} w0={R * 0.05} w1={R * 0.026} strands={strands} divider={minFeature} pass={p} />
       ))}
       {hero && <BraidMass sp={hs} w0={R * 0.045} w1={R * 0.026} strands={2} divider={minFeature} pass={p} />}
     </g>
   );
-  return (
-    <g>
-      {mass("keyline")}
-      {mass("fill")}
-    </g>
-  );
+  return <g>{mass("fill")}</g>;
 };
 
 /** Two strands with a cream divider: it unzips into the two dutar strings. */

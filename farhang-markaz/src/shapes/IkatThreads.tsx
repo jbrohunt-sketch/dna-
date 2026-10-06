@@ -65,3 +65,9 @@ export const DyedThreads: React.FC<{
 
 /** Bundle misregistration: threads tied in bundles of `size` share one step offset. */
 export const bundleShift = (i: number, size: number, step: number) => (((Math.floor(i / size) * 7) % 3) - 1) * step;
+
+/** Mirror-symmetric bundle misregistration (khan-atlas motifs are mirror-symmetric). */
+export const symmetricShift = (i: number, n: number, size: number, step: number) => {
+  const b = Math.floor(Math.abs(i - (n - 1) / 2) / size);
+  return (b % 2 ? 1 : -1) * step * 0.5;
+};

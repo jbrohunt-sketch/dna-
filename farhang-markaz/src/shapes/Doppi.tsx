@@ -21,12 +21,14 @@ const Bush: React.FC<{ readonly s: number }> = ({ s }) => (
         transform={`rotate(${d * 52} ${d * s * 0.06} ${s * 0.02})`}
       />
     ))}
+    {/* one flower silhouette: three tightly merged lobes */}
     {[
-      [-0.088, -0.085],
-      [0, -0.12],
-      [0.088, -0.085],
+      [-0.05, -0.1],
+      [0, -0.125],
+      [0.05, -0.1],
+      [0, -0.085],
     ].map(([x, y], i) => (
-      <circle key={i} cx={x * s} cy={y * s} r={s * 0.07} fill={color.pink} />
+      <circle key={i} cx={x * s} cy={y * s} r={s * 0.06} fill={color.pink} />
     ))}
   </g>
 );
