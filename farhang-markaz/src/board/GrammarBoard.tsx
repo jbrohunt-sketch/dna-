@@ -197,7 +197,7 @@ export const GrammarBoard: React.FC = () => {
               )}
               {k === 1 && (
                 <g>
-                  <Skirt id="m1b" cx={x} cy={mid} R={R} rotation={FRAME0_ROT} flames={0.5} panels={0.5} />
+                  <Skirt id="m1b" cx={x} cy={mid} R={R} rotation={FRAME0_ROT} flames={0.5} />
                   <circle cx={x} cy={mid} r={R * 0.3} fill={color.milk} />
                   <Dancer id="m1b2" cx={x} cy={mid} R={R} rotation={FRAME0_ROT} hero={false} body={0.3} flare={0} />
                   <circle cx={hx} cy={hy} r={24} fill="none" stroke={color.red} strokeWidth={4} />

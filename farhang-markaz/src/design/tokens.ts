@@ -28,7 +28,7 @@ export const count = {
 } as const;
 
 export const dancer = {
-  R: 360, // skirt radius at full flare — also identity ring radius (loop anchor)
+  R: 460, // skirt radius at full flare (≈85% of frame width) — loop anchor
   band: 0.13, // hem band width (× R) = doira rim width = identity ring width
   doppi: 0.28, // doppi side (× R)
   minFeature: 3, // px at film scale — nothing thinner or smaller

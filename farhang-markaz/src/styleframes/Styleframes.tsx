@@ -5,6 +5,7 @@ import { sans } from "../design/fonts";
 import { type Pt } from "../shapes/geo";
 import { Dancer } from "../shapes/Dancer";
 import { HemBand } from "../shapes/Skirt";
+import { bundleShift, DyedThreads } from "../shapes/IkatThreads";
 import { Doppi } from "../shapes/Doppi";
 
 // Phase 3 styleframes (v3 graphic direction). Frame-0 constants are shared by SF1 and SF3 so
@@ -26,82 +27,68 @@ export const SF1Spin: React.FC = () => (
   </Canvas>
 );
 
-// SF2 — the T2→T3 hinge as ONE object inside the frame-0 ring (the doira rim the world has
-// kept): 12 warp threads; the centre two are the plucked dutar strings, the others echo the
-// pluck with decaying amplitude. Ikat is resist-dyed on the warp before weaving, so one large
-// stepped flame appears ACROSS the threads, each thread's dye offset by whole steps.
-const flameProfile = (t: number) =>
-  t < 0 || t > 1 ? 0 : t < 0.34 ? 0.12 + 0.88 * Math.sin((t / 0.34) * (Math.PI / 2)) : Math.pow((1 - t) / 0.66, 0.9);
-
+// SF2 — the T2→T3 hinge as ONE object: full-height warp threads seen through the frame-0
+// ring (the doira rim the world has kept). The pluck bends every thread the same way along
+// one smooth curve, decaying away from the plucked pair (the dutar strings). Abrbandi: one
+// stepped flame is resist-dyed across the threads, offset per bundle of three.
 export const SF2Transform: React.FC = () => {
   const { cx, cy, R } = FRAME0;
   const rIn = R * (1 - dancer.band);
-  const inner = rIn - 10;
   const cols = count.warpThreads;
-  const pitch = (2 * inner) / cols;
-  const pluckY = cy + R * 0.22;
-  const amp = 34;
+  const pitch = (2 * rIn) / cols;
   const lw = dancer.lineWeight;
-  const flame = { base: cy + inner * 0.62, tip: cy - inner * 0.72, half: inner * 0.44, steps: 5 };
-  const stepH = (flame.base - flame.tip) / flame.steps;
+  const pluckY = cy + R * 0.18;
+  const sigma = R * 0.75;
+  const amp = 46;
+  const plucked = cols / 2 - 1; // left string of the centre pair
+  const H = FRAME.height;
   const threads = Array.from({ length: cols }, (_, i) => {
-    const x = cx - inner + pitch * (i + 0.5);
-    const dx = x - cx;
-    const half = Math.sqrt(Math.max(0, inner * inner - dx * dx));
-    const k = Math.abs(i - (cols - 1) / 2) - 0.5; // 0 = the two strings
-    const a = amp * Math.max(0.1, 1 - k / 11) * (dx < 0 ? -1 : 1);
-    return { x, top: cy - half, bot: cy + half, a, misreg: ((i % 3) - 1) * stepH * 0.5 };
+    const x = cx - rIn + pitch * (i + 0.5);
+    const k = Math.abs(i - plucked);
+    const a = amp * Math.exp(-k / 6);
+    const at = (t: number): Pt => {
+      const y = t * H;
+      return [x + a * Math.exp(-(((y - pluckY) / sigma) ** 2)), y];
+    };
+    return { at, u: x - (cx - pitch * 1.5), misreg: bundleShift(i, 3, 0.012) };
   });
-  const xAt = (t: (typeof threads)[number], y: number) =>
-    y < pluckY ? t.x + (t.a * (y - t.top)) / (pluckY - t.top) : t.x + (t.a * (t.bot - y)) / (t.bot - pluckY);
-  // dyed spans per thread, stepped (quantised) profile, offset per thread
-  const spans = (t: (typeof threads)[number], scale: number, t0: number, t1: number) => {
-    const out: Pt[][] = [];
-    let cur: Pt[] | null = null;
-    for (let y = flame.base; y >= flame.tip; y -= 3) {
-      const tt = (flame.base - (y - t.misreg)) / (flame.base - flame.tip);
-      const q = (Math.floor(tt * flame.steps) + 0.5) / flame.steps;
-      const local = (q - t0) / (t1 - t0);
-      const dyed = Math.abs(t.x - cx) < flame.half * scale * flameProfile(local) && y > t.top && y < t.bot;
-      if (dyed) {
-        if (!cur) cur = [];
-        cur.push([xAt(t, y), y]);
-      } else if (cur) {
-        out.push(cur);
-        cur = null;
-      }
-    }
-    if (cur) out.push(cur);
-    return out;
-  };
-  const pts = (p: Pt[]) => p.map((q) => `${q[0].toFixed(1)},${q[1].toFixed(1)}`).join(" ");
+  const motif = { t0: (cy - rIn * 0.78) / H, t1: (cy + rIn * 0.7) / H, half: rIn * 0.5 };
+  // flame points up the warp: invert t so its base is at the bottom
+  const dyed = threads.map((t) => ({ ...t, at: (tt: number) => t.at(1 - tt) }));
+  const motifUp = { t0: 1 - motif.t1, t1: 1 - motif.t0, half: motif.half };
   return (
     <Canvas>
-      <HemBand cx={cx} cy={cy} R={R} />
       {threads.map((t, i) => (
-        <polyline key={i} points={`${t.x},${t.top} ${t.x + t.a},${pluckY} ${t.x},${t.bot}`} fill="none" stroke={color.ink} strokeWidth={lw} strokeLinejoin="round" />
+        <polyline
+          key={i}
+          points={Array.from({ length: 97 }, (_, k) => t.at(k / 96))
+            .map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`)
+            .join(" ")}
+          fill="none"
+          stroke={color.ink}
+          strokeWidth={lw}
+        />
       ))}
-      {threads.map((t, i) =>
-        spans(t, 1, 0, 1).map((sp, j) => <polyline key={`r${i}-${j}`} points={pts(sp)} fill="none" stroke={color.red} strokeWidth={pitch - 4} />),
-      )}
-      {threads.map((t, i) =>
-        spans(t, 0.42, 0.16, 0.74).map((sp, j) => <polyline key={`m${i}-${j}`} points={pts(sp)} fill="none" stroke={color.milk} strokeWidth={pitch - 4} />),
-      )}
+      <DyedThreads threads={dyed} motif={motifUp} width={pitch - 4} samples={480} />
+      <HemBand cx={cx} cy={cy} R={R} />
     </Canvas>
   );
 };
 
-// SF3 — identity. The mark is the frame-0 hem band with the doppi at its centre
-// (markaz = centre): exactly what SF1 shows before the panels, arms and braids bloom out of
-// it, so the loop needs no new shape. Wordmark sits below the mark. ◇ type size/tracking.
+// SF3 — identity hold. The skirt at rest: a solid bold-blue disc (the hem band edge marked
+// by one cream line) with the doppi tile at its centre (markaz = centre). In the loop
+// handoff the tile eases to frame-0 size/rotation and the arms and braids bloom out of it.
+// Wordmark cap height = hem band width. ◇ type pending the reference.
 export const SF3Identity: React.FC = () => {
   const { cx, cy, R } = FRAME0;
+  const band = R * dancer.band;
+  const fontSize = band / 0.73; // Inter Tight cap height ≈ 0.73 em
   return (
     <AbsoluteFill style={{ backgroundColor: color.cream }}>
       <svg viewBox={`0 0 ${FRAME.width} ${FRAME.height}`} width={FRAME.width} height={FRAME.height} style={{ position: "absolute" }}>
-        <HemBand cx={cx} cy={cy} R={R} />
-        {/* end-card hold: doppi at 0.5R; it eases back to frame-0 size (0.28R, 28°) in the loop handoff */}
-        <g transform={`translate(${cx} ${cy}) rotate(0)`}>
+        <circle cx={cx} cy={cy} r={R} fill={color.cobalt} />
+        <circle cx={cx} cy={cy} r={R - band} fill="none" stroke={color.cream} strokeWidth={dancer.minFeature * 2} />
+        <g transform={`translate(${cx} ${cy})`}>
           <Doppi size={R * 0.5} keyline={0} />
         </g>
       </svg>
@@ -110,14 +97,14 @@ export const SF3Identity: React.FC = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: cy + R + 96,
+          top: cy + R + band * 1.4,
           textAlign: "center",
           fontFamily: sans,
           fontWeight: 700,
-          fontSize: 58,
+          fontSize,
           lineHeight: 1,
-          letterSpacing: "0.1em",
-          paddingLeft: "0.1em",
+          letterSpacing: "0.04em",
+          paddingLeft: "0.04em",
           color: color.ink,
         }}
       >

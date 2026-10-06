@@ -61,7 +61,7 @@ export const Dancer: React.FC<
     readonly hero?: boolean;
     readonly doppiGround?: "ink" | "milk";
   }
-> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 60, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
+> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 38, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
   const kl = Math.max(1.2, R * 0.012);
   const mf = Math.max(1, (dancer.minFeature * R) / dancer.R);
   return (
