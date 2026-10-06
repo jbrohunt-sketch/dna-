@@ -46,11 +46,11 @@ export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number;
     <g>
       <rect x={-h} y={-h} width={size} height={size} rx={size * 0.15} fill={fill} stroke={color.cream} strokeWidth={keyline} />
       {showBand && <rect
-        x={-h + size * 0.055}
-        y={-h + size * 0.055}
-        width={size * 0.89}
-        height={size * 0.89}
-        rx={size * 0.11}
+        x={-h + size * 0.015}
+        y={-h + size * 0.015}
+        width={size * 0.97}
+        height={size * 0.97}
+        rx={size * 0.14}
         fill="none"
         stroke={band}
         strokeWidth={Math.max(1, size * 0.03)}

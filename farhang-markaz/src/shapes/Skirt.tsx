@@ -8,7 +8,7 @@ import { DyedThreads, symmetricShift, type Thread } from "./IkatThreads";
 // bundle offset by a step, so SF1 → SF2 is the same pattern straightening.
 // The outer `dancer.band` of the disc is the hem band = doira rim = identity ring.
 
-export const SKIRT_MOTIFS = 4;
+export const SKIRT_MOTIFS = 5; // odd count: no 4-fold rotational (swastika-adjacent) read
 const STRIPS = 7;
 
 
@@ -44,7 +44,7 @@ export const Skirt: React.FC<{
       <g clipPath={`url(#skirt-${Math.round(cx)}-${Math.round(cy)}-${Math.round(Re)})`}>
       {flames > 0.01 &&
         Array.from({ length: SKIRT_MOTIFS }, (_, m) => {
-          const a = rotation + (m * 360) / SKIRT_MOTIFS - 45; // leaves the braid's sector empty
+          const a = rotation + (m * 360) / SKIRT_MOTIFS - 18; // braid falls between two bundles
           const threads: Thread[] = Array.from({ length: STRIPS }, (_, j) => {
             const u = -half + pitch * (j + 0.5);
             return {
@@ -63,7 +63,7 @@ export const Skirt: React.FC<{
                 <polyline
                   key={j}
                   points={[0, 1].map((t) => th.at(t).join(",")).join(" ")}
-                  stroke={color.sky}
+                  stroke={color.milk}
                   strokeWidth={pitch * 0.55}
                 />
               ))}

@@ -30,7 +30,7 @@ const bez = (p0: Pt, p1: Pt, p2: Pt, p3: Pt, n = 22): Pt[] =>
 
 /** Rounded Fergana arm (register R8), ending in an open palm-up hand; hand tip ≤ 0.80R. */
 export const armSpine = (s: 1 | -1, R: number) =>
-  bez([s * 0.17 * R, 0], [s * 0.36 * R, -0.12 * R], [s * 0.54 * R, -0.15 * R], [s * 0.64 * R, -0.07 * R]);
+  bez([s * 0.17 * R, 0], [s * 0.34 * R, -0.12 * R], [s * 0.5 * R, -0.16 * R], [s * 0.66 * R, -0.16 * R]); // ends straight outward, no curl
 
 export const handAt = (s: 1 | -1, R: number): { at: Pt; dir: number } => {
   const sp = armSpine(s, R);
@@ -49,8 +49,8 @@ const ArmsArc: React.FC<{ readonly R: number; readonly lift: number }> = ({ R, l
     // open palm facing camera: flat-ended fan, wider than the wrist, distinct from round beads
     return (
       <g transform={`translate(${at[0]} ${at[1]}) rotate(${dir})`}>
-        {/* open palm seen from above: D-shape, flat at the wrist, rounded outward (no knob, no point) */}
-        <path d={`M0 ${-R * 0.065} A${R * 0.07} ${R * 0.065} 0 0 1 0 ${R * 0.065} Z`} fill={color.milk} transform={`translate(${R * 0.01} 0)`} />
+        {/* open palm seen from above: half-disc, curve toward the wrist, flat open edge outward (blunt) */}
+        <path d={`M${R * 0.08} ${-R * 0.065} A${R * 0.07} ${R * 0.065} 0 0 0 ${R * 0.08} ${R * 0.065} Z`} fill={color.milk} />
       </g>
     );
   };
@@ -73,7 +73,6 @@ export const Dancer: React.FC<
     readonly doppiGround?: "ink" | "milk";
   }
 > = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 46, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
-  const kl = Math.max(1.2, R * 0.012);
   const mf = Math.max(1, (dancer.minFeature * R) / dancer.R);
   return (
     <g>
@@ -84,7 +83,7 @@ export const Dancer: React.FC<
         </g>
         <Braids cx={cx} cy={cy} R={R} rotation={rotation} lag={braidLag} reach={braidReach} minFeature={mf} hero={hero} />
         <g transform={`translate(${cx} ${cy}) rotate(${rotation})`}>
-          <Doppi size={dancer.doppi * R} keyline={kl * 2} ground={doppiGround} />
+          <Doppi size={dancer.doppi * R} keyline={0} ground={doppiGround} />
         </g>
       </g>
     </g>

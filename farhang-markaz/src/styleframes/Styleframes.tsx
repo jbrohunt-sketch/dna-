@@ -36,7 +36,7 @@ export const SF2Transform: React.FC = () => {
   const pitch = (2 * R) / cols; // field edges = disc edges
   const lw = dancer.lineWeight;
   const H = FRAME.height;
-  const amp = 58;
+  const amp = 29;
   const plucked = cols / 2 - 1; // ONE string at full amplitude
   const y0 = cy - R;
   const y1 = cy + R;
