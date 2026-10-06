@@ -4,7 +4,6 @@ import { CENTER, color, count, dancer, FRAME } from "../design/tokens";
 import { sans } from "../design/fonts";
 import { type Pt } from "../shapes/geo";
 import { Dancer } from "../shapes/Dancer";
-import { HemBand } from "../shapes/Skirt";
 import { DyedThreads, symmetricShift } from "../shapes/IkatThreads";
 import { Doppi } from "../shapes/Doppi";
 
@@ -36,44 +35,43 @@ export const SF2Transform: React.FC = () => {
   const cols = count.warpThreads;
   const pitch = (2 * R) / cols; // field edges = disc edges
   const lw = dancer.lineWeight;
-  const amp = 40;
   const H = FRAME.height;
+  const amp = 58;
+  const plucked = cols / 2 - 1; // ONE string at full amplitude
+  const y0 = cy - R;
+  const y1 = cy + R;
   const threads = Array.from({ length: cols }, (_, i) => {
     const x = cx - R + pitch * (i + 0.5);
-    const plucked = cols / 2 - 1; // the plucked string (left of the centre pair)
-    const k = i - plucked;
-    const a = amp * (k >= 0 ? Math.exp(-k / 5) : Math.exp(k / 1.6)); // spreads to one side
-    const y0 = cy - R;
-    const y1 = cy + R;
+    const k = Math.abs(i - plucked);
+    const a = k > 6 ? 0 : amp * Math.exp(-k / 1.4); // neighbours bend less; far threads straight
     const at = (t: number): Pt => {
       const y = t * H;
-      const inRing = y > y0 && y < y1;
-      // standing wave, 2nd harmonic between the ring edges: one string set vibrating
-      return [x + (inRing ? a * Math.sin((2 * Math.PI * (y - y0)) / (y1 - y0)) : 0), y];
+      const s = y > y0 && y < y1 ? Math.sin((Math.PI * (y - y0)) / (y1 - y0)) ** 2 : 0; // raised cosine: no corners
+      return [x + a * s, y];
     };
-    return { at, u: x - cx, misreg: symmetricShift(i, cols, 3, 0.014) };
+    return { at, u: x - (cx - pitch / 2), misreg: symmetricShift(i, cols, 2, 0.02) };
   });
   const rIn = R * (1 - dancer.band);
-  const motif = { t0: (cy - rIn * 0.78) / H, t1: (cy + rIn * 0.7) / H, half: rIn * 0.5 };
-  // flame points up the warp: invert t so its base is at the bottom
+  const motifLen = rIn * 1.5;
+  const t0 = (cy - motifLen / 2) / H;
+  const motifUp = { t0: 1 - (t0 + motifLen / H), t1: 1 - t0, half: motifLen / 2 / dancer.ikatAspect * 2 };
   const dyed = threads.map((t) => ({ ...t, at: (tt: number) => t.at(1 - tt) }));
-  const motifUp = { t0: 1 - motif.t1, t1: 1 - motif.t0, half: motif.half };
   return (
     <Canvas>
       {threads.map((t, i) => (
         <polyline
           key={i}
-          points={Array.from({ length: 97 }, (_, k) => t.at(k / 96))
+          points={Array.from({ length: 193 }, (_, k) => t.at(k / 192))
             .map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`)
             .join(" ")}
           fill="none"
-          stroke={color.ink}
+          stroke={i === plucked ? color.ink : color.sky}
           strokeWidth={lw}
         />
       ))}
       {/* resist-dye changes the thread itself: dye is exactly thread-width, on the thread path */}
       <DyedThreads threads={dyed} motif={motifUp} width={lw} samples={480} />
-      <HemBand cx={cx} cy={cy} R={R} />
+      <circle cx={cx} cy={cy} r={R - (R * dancer.band) / 4} fill="none" stroke={color.cobalt} strokeWidth={(R * dancer.band) / 2} />
     </Canvas>
   );
 };
@@ -90,11 +88,11 @@ export const SF3Identity: React.FC = () => {
       <circle cx={cx} cy={cy} r={R} fill={color.cobalt} />
       {/* tilted to the frame-0 rotation: it implies the spin and is the loop's start pose */}
       <g transform={`translate(${cx} ${cy}) rotate(${FRAME0.rotation})`}>
-        <Doppi size={capSize} keyline={0} band={false} />
+        <Doppi size={capSize} keyline={0} />
       </g>
       <text
         x={cx - R}
-        y={cy + R + capSize / 2}
+        y={cy - R - 150}
         textLength={2 * R}
         lengthAdjust="spacing"
         fontFamily={sans}

@@ -49,13 +49,14 @@ const ArmsArc: React.FC<{ readonly R: number; readonly lift: number }> = ({ R, l
     // open palm facing camera: flat-ended fan, wider than the wrist, distinct from round beads
     return (
       <g transform={`translate(${at[0]} ${at[1]}) rotate(${dir})`}>
-        <rect x={-R * 0.01} y={-R * 0.07} width={R * 0.11} height={R * 0.14} rx={R * 0.04} fill={color.milk} />
+        {/* open palm seen from above: D-shape, flat at the wrist, rounded outward (no knob, no point) */}
+        <path d={`M0 ${-R * 0.065} A${R * 0.07} ${R * 0.065} 0 0 1 0 ${R * 0.065} Z`} fill={color.milk} transform={`translate(${R * 0.01} 0)`} />
       </g>
     );
   };
   return (
     <g transform={`rotate(${lift})`}>
-      <path d={path(taper(sp, R * 0.085, R * 0.085))} fill={color.milk} />
+      <path d={path(taper(sp, R * 0.05, R * 0.05))} fill={color.milk} />
       {palm(1)}
       {palm(-1)}
     </g>
@@ -71,7 +72,7 @@ export const Dancer: React.FC<
     readonly hero?: boolean;
     readonly doppiGround?: "ink" | "milk";
   }
-> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 62, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
+> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 46, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
   const kl = Math.max(1.2, R * 0.012);
   const mf = Math.max(1, (dancer.minFeature * R) / dancer.R);
   return (

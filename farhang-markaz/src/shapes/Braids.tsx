@@ -105,7 +105,7 @@ export const Braids: React.FC<TailProps> = ({ cx, cy, R, rotation, lag, reach = 
   const n = 30;
   const base: Pt[] = Array.from({ length: n }, (_, k) => {
     const s = k / (n - 1);
-    return polar(cx, cy, R * 0.12 + s * R * 0.62 * reach, rotation + 90 - lag * s);
+    return polar(cx, cy, R * 0.12 + s * R * 0.66 * reach, rotation + 115 - lag * s);
   });
   const offsetSpine = (d: number, frac: number): Pt[] => {
     const m = Math.max(3, Math.round(n * frac));

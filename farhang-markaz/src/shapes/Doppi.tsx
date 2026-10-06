@@ -28,7 +28,7 @@ const Bush: React.FC<{ readonly s: number }> = ({ s }) => (
       [0.05, -0.1],
       [0, -0.085],
     ].map(([x, y], i) => (
-      <circle key={i} cx={x * s} cy={y * s} r={s * 0.06} fill={color.pink} />
+      <circle key={i} cx={x * s * 1.15} cy={y * s * 1.1} r={s * 0.075} fill={color.pink} />
     ))}
   </g>
 );
@@ -44,13 +44,13 @@ export const Doppi: React.FC<{ readonly size: number; readonly keyline?: number;
   const band = ground === "ink" ? color.milk : color.ink;
   return (
     <g>
-      <rect x={-h} y={-h} width={size} height={size} rx={size * 0.22} fill={fill} stroke={color.cream} strokeWidth={keyline} />
+      <rect x={-h} y={-h} width={size} height={size} rx={size * 0.15} fill={fill} stroke={color.cream} strokeWidth={keyline} />
       {showBand && <rect
         x={-h + size * 0.055}
         y={-h + size * 0.055}
         width={size * 0.89}
         height={size * 0.89}
-        rx={size * 0.17}
+        rx={size * 0.11}
         fill="none"
         stroke={band}
         strokeWidth={Math.max(1, size * 0.03)}

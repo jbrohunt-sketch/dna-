@@ -33,4 +33,5 @@ export const dancer = {
   doppi: 0.28, // doppi side (× R)
   minFeature: 3, // px at film scale — nothing thinner or smaller
   lineWeight: 12, // px at film scale for strings / warp threads (reads at 0.1×)
+  ikatAspect: 4, // motif length / half-width — identical in every frame (same cloth)
 } as const;
