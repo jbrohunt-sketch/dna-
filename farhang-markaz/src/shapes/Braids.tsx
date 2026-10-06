@@ -28,15 +28,13 @@ const offsetLine = (sp: readonly Pt[], frac: number, w0: number, w1: number, upT
   return out;
 };
 
+/** Sochpopuk: silver cap (milk) + coral bead (red) — two circles, no pointed tail. */
 export const Tassel: React.FC<{ readonly at: Pt; readonly dir: number; readonly s: number }> = ({ at, dir, s }) => {
-  const tip = polar(at[0], at[1], s * 2.4, dir);
-  const l = polar(at[0], at[1], s, dir - 90);
-  const r = polar(at[0], at[1], s, dir + 90);
+  const bead = polar(at[0], at[1], s * 1.1, dir);
   return (
     <g>
-      <path d={path([l, tip, r])} fill={color.red} />
-      <circle cx={at[0]} cy={at[1]} r={s} fill={color.red} />
-      <circle cx={at[0]} cy={at[1]} r={s * 0.55} fill={color.milk} />
+      <circle cx={bead[0]} cy={bead[1]} r={s * 1.25} fill={color.red} />
+      <circle cx={at[0]} cy={at[1]} r={s * 0.75} fill={color.milk} />
     </g>
   );
 };
@@ -93,7 +91,7 @@ type TailProps = {
 };
 
 export const heroSpine = (cx: number, cy: number, R: number, rotation: number, lag: number, reach = 1) =>
-  spine(cx, cy, rotation + 90 + 40, lag, R * 0.12, R * 0.7 * reach);
+  spine(cx, cy, rotation + 125 + 50, lag, R * 0.12, R * 0.78 * reach);
 
 /**
  * The braid tail: one merged ink root mass for the first ~30% (a head with a tail of hair),
@@ -103,29 +101,30 @@ export const heroSpine = (cx: number, cy: number, R: number, rotation: number, l
 export const Braids: React.FC<TailProps> = ({ cx, cy, R, rotation, lag, reach = 1, strands = 1, minFeature = dancer.minFeature, hero = false }) => {
   const N = count.braidClusters;
   const spines = Array.from({ length: N }, (_, i) => {
-    const spread = -32 + (64 * i) / (N - 1);
-    const L = R * (0.5 + 0.12 * (0.5 + 0.5 * Math.sin(i * 2.3))) * reach;
-    return spine(cx, cy, rotation + 90 + spread, lag * (0.8 + 0.25 * Math.cos(i * 1.3)), R * 0.12, L);
+    // flung outward from the back of the head and swept against the spin (all one way)
+    const spread = -40 + (80 * i) / (N - 1);
+    const L = R * (0.58 + 0.14 * (0.5 + 0.5 * Math.sin(i * 2.3))) * reach;
+    return spine(cx, cy, rotation + 125 + spread, lag * (0.85 + 0.2 * Math.cos(i * 1.3)), R * 0.12, L);
   });
   const hs = heroSpine(cx, cy, R, rotation, lag, reach);
-  const k = Math.round(spines[0].length * 0.3);
-  const rootPoly = [polar(cx, cy, R * 0.06, rotation + 90), ...spines[0].slice(0, k), ...spines[N - 1].slice(0, k).reverse()];
-  const kl = Math.max(1.5, R * 0.06 * 0.14);
+  const k = Math.round(spines[0].length * 0.22);
+  const rootPoly = [polar(cx, cy, R * 0.06, rotation + 125), ...spines[0].slice(0, k), ...spines[N - 1].slice(0, k).reverse()];
+  const kl = Math.max(1.5, R * 0.075 * 0.14);
   const root = path(rootPoly);
   const mass = (p: "keyline" | "fill") => (
     <g>
       {spines.map((sp, i) => (
-        <BraidMass key={i} sp={sp} w0={R * 0.06} w1={R * 0.03} strands={strands} divider={minFeature} pass={p} />
+        <BraidMass key={i} sp={sp} w0={R * 0.075} w1={R * 0.035} strands={strands} divider={minFeature} pass={p} />
       ))}
       {hero && <BraidMass sp={hs} w0={R * 0.05} w1={R * 0.03} strands={2} divider={minFeature} pass={p} />}
     </g>
   );
   return (
     <g>
-      <path d={root} fill={color.cream} stroke={color.cream} strokeWidth={R * 0.06 + kl * 2} strokeLinejoin="round" />
+      <path d={root} fill={color.cream} stroke={color.cream} strokeWidth={R * 0.075 + kl * 2} strokeLinejoin="round" />
       {mass("keyline")}
       {mass("fill")}
-      <path d={root} fill={color.ink} stroke={color.ink} strokeWidth={R * 0.06} strokeLinejoin="round" />
+      <path d={root} fill={color.ink} stroke={color.ink} strokeWidth={R * 0.075} strokeLinejoin="round" />
     </g>
   );
 };

@@ -41,19 +41,13 @@ export const handAt = (s: 1 | -1, R: number): { at: Pt; dir: number } => {
 
 const Arm: React.FC<{ readonly s: 1 | -1; readonly R: number; readonly lift: number }> = ({ s, R, lift }) => {
   const sp = armSpine(s, R);
-  const cuffFrom = Math.floor(sp.length * 0.82);
   const { at, dir } = handAt(s, R);
+  const palm = [at[0] + Math.cos((dir * Math.PI) / 180) * R * 0.05, at[1] + Math.sin((dir * Math.PI) / 180) * R * 0.05];
   return (
     <g transform={`rotate(${s * lift})`}>
-      <path d={path(taper(sp, R * 0.1, R * 0.075))} fill={color.milk} />
-      <path d={path(taper(sp.slice(cuffFrom), R * 0.08, R * 0.075))} fill={color.red} />
-      <g transform={`translate(${at[0]} ${at[1]}) rotate(${dir})`}>
-        {/* open palm, ~1.3× cuff width: teardrop pointing outward */}
-        <path
-          d={`M0 ${-R * 0.05} C${R * 0.07} ${-R * 0.055} ${R * 0.13} ${-R * 0.02} ${R * 0.15} 0 C${R * 0.13} ${R * 0.02} ${R * 0.07} ${R * 0.055} 0 ${R * 0.05} Z`}
-          fill={color.milk}
-        />
-      </g>
+      <path d={path(taper(sp, R * 0.1, R * 0.08))} fill={color.milk} />
+      {/* open palm, seen from above: one disc */}
+      <circle cx={palm[0]} cy={palm[1]} r={R * 0.065} fill={color.milk} />
     </g>
   );
 };
@@ -67,7 +61,7 @@ export const Dancer: React.FC<
     readonly hero?: boolean;
     readonly doppiGround?: "ink" | "milk";
   }
-> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 18, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
+> = ({ cx, cy, R, id, rotation, flare = 1, braidLag = 60, braidReach = 1, armLift = 0, body = 1, hero = true, doppiGround = "milk" }) => {
   const kl = Math.max(1.2, R * 0.012);
   const mf = Math.max(1, (dancer.minFeature * R) / dancer.R);
   return (
@@ -77,7 +71,7 @@ export const Dancer: React.FC<
         <g transform={`translate(${cx} ${cy}) rotate(${rotation})`}>
           <Arm s={1} R={R} lift={armLift} />
           <Arm s={-1} R={R} lift={armLift} />
-          <rect x={-0.31 * R} y={-0.19 * R} width={0.62 * R} height={0.38 * R} rx={0.17 * R} fill={color.red} />
+          <rect x={-0.28 * R} y={-0.15 * R} width={0.56 * R} height={0.3 * R} rx={0.15 * R} fill={color.red} />
         </g>
         <Braids cx={cx} cy={cy} R={R} rotation={rotation} lag={braidLag} reach={braidReach} minFeature={mf} hero={hero} />
         <g transform={`translate(${cx} ${cy}) rotate(${rotation})`}>

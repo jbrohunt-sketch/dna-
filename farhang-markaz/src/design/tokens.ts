@@ -22,9 +22,9 @@ export type ColorName = keyof typeof color;
 export const count = {
   hemScallops: 12, // = skirt panels = flame columns around the hem
   doiraRingPairs: 12, // ring pairs around the doira (24 rings)
-  plateSegments: 12, // Rishtan plate radial segments (provisional — pending register)
-  braidClusters: 7,
-  hemFlames: 24, // flames in the hem band (= identity ring); SF1 test: 24 larger vs 36
+  plateSegments: 12, // plate compartments (stylisation)
+  warpThreads: 24, // = 2 × plateSegments
+  braidClusters: 6,
 } as const;
 
 export const dancer = {
@@ -32,5 +32,5 @@ export const dancer = {
   band: 0.13, // hem band width (× R) = doira rim width = identity ring width
   doppi: 0.28, // doppi side (× R)
   minFeature: 3, // px at film scale — nothing thinner or smaller
-  hemFlameW: 0.065, // hem flame width (× R); length = band → ratio ≥ 2
+  lineWeight: 12, // px at film scale for strings / warp threads (reads at 0.1×)
 } as const;

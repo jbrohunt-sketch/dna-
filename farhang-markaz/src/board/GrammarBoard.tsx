@@ -116,7 +116,7 @@ export const GrammarBoard: React.FC = () => {
       </Cell>
 
       <Cell i={2} title="TYPOGRAPHY · IDENTITY ◇" caption="The identity ring IS the hem band (0.13R, 36 flames) at the frame-0 rotation — so the last frame blooms back into the spin. Inter Tight 700, ink. Divider = the two dutar strings spanning the ring, one plucked — never a short double bar. ◇ Size, tracking, timing pending the reference.">
-        <HemBand cx={360} cy={mid} R={268} rotation={FRAME0_ROT} />
+        <HemBand cx={360} cy={mid} R={268} />
         <text x={360} y={mid - 30} fontFamily={sans} fontSize={60} fontWeight={700} textAnchor="middle" fill={color.ink} letterSpacing="0.02em">FARHANG</text>
         <Dutar a={[360 - 268 * 0.845, mid + 1]} b={[360 + 268 * 0.845, mid + 1]} gap={10} pluck={{ at: 0.32, amp: -5 }} weight={3} />
         <text x={360} y={mid + 76} fontFamily={sans} fontSize={60} fontWeight={700} textAnchor="middle" fill={color.ink} letterSpacing="0.02em">MARKAZ</text>
@@ -197,7 +197,7 @@ export const GrammarBoard: React.FC = () => {
               )}
               {k === 1 && (
                 <g>
-                  <Skirt id="m1b" cx={x} cy={mid} R={R} rotation={FRAME0_ROT} scallop={0.01} flames={0.5} panels={0.5} />
+                  <Skirt id="m1b" cx={x} cy={mid} R={R} rotation={FRAME0_ROT} flames={0.5} panels={0.5} />
                   <circle cx={x} cy={mid} r={R * 0.3} fill={color.milk} />
                   <Dancer id="m1b2" cx={x} cy={mid} R={R} rotation={FRAME0_ROT} hero={false} body={0.3} flare={0} />
                   <circle cx={hx} cy={hy} r={24} fill="none" stroke={color.red} strokeWidth={4} />
