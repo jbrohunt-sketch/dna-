@@ -49,7 +49,8 @@ export const BraidMass: React.FC<{
   readonly divider?: number;
   readonly keyline?: number;
   readonly pass?: "keyline" | "fill" | "both";
-}> = ({ sp, w0, w1, strands = 3, divider = dancer.minFeature, keyline, pass = "both" }) => {
+  readonly tassel?: boolean;
+}> = ({ sp, w0, w1, strands = 3, divider = dancer.minFeature, keyline, pass = "both", tassel = true }) => {
   const n = sp.length;
   const tip = sp[n - 1];
   const prev = sp[n - 3];
@@ -72,7 +73,7 @@ export const BraidMass: React.FC<{
               strokeLinecap="round"
             />
           ))}
-          <Tassel at={tip} dir={dir} s={Math.max(dancer.minFeature, w1 * 0.6)} />
+          {tassel && <Tassel at={tip} dir={dir} s={Math.max(dancer.minFeature, w1 * 0.6)} />}
         </g>
       )}
     </g>

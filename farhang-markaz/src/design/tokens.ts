@@ -24,6 +24,7 @@ export const count = {
   doiraRingPairs: 12, // ring pairs around the doira (24 rings)
   plateSegments: 12, // Rishtan plate radial segments (provisional — pending register)
   braidClusters: 7,
+  hemFlames: 24, // flames in the hem band (= identity ring); SF1 test: 24 larger vs 36
 } as const;
 
 export const dancer = {
@@ -31,4 +32,5 @@ export const dancer = {
   band: 0.13, // hem band width (× R) = doira rim width = identity ring width
   doppi: 0.28, // doppi side (× R)
   minFeature: 3, // px at film scale — nothing thinner or smaller
+  hemFlameW: 0.065, // hem flame width (× R); length = band → ratio ≥ 2
 } as const;

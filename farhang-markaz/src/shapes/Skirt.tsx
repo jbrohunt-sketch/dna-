@@ -7,7 +7,7 @@ import { flame } from "./Ikat";
 // alternating cobalt/sky. Hem band (0.84–0.97R, = doira rim = identity ring): 36 red flames
 // with milk cores, each ≥2× as long as wide. The hem band IS the identity ring (loop anchor).
 
-export const HEM_FLAMES = 36;
+export const HEM_FLAMES = count.hemFlames;
 
 /** Hem band only (used by the skirt and, unchanged, as the identity ring). */
 export const HemBand: React.FC<{
@@ -22,7 +22,7 @@ export const HemBand: React.FC<{
   const r1 = R * 0.97;
   const H = (r1 - r0) * flames;
   const rRef = (r0 + r1) / 2;
-  const W = R * 0.06;
+  const W = R * dancer.hemFlameW;
   const ring = [
     ...Array.from({ length: 121 }, (_, i) => polar(cx, cy, r1, (i / 120) * 360)),
     ...Array.from({ length: 121 }, (_, i) => polar(cx, cy, r0, 360 - (i / 120) * 360)),
