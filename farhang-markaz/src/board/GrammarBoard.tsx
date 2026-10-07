@@ -85,7 +85,7 @@ export const GrammarBoard: React.FC = () => {
       <div style={{ position: "absolute", left: M, top: 70, fontFamily: sans, color: color.ink }}>
         <div style={{ fontSize: 64, fontWeight: 700, letterSpacing: "-0.01em" }}>Farhang Markaz — Visual Grammar v3 · rev 3</div>
         <div style={{ fontSize: 26, marginTop: 10, opacity: 0.75 }}>
-          After two Art Director + Cultural Auditor review rounds · flat shapes on cream · Fergana anchor · [R#] = cultural register entry · ◇ = provisional / stylisation
+          Phase 2 gate record. Where it differs, the approved styleframes rev 7 (review/SF1–SF3) and the skill are the source of truth.
         </div>
       </div>
 

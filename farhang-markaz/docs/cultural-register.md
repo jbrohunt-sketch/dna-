@@ -56,6 +56,17 @@ Source quality: primary · academic · museum · secondary · tourism · commerc
   leaves per bush; **milk ground** (stylisation — the dark ground failed the 0.1× thumbnail
   test and read as the black men's cap [R1]). Flower count and ground colour are stylisation.
 
+## Design decisions recorded at styleframe approval (rev 7)
+
+- **Nimcha omitted** (stylisation). R6 remains the reference if a garment layer returns.
+- **Ikat label:** "abrbandi (khan-atlas-derived)" — the drawn motif is a symmetric stepped
+  flame on threads; plain "khan-atlas" slightly overclaims [R5].
+- **Braids:** one swept ribbon of 6 braids reads as long hair at thumbnail; claim qirq kokil
+  only where separate strands are visible [R3].
+- **Skirt bundle count = 5** (odd): avoids a 4-fold rotational, swastika-adjacent read.
+- **Identity:** solid disc + doppi tile; describe the cap as one documented women's cap type,
+  not *the* Fergana symbol [R2].
+
 ## Design decisions recorded after the Phase 2 gate
 
 - Morph 3 (stepped ikat flame → smooth bodom leaf) is a **formal rhyme** between shared

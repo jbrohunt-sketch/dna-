@@ -55,8 +55,8 @@ only the design consequence. Specificity, not brittle certainty: where an associ
 strong but not exclusive, say "strongly associated", not "only".
 
 Anchors in use (register IDs in brackets):
-- **Khan-atlas warp ikat** — anchored in Margilan [R5, High]. Abstracted as stepped *flame
-  columns* along the warp (radial on the overhead skirt). Lozenges only if labelled *abrbandi*.
+- **Khan-atlas warp ikat** — anchored in Margilan [R5, High]. Drawn as abrbandi resist-dye on
+  threads (§5); label "abrbandi (khan-atlas-derived)".
 - **Rishtan ceramics** — ishkor glaze; cobalt and turquoise on a milky ground with dark
   outlines; mainly floral [R12, High/Med]. Source of the cream + blue palette and of the
   ceramic beat, which replaces the former architecture beat: **radial floral zoning, not girih**.
@@ -78,44 +78,43 @@ Do not use: zardozi or metallic gold [R7]; eight-point star-and-cross or any iso
 central star, calligraphy band, mehrob niche) [R12]; mosque/madrasa façades; married-woman
 cues (e.g. headscarf over the braids).
 
-## 3. Shape vocabulary — the dancer (overhead; R = skirt radius = 360 px, loop anchor)
+## 3. Shape vocabulary — the dancer (approved styleframes rev 7)
 
-- **Skirt:** circle of radius R with shallow scallops. Inner field = 12 plain panels
-  alternating cobalt / sky. **Hem band** 0.84–0.97R (`dancer.band` = 0.13R, shared with the
-  doira rim and the identity ring) carries 36 red flames with milk cores, each ≥ 2× as long
-  as wide. Flare scales R from 0.35R → R.
-- **Nimcha:** sleeveless, one red rounded rectangle 0.62R × 0.38R — it must clear the doppi
-  front and back by ≥ 0.05R so it reads as a garment, not earmuffs.
-- **Sleeves:** plain-silk dress sleeves [R6] — milk, with a red cuff.
-- **Arms:** rounded curved capsules, never a rigid straight T. **Hands:** open palm-up ovals,
-  no fingers; hand tips ≤ 0.80R.
-- **Headpiece:** square doppi, side 0.28R, **milk ground** (the dark ground failed the
-  thumbnail test and read as the black men's cap [R1]), band border, four bushes filling
-  ~65% of each face, stems toward the centre, 3 pink flowers each (stylisation).
-- **Braids:** a **tail**, not spokes — one merged ink root mass for the first ~30% of the
-  length, then splitting into 7 solid masses rooted along the back edge of the doppi (0.12R
-  behind centre); only the outer silhouette carries a cream keyline; spread ±32°, width 0.06R → 0.03R, length 0.50–0.62R (tassels
-  stay off the hem). Strand subdivision (5 per mass, ≈35 implied) only in close-ups.
-  **Hero braid:** 2 strands with a cream divider, length 0.7R — it unzips into the dutar
-  strings. Sochpopuk = silver cap (milk) + coral/silk tassel (red) [R4].
-- **Minimum feature size:** 3 px at film scale (`dancer.minFeature`), including outlines and
-  keylines. Nothing thinner — if an outline can't be ≥ 3 px, remove it (milk on blue needs none).
-- **Hands:** palm ≈ 1.3× cuff width, teardrop pointing outward.
-- **Never drawn:** face, skin tone rendering, fingers, feet, body curves, hair strands,
-  fabric folds, stitching, shadows.
+Overhead. **R = 460 px** (≈ 85% of frame width) — the bold-blue disc at frame centre is the
+fixed loop anchor in every frame. Source: `src/shapes/*`, `src/styleframes/Styleframes.tsx`.
+
+- **Skirt:** a solid cobalt disc of radius R (true circle). The khan-atlas-derived ikat sits on
+  **5 bundles of milk warp threads** (odd count — never 4-fold rotational: a swastika-adjacent
+  read [cultural note]) running radially from 0.42R to 60 px inside the rim; the motif is
+  dyed onto the threads (`IkatThreads`). No wedges, no cards, no hem flames. The outer
+  `dancer.band` (0.13R) is implicit at rest and becomes the doira rim when the skin opens.
+- **Body:** one continuous milk **arm-arc** from hand to hand through the shoulders (rounded,
+  forward), ending straight outward in **blunt half-disc palms** (curve to the wrist, flat
+  open edge outward — no knob, no point, no curl). Nimcha omitted (stylisation, R6).
+- **Headpiece:** square doppi, 0.28R, milk ground, one ink border at the edge (no cream
+  halo), tighter corners, four bushes with one merged pink flower silhouette each
+  (stylisation of R2). Tilted 28° at frame 0.
+- **Braids:** **one swept ribbon** — 6 thin braids (0.03R) tightly parallel along a shared
+  spiral that trails the spin, ends staggered, a sochpopuk bead at each tip (milk cap + red
+  coral bead, circles only). The outermost is the hero braid (2 strands) → dutar string. It
+  reads as *long hair* at thumbnail size; claim *qirq kokil* only where strands separate
+  (close-ups) [R3].
+- **Minimum feature size:** 3 px at film scale, outlines included; strings/warp threads 12 px.
+- **Never drawn:** face, skin rendering, fingers, feet, body curves, hair strands, folds,
+  stitching, shadows, map-pin teardrops.
 
 ## 4. Palette (source of truth: `farhang-markaz/src/design/tokens.ts`)
 
 | token | hex | source | role |
 |---|---|---|---|
 | cream | `#F3ECDF` | Rishtan milky slip | background — always, except a shape that scales to fill frame |
-| milk | `#FFFAF2` | slip white | doira skin, sleeves, doppi ground, flame cores |
+| milk | `#FFFAF2` | slip white | arm-arc, palms, skirt warp threads, doppi ground, doira skin |
 | ink | `#15183A` | Rishtan dark outline (stylised blue-black) | braids, outlines, type |
 | cobalt | `#1D3FD6` | Rishtan cobalt; indigo atlas | primary blue, hem band, rim |
-| sky | `#6F8BF7` | stylisation | alternate skirt panels |
+| sky | `#6F8BF7` | stylisation | SF2 warp threads |
 | ishkor | `#14A39A` | Rishtan ishkor; stands in for atlas / chamanda-gul green | plate, doppi bushes, one ikat column |
-| red | `#E5323F` | madder red (atlas) | flames, nimcha, cuffs, tassels, strike |
-| pink | `#F49AB6` | chamanda gul flower | florals only |
+| red | `#E5323F` | madder red (atlas) | ikat dye (outer), tassel beads, strike |
+| pink | `#F49AB6` | chamanda gul flower | cap flowers, ikat dye core |
 | saffron | `#F4AE2A` | isparak yellow (atlas) | dutar frets only |
 
 Every **accent** colour traces to a named source; ink and sky are stylisation. Retired: dark
@@ -124,53 +123,46 @@ hues without updating tokens.ts and this table together.
 
 ## 5. Motif abstractions
 
-- **Doira:** seen from the open side [R10]: cobalt rim (width = hem band) + milk skin + 12
-  ring pairs on the inner wall (stylised count). The strike is a flat red wave in the skin
-  (struck on the far side), synced to *dum* / *tak*.
-- **Dutar:** exactly two parallel lines with short tied-fret bars; if the body is shown, the
-  long-neck pear silhouette.
-- **Ikat:** stepped flames tapering at both ends, stacked tip-to-base into continuous
-  flame columns; misregistration = whole-step offsets, never blur. One column in three
-  carries ishkor (atlas green). Pink, sky and the misregistration are stylisation [R5].
-- **Fergana-school plate, Rishtan palette** [R12]: milk ground; dark zone outlines; cobalt +
-  ishkor only (no red, no pink). Centre = radiating four-lobed motif grown from the doppi's
-  four bushes; middle field = bodom leaves, each in its own compartment (the bent warp);
-  rim = checked band, 24 cells per row = the doira's 24 rings. Counts are stylisation.
-- **Identity divider:** the two dutar strings (two parallel lines), never one line.
+- **Ikat (one method everywhere):** abrbandi resist-dye — one stepped flame motif dyed onto
+  parallel threads (exactly thread-width, on the thread path), bundle offsets mirror-symmetric
+  on three levels; red outer, pink core; motif length / half-width = `dancer.ikatAspect` (4)
+  in every frame so skirt and warp are visibly the same cloth. Label it **"abrbandi
+  (khan-atlas-derived)"**, not plain "khan-atlas" [R5].
+- **Warp (SF2):** 24 sky threads at disc width, full frame height (the ring is a window),
+  one ink thread = the plucked dutar string; raised-cosine bend, neighbours decay, threads
+  more than 6 away stay straight.
+- **Doira:** seen from the open side [R10]: cobalt rim (width = `dancer.band`), milk skin,
+  ring pairs on the inner wall (stylised count); strike = flat red wave, on *dum* / *tak*.
+- **Dutar:** two parallel strings, tied-fret bars only in close-up T2 frames.
+- **Fergana-school plate, Rishtan palette** [R12]: milk ground, dark outlines, cobalt + ishkor
+  only; four-lobed centre (documented; derivation from the doppi = design rhyme); bodom
+  compartments; checked rim. Counts are stylisation.
 
-## 6. Transition grammar (preserved from v1–v2 — this is the project's core asset)
+## 6. Transition grammar
 
 Every transition shares geometry, direction, rhythm or material logic. Objects never pop in.
-- **T1 skirt → doira:** *tak* — her hand meets the hem and the strike wave starts at the hand;
-  *dum* — the body (arms, nimcha, braids, doppi) draws into the centre and the milk skin opens
-  from that point. Flames retract; the hem band becomes the rim; rings settle in pairs.
-- **T2 hero braid → dutar:** the 2-strand hero braid peels from the tail, straightens under
-  tension and unzips along its divider into the two strings; tied frets tick on; the pluck
-  is the instant-after-release triangle.
-- **T3 strings → warp → plate:** each string throws stepped echoes → 12 warp columns; flames
-  dye the columns; the warp bends into a ring (`bend`, t 0 → 1) while each stepped flame
-  relaxes into a bodom leaf (same vertices, `smooth` 0 → 1) and re-glazes to the Rishtan
-  palette — a formal rhyme between pointed-oval shapes, **not** a claim that ikat flames
-  derive from bodom.
-- **Origins inside the plate:** rim checks = doira rings; four-lobed centre = doppi bushes
-  (four-lobed centres are documented on Fergana-school dishes; the doppi derivation is a
-  design rhyme, not a cultural link).
-- **Hem band → identity ring → frame 0:** the identity ring is the hem band with its 36
-  flames at the frame-0 centre, radius and rotation; the loop blooms back into the spin.
-- The world accumulates: each return to the dancer keeps something from the scene before.
-- Speed is shown through shape (braid lag, stretch, spacing), never through blur.
-- Morph engineering: generate paths in code with identical structure (same vertex/segment
-  counts) and interpolate parameters; never tween unrelated path strings.
+One stage on screen at a time; the 920 px disc is the constant stage.
+- **T1 skirt → doira:** *tak* at her hand, then the body (arms, cap, braids) draws into the
+  centre and the milk skin opens from it on *dum*; the bundles clear; the outer band is the rim.
+- **T2 hero braid → dutar:** the hero braid peels from the ribbon, straightens, unzips into
+  two strings; frets tick on; one string is plucked.
+- **T3 string → warp → plate:** the pluck spreads to neighbouring threads (decaying); the
+  motif is dyed across the threads; the warp then bends into the plate's ring (`bend`) while
+  stepped flames relax into bodom leaves (formal rhyme, not derivation) and re-glaze.
+- **Identity → frame 0:** end-card hold = solid disc + cap tile (0.7R, 28°); in the loop
+  handoff the tile eases to 0.28R and the arm-arc, braids and bundles bloom out of it.
+- The world accumulates; speed is shown through shape, never blur; morphs interpolate
+  parameters on identical structures.
 
 ## 7. Typography
 
-- Wordmark **FARHANG MARKAZ** in a clean geometric sans (default: Inter Tight, OFL,
-  vendored in `public/fonts`), ink on cream, set inside the identity ring (markaz = centre).
-  Divider = the two dutar strings spanning the full inner diameter of the ring, anchored on
-  the hem band, one slightly plucked — never a short double bar (it reads as "=").
-- No wide-tracked luxury serif. Size/tracking/entry timing are provisional pending the
-  reference.
+- Wordmark **FARHANG MARKAZ**, Inter Tight 600 (OFL, vendored), ink, one line, set **above**
+  the disc (out of the bottom platform-UI zone), width locked to the disc diameter.
+  The disc never moves to make room for type.
+- ◇ Size, tracking and entry timing remain provisional pending the client's reference.
 - Safe areas in 1080×1920: key text ≥ 80 px from sides, ≥ 160 px from top/bottom.
+- Never describe the chamanda gul cap as *the* Fergana symbol in copy (one documented type, R2);
+  don't call *farhang* an Uzbek word without verification (register open item).
 
 ## 8. Motion and sound
 
@@ -196,6 +188,8 @@ around her. 7. Final spin → hem ring → FARHANG MARKAZ identity → loops to 
 
 - Flat SVG, masks, transforms, procedural React. Centralised tokens (`tokens.ts`) and cue
   map (`timeline.ts`); never hard-code event frames in scene files.
+- Source of truth for look: approved styleframes rev 7 (`farhang-markaz/review/SF1-3`, code in
+  `src/styleframes`). The grammar board is the Phase 2 gate record only.
 - Workflow gates: visual grammar board → Art Director + Cultural Auditor pass → three
   styleframes → Adversarial Critic + Cultural Auditor → motion + sound → implementation.
 - Review checklist for every frame:
